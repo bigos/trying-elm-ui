@@ -56,7 +56,7 @@ view model =
         (Element.column []
             [ Element.text "Hello Elm-UI!"
             , Element.text (Debug.toString model)
-            , Input.checkbox [] <|
+            , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
                 , label = Input.labelHidden "Activer/Désactiver le partage"
                 , checked = model.toggle
@@ -69,6 +69,7 @@ view model =
                         , toggleHeight = 28
                         }
                 }
+            , myRowOfStuff model
             ]
         )
 
@@ -141,19 +142,25 @@ subscriptions _ =
     Sub.none
 
 
-myRowOfStuff : Element msg
-myRowOfStuff =
+myRowOfStuff : Model -> Element msg
+myRowOfStuff model =
     row [ width fill, centerY, spacing 30 ]
-        [ myElement
-        , myElement
-        , el [ alignRight ] myElement
+        [ myElement model
+        , myElement model
+        , el [ alignRight ] (myElement model)
         ]
 
 
-myElement : Element msg
-myElement =
+myElement : Model -> Element msg
+myElement model =
     el
-        [ Background.color (rgb255 240 0 245)
+        [ Background.color
+            (if model.toggle then
+                rgb255 57 180 111
+
+             else
+                rgb255 111 180 57
+            )
         , Font.color (rgb255 255 255 255)
         , Border.rounded 3
         , padding 30
