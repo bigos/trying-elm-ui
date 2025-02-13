@@ -1,0 +1,3 @@
+* README
+
+This is example Rails 8 app that uses Elm and elm-ui.
