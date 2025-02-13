@@ -5211,15 +5211,11 @@ var $author$project$UiExperiment$subscriptions = function (_v0) {
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'NoOp') {
-			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-		} else {
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{toggle: !model.toggle}),
-				$elm$core$Platform$Cmd$none);
-		}
+		return _Utils_Tuple2(
+			_Utils_update(
+				model,
+				{toggle: !model.toggle}),
+			$elm$core$Platform$Cmd$none);
 	});
 var $author$project$UiExperiment$Toggle = {$: 'Toggle'};
 var $elm$core$Basics$always = F2(
@@ -11603,9 +11599,6 @@ var $author$project$UiExperiment$toggleCheckboxWidget = F2(
 		var sliderColor = _v0.sliderColor;
 		var toggleWidth = _v0.toggleWidth;
 		var toggleHeight = _v0.toggleHeight;
-		var pad = 3;
-		var sliderSize = toggleHeight - (2 * pad);
-		var translation = $elm$core$String$fromInt((toggleWidth - sliderSize) - pad);
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
@@ -11626,21 +11619,32 @@ var $author$project$UiExperiment$toggleCheckboxWidget = F2(
 							]),
 						A2(
 							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Background$color(sliderColor),
-									$mdgriffith$elm_ui$Element$Border$rounded((sliderSize / 2) | 0),
-									$mdgriffith$elm_ui$Element$width(
-									$mdgriffith$elm_ui$Element$px(sliderSize)),
-									$mdgriffith$elm_ui$Element$height(
-									$mdgriffith$elm_ui$Element$px(sliderSize)),
-									$mdgriffith$elm_ui$Element$centerY,
-									$mdgriffith$elm_ui$Element$moveRight(pad),
-									$mdgriffith$elm_ui$Element$htmlAttribute(
-									A2($elm$html$Html$Attributes$style, 'transition', '.4s')),
-									$mdgriffith$elm_ui$Element$htmlAttribute(
-									checked ? A2($elm$html$Html$Attributes$style, 'transform', 'translateX(' + (translation + 'px)')) : $elm$html$Html$Attributes$class(''))
-								]),
+							function () {
+								var pad = 3;
+								var sliderSize = toggleHeight - (2 * pad);
+								return _List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Background$color(sliderColor),
+										$mdgriffith$elm_ui$Element$Border$rounded((sliderSize / 2) | 0),
+										$mdgriffith$elm_ui$Element$width(
+										$mdgriffith$elm_ui$Element$px(sliderSize)),
+										$mdgriffith$elm_ui$Element$height(
+										$mdgriffith$elm_ui$Element$px(sliderSize)),
+										$mdgriffith$elm_ui$Element$centerY,
+										$mdgriffith$elm_ui$Element$moveRight(pad),
+										$mdgriffith$elm_ui$Element$htmlAttribute(
+										A2($elm$html$Html$Attributes$style, 'transition', '.4s')),
+										$mdgriffith$elm_ui$Element$htmlAttribute(
+										function () {
+											if (checked) {
+												var translation = $elm$core$String$fromInt((toggleWidth - sliderSize) - pad);
+												return A2($elm$html$Html$Attributes$style, 'transform', 'translateX(' + (translation + 'px)'));
+											} else {
+												return $elm$html$Html$Attributes$class('');
+											}
+										}())
+									]);
+							}(),
 							$mdgriffith$elm_ui$Element$text(''))))
 				]),
 			$mdgriffith$elm_ui$Element$text(''));

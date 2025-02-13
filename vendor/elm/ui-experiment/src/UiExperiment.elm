@@ -1,4 +1,4 @@
-module UiExperiment exposing (..)
+module UiExperiment exposing (Model)
 
 import Browser
 import Element exposing (Color, Element, alignRight, centerY, el, fill, height, htmlAttribute, inFront, moveRight, padding, px, rgb255, row, spacing, text, width)
@@ -6,7 +6,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
-import Html exposing (Html, div)
+import Html exposing (Html)
 import Html.Attributes as HA
 
 
@@ -34,17 +34,13 @@ init _ =
 
 
 type Msg
-    = NoOp
-    | Toggle
+    = Toggle
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     -- case Debug.log "msg" msg of
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         Toggle ->
             ( { model | toggle = not model.toggle }, Cmd.none )
 
@@ -76,17 +72,6 @@ view model =
 
 toggleCheckboxWidget : { offColor : Color, onColor : Color, sliderColor : Color, toggleWidth : Int, toggleHeight : Int } -> Bool -> Element msg
 toggleCheckboxWidget { offColor, onColor, sliderColor, toggleWidth, toggleHeight } checked =
-    let
-        pad =
-            3
-
-        sliderSize =
-            toggleHeight - 2 * pad
-
-        translation =
-            (toggleWidth - sliderSize - pad)
-                |> String.fromInt
-    in
     el
         [ Background.color <|
             if checked then
@@ -100,21 +85,34 @@ toggleCheckboxWidget { offColor, onColor, sliderColor, toggleWidth, toggleHeight
         , inFront <|
             el [ height fill ] <|
                 el
-                    [ Background.color sliderColor
-                    , Border.rounded <| sliderSize // 2
-                    , width <| px <| sliderSize
-                    , height <| px <| sliderSize
-                    , centerY
-                    , moveRight pad
-                    , htmlAttribute <|
+                    (let
+                        pad =
+                            3
+
+                        sliderSize =
+                            toggleHeight - 2 * pad
+                     in
+                     [ Background.color sliderColor
+                     , Border.rounded <| sliderSize // 2
+                     , width <| px <| sliderSize
+                     , height <| px <| sliderSize
+                     , centerY
+                     , moveRight pad
+                     , htmlAttribute <|
                         HA.style "transition" ".4s"
-                    , htmlAttribute <|
+                     , htmlAttribute <|
                         if checked then
+                            let
+                                translation =
+                                    String.fromInt
+                                        (toggleWidth - sliderSize - pad)
+                            in
                             HA.style "transform" <| "translateX(" ++ translation ++ "px)"
 
                         else
                             HA.class ""
-                    ]
+                     ]
+                    )
                 <|
                     text ""
         ]
