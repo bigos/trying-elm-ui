@@ -11154,10 +11154,12 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
 	});
 var $author$project$UiExperiment$green = A3($mdgriffith$elm_ui$Element$rgb255, 39, 203, 139);
-var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
-	return {$: 'HiddenLabel', a: a};
-};
-var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
+var $mdgriffith$elm_ui$Element$Input$Label = F3(
+	function (a, b, c) {
+		return {$: 'Label', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Element$Input$OnRight = {$: 'OnRight'};
+var $mdgriffith$elm_ui$Element$Input$labelRight = $mdgriffith$elm_ui$Element$Input$Label($mdgriffith$elm_ui$Element$Input$OnRight);
 var $mdgriffith$elm_ui$Internal$Model$OnlyDynamic = F2(
 	function (a, b) {
 		return {$: 'OnlyDynamic', a: a, b: b};
@@ -11672,7 +11674,10 @@ var $author$project$UiExperiment$view = function (model) {
 						checked: model.toggle,
 						icon: $author$project$UiExperiment$toggleCheckboxWidget(
 							{offColor: $author$project$UiExperiment$lightGrey, onColor: $author$project$UiExperiment$green, sliderColor: $author$project$UiExperiment$white, toggleHeight: 28, toggleWidth: 60}),
-						label: $mdgriffith$elm_ui$Element$Input$labelHidden('Activer/Désactiver le partage'),
+						label: A2(
+							$mdgriffith$elm_ui$Element$Input$labelRight,
+							_List_Nil,
+							$mdgriffith$elm_ui$Element$text('Activer/Désactiver le partage')),
 						onChange: $elm$core$Basics$always($author$project$UiExperiment$Toggle)
 					}),
 					$author$project$UiExperiment$myRowOfStuff(model)

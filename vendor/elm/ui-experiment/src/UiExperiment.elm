@@ -54,7 +54,7 @@ view model =
             , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
-                , label = Input.labelHidden "Activer/Désactiver le partage"
+                , label = Input.labelRight [] (text "Switch colours")
                 , checked = model.toggle
                 , icon =
                     toggleCheckboxWidget
