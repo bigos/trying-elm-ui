@@ -157,7 +157,7 @@ myElement model =
                 rgb255 57 180 111
 
              else
-                rgb255 111 180 57
+                rgb255 111 120 97
             )
         , Font.color (rgb255 255 255 255)
         , Border.rounded 3

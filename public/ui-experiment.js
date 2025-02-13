@@ -11510,7 +11510,7 @@ var $author$project$UiExperiment$myElement = function (model) {
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$Background$color(
-				model.toggle ? A3($mdgriffith$elm_ui$Element$rgb255, 57, 180, 111) : A3($mdgriffith$elm_ui$Element$rgb255, 111, 180, 57)),
+				model.toggle ? A3($mdgriffith$elm_ui$Element$rgb255, 57, 180, 111) : A3($mdgriffith$elm_ui$Element$rgb255, 111, 120, 97)),
 				$mdgriffith$elm_ui$Element$Font$color(
 				A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
 				$mdgriffith$elm_ui$Element$Border$rounded(3),
@@ -11677,7 +11677,7 @@ var $author$project$UiExperiment$view = function (model) {
 						label: A2(
 							$mdgriffith$elm_ui$Element$Input$labelRight,
 							_List_Nil,
-							$mdgriffith$elm_ui$Element$text('Activer/Désactiver le partage')),
+							$mdgriffith$elm_ui$Element$text('Switch colours')),
 						onChange: $elm$core$Basics$always($author$project$UiExperiment$Toggle)
 					}),
 					$author$project$UiExperiment$myRowOfStuff(model)
