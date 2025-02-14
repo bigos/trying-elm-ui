@@ -2,9 +2,17 @@
 <p>Find me in app/views/home/page.html.erb</p>
 
 <div id="elm"></div>
+<%
+js_filename = 'ui-experiment.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+js_mtime =File.mtime(js_file).to_i
 
-<script src="ui-experiment.js"></script>
+flag_data = { a: 1, be: "2", base_url: request.base_url }
+%>
+<script src="<%= "#{js_filename}?#{js_mtime}" %>"></script>
 <script>
- var app = Elm.UiExperiment.init({ node: document.getElementById('elm') })
+ var app = Elm.UiExperiment.init({ node: document.getElementById('elm'),
+                                   flags: <%= raw JSON.generate flag_data %>
+ })
  // you can use ports and stuff here
 </script>
