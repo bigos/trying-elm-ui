@@ -8,33 +8,79 @@ import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes as HA
+import Http
+import Json.Decode as Decode exposing (Decoder, decodeString, field, float, int, map4, nullable, string)
+import Json.Decode.Pipeline exposing (required)
 
 
 main : Program Flags Model Msg
 main =
     Browser.element
         { init = init
-        , view = view
         , update = update
         , subscriptions = subscriptions
+        , view = view
         }
+
+
+
+-- TYPES
+
+
+type alias Model =
+    { toggle : Bool
+    , dir : Files
+    }
 
 
 type alias Flags =
     ()
 
 
-type alias Model =
-    { toggle : Bool }
+type alias Files =
+    { pwd : List String
+    , showHidden : Bool
+    , files : Maybe (List File)
+    }
+
+
+type alias File =
+    { name : String }
+
+
+
+-- INIT
+
+
+new_model : Model
+new_model =
+    { toggle = True
+    , dir =
+        { pwd = [ "~" ]
+        , showHidden = False
+        , files = Nothing
+        }
+    }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init _ =
-    ( { toggle = True }, Cmd.none )
+    let
+        m =
+            new_model
+    in
+    ( m, httpLoadFiles m )
+
+
+
+-- loadFiles model =
+--     model
+-- UPDATE
 
 
 type Msg
     = Toggle
+    | LoadedFiles (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -44,6 +90,33 @@ update msg model =
         Toggle ->
             ( { model | toggle = not model.toggle }, Cmd.none )
 
+        LoadedFiles result ->
+            -- TODO add rails response with  the files and convert the response later from string to sensible json
+            case result of
+                Ok fullText ->
+                    ( model, Cmd.none )
+
+                Err errMsg ->
+                    ( model, Cmd.none )
+
+
+
+-- let
+--     newDir =
+--         model.dir
+-- in
+-- ( { model | dir = newDir }, Cmd.none )
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
+
+
+
+-- VIEW
+
 
 view : Model -> Html Msg
 view model =
@@ -51,7 +124,8 @@ view model =
         []
         (Element.column []
             [ Element.text "Hello Elm-UI!"
-            , Element.text (Debug.toString model)
+
+            -- , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
                 , label = Input.labelRight [] (text "Switch colours")
@@ -135,11 +209,6 @@ white =
     rgb255 255 255 255
 
 
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
-
-
 myRowOfStuff : Model -> Element msg
 myRowOfStuff model =
     row [ width fill, centerY, spacing 30 ]
@@ -164,3 +233,20 @@ myElement model =
         , padding 30
         ]
         (Element.text "stylish!")
+
+
+
+-- ACTIONS
+
+
+httpLoadFiles model =
+    Http.get
+        { url = "http://localost:3000/load-files"
+
+        -- , expect = Http.expectJson LoadedFiles fileListDecoder
+        , expect = Http.expectString LoadedFiles
+        }
+
+
+fileListDecoder =
+    Debug.todo
