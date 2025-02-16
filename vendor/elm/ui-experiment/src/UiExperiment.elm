@@ -11,6 +11,7 @@ import Html.Attributes as HA
 import Http
 import Json.Decode as Decode exposing (Decoder, decodeString, field, float, int, map4, nullable, string)
 import Json.Decode.Pipeline exposing (required)
+import Json.Encode as Encode
 
 
 main : Program Flags Model Msg
@@ -73,22 +74,23 @@ init _ =
 
 
 
--- loadFiles model =
---     model
 -- UPDATE
 
 
 type Msg
     = Toggle
+    | LoadFiles
     | LoadedFiles (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    -- case Debug.log "msg" msg of
     case msg of
         Toggle ->
             ( { model | toggle = not model.toggle }, Cmd.none )
+
+        LoadFiles ->
+            Debug.todo
 
         LoadedFiles result ->
             -- TODO add rails response with  the files and convert the response later from string to sensible json
@@ -101,11 +103,6 @@ update msg model =
 
 
 
--- let
---     newDir =
---         model.dir
--- in
--- ( { model | dir = newDir }, Cmd.none )
 -- SUBSCRIPTIONS
 
 
@@ -240,8 +237,14 @@ myElement model =
 
 
 httpLoadFiles model =
-    Http.get
+    Http.post
         { url = "http://localost:3000/load-files"
+        , body =
+            Http.jsonBody
+                Encode.object
+                [ ( "name", Encode.string "Tom" )
+                , ( "age", Encode.int 42 )
+                ]
 
         -- , expect = Http.expectJson LoadedFiles fileListDecoder
         , expect = Http.expectString LoadedFiles
