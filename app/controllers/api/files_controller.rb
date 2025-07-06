@@ -15,6 +15,7 @@ class Api::FilesController < ApplicationController
       end
 
     render json: { pwd: dir.to_path,
+                   show_hidden: params['show_hidden'],
                    files: files_filtered }.to_json
   end
 end

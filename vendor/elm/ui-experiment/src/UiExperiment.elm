@@ -1,4 +1,4 @@
-module UiExperiment exposing (Model)
+module UiExperiment exposing (Files, Model)
 
 import Browser
 import Element exposing (Color, Element, alignRight, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, px, rgb255, row, spacing, text, width)
@@ -9,7 +9,7 @@ import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes as HA
 import Http
-import Json.Decode as Decode exposing (Decoder, decodeString, field, float, int, map4, nullable, string)
+import Json.Decode as Decode exposing (Decoder, bool, decodeString, field, float, int, list, map4, nullable, string)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 
@@ -39,14 +39,10 @@ type alias Flags =
 
 
 type alias Files =
-    { pwd : List String
+    { pwd : String
     , showHidden : Bool
-    , files : Maybe (List String)
+    , files : List String
     }
-
-
-type alias File =
-    { name : String }
 
 
 
@@ -57,9 +53,9 @@ new_model : Model
 new_model =
     { toggle = True
     , dir =
-        { pwd = [ "~" ]
+        { pwd = "~"
         , showHidden = False
-        , files = Nothing
+        , files = []
         }
     }
 
@@ -80,7 +76,7 @@ init _ =
 type Msg
     = Toggle
     | LoadFiles
-    | LoadedFiles (Result Http.Error String)
+    | LoadedFiles (Result Http.Error Files)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -93,15 +89,14 @@ update msg model =
             ( model, httpLoadFiles model )
 
         LoadedFiles result ->
-            -- TODO add rails response with  the files and convert the response later from string to sensible json
             case result of
                 Ok fullText ->
                     Debug.log (Debug.toString fullText)
                         ( { model
                             | dir =
-                                { pwd = [ "todo" ]
-                                , showHidden = False
-                                , files = Just [ fullText ]
+                                { pwd = fullText.pwd
+                                , showHidden = fullText.showHidden
+                                , files = fullText.files
                                 }
                           }
                         , Cmd.none
@@ -280,6 +275,7 @@ myElement model =
 -- ACTIONS
 
 
+httpLoadFiles : Model -> Cmd Msg
 httpLoadFiles model =
     Http.post
         { url = "http://localhost:3000/api/list-files"
@@ -290,16 +286,13 @@ httpLoadFiles model =
                     , ( "show_hidden", Encode.bool False )
                     ]
                 )
-
-        -- , expect = Http.expectJson LoadedFiles fileListDecoder
-        , expect = Http.expectString LoadedFiles
+        , expect = Http.expectJson LoadedFiles fileListDecoder
         }
 
 
+fileListDecoder : Decoder Files
 fileListDecoder =
-    Debug.todo "write decoder"
-
-
-
--- Decode.succeed
--- file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.elm::214
+    Decode.succeed Files
+        |> required "pwd" string
+        |> required "show_hidden" bool
+        |> required "files" (list string)
