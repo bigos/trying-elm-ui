@@ -7,6 +7,8 @@ file:~/Programming/Rails/trying-elm-ui/
 
 file:~/Programming/Rails/trying-elm-ui/config/routes.rb::1
 
+file:~/Programming/Rails/trying-elm-ui/app/controllers/
+
 ** view
 [[file:app/views/home/page.html.erb::<script src]]
 

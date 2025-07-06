@@ -256,4 +256,9 @@ httpLoadFiles model =
 
 
 fileListDecoder =
-    Debug.todo
+    Debug.todo "write decoder"
+
+
+
+-- Decode.succeed
+-- file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.elm::214
