@@ -1,7 +1,7 @@
 module UiExperiment exposing (Model)
 
 import Browser
-import Element exposing (Color, Element, alignRight, centerY, el, fill, height, htmlAttribute, inFront, moveRight, padding, px, rgb255, row, spacing, text, width)
+import Element exposing (Color, Element, alignRight, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, px, rgb255, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -92,7 +92,7 @@ update msg model =
         LoadFiles ->
             let
                 a =
-                    Debug.todo
+                    Debug.todo "implement load files"
             in
             ( model, Cmd.none )
 
@@ -121,10 +121,11 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    Element.layout
+    -- elm-ui layout
+    layout
         []
-        (Element.column []
-            [ Element.text "Hello Elm-UI!"
+        (column []
+            [ text "Hello Elm-UI!"
 
             -- , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|
@@ -141,8 +142,39 @@ view model =
                         }
                 }
             , myRowOfStuff model
+            , html (Html.hr [] [])
+            , Input.button
+                [ padding 10
+                , Border.width 3
+                , Border.rounded 6
+                , Border.color color.blue
+                , Background.color color.lightBlue
+                , Font.variant Font.smallCaps
+
+                -- The order of mouseDown/mouseOver can be significant when changing
+                -- the same attribute in both
+                , mouseDown
+                    [ Background.color color.blue
+                    , Border.color color.blue
+                    , Font.color color.white
+                    ]
+                , mouseOver
+                    [ Background.color color.white
+                    , Border.color color.lightGrey
+                    ]
+                ]
+                { onPress = Just LoadFiles, label = text "Load Files" }
             ]
         )
+
+
+color =
+    { blue = rgb255 0x72 0x9F 0xCF
+    , darkCharcoal = rgb255 0x2E 0x34 0x36
+    , lightBlue = rgb255 0xC5 0xE8 0xF7
+    , lightGrey = rgb255 0xE0 0xE0 0xE0
+    , white = rgb255 0xFF 0xFF 0xFF
+    }
 
 
 toggleCheckboxWidget : { offColor : Color, onColor : Color, sliderColor : Color, toggleWidth : Int, toggleHeight : Int } -> Bool -> Element msg
@@ -242,13 +274,14 @@ myElement model =
 
 httpLoadFiles model =
     Http.post
-        { url = "http://localost:3000/load-files"
+        { url = "http://localost:3000/api/list-files"
         , body =
             Http.jsonBody
-                Encode.object
-                [ ( "name", Encode.string "Tom" )
-                , ( "age", Encode.int 42 )
-                ]
+                (Encode.object
+                    [ ( "pwd", Encode.string "/home/jacek" )
+                    , ( "show_hidden", Encode.bool False )
+                    ]
+                )
 
         -- , expect = Http.expectJson LoadedFiles fileListDecoder
         , expect = Http.expectString LoadedFiles

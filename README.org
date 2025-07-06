@@ -18,6 +18,11 @@ file:~/Programming/Rails/trying-elm-ui/vendor/elm/ui-experiment/
 ** Elm documentation
 https://package.elm-lang.org/
 
+https://korban.net/elm/elm-ui-patterns/
+
+decoder example
+file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.elm::248
+
 ** restclient
 
 #+begin_src restclient
