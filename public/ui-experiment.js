@@ -12693,6 +12693,25 @@ var $author$project$UiExperiment$myRowOfStuff = function (model) {
 				$author$project$UiExperiment$myElement(model))
 			]));
 };
+var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
+var $mdgriffith$elm_ui$Element$paragraph = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asParagraph,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$Paragraph),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$spacing(5),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
 var $mdgriffith$elm_ui$Internal$Model$VariantActive = function (a) {
 	return {$: 'VariantActive', a: a};
 };
@@ -12881,8 +12900,14 @@ var $author$project$UiExperiment$view = function (model) {
 					}),
 					$mdgriffith$elm_ui$Element$html(
 					A2($elm$html$Html$hr, _List_Nil, _List_Nil)),
-					$mdgriffith$elm_ui$Element$text(
-					$elm$core$Debug$toString(model))
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(
+							$elm$core$Debug$toString(model))
+						]))
 				])));
 };
 var $author$project$UiExperiment$main = $elm$browser$Browser$element(

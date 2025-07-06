@@ -1,7 +1,7 @@
 module UiExperiment exposing (Files, Model)
 
 import Browser
-import Element exposing (Color, Element, alignRight, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, px, rgb255, row, spacing, text, width)
+import Element exposing (Color, Element, alignRight, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb255, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -166,7 +166,7 @@ view model =
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
             , html (Html.hr [] [])
-            , text (Debug.toString model)
+            , paragraph [] [ text (Debug.toString model) ]
             ]
         )
 
