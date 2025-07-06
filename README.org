@@ -1,3 +1,17 @@
 * README
 
 This is example Rails 8 app that uses Elm and elm-ui.
+
+** app
+file:~/Programming/Rails/trying-elm-ui/
+
+file:~/Programming/Rails/trying-elm-ui/config/routes.rb::1
+
+** view
+[[file:app/views/home/page.html.erb::<script src]]
+
+** elm folder
+file:~/Programming/Rails/trying-elm-ui/vendor/elm/ui-experiment/
+
+** Elm documentation
+https://package.elm-lang.org/
