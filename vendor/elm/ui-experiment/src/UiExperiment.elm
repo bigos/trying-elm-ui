@@ -41,7 +41,7 @@ type alias Flags =
 type alias Files =
     { pwd : List String
     , showHidden : Bool
-    , files : Maybe (List File)
+    , files : Maybe (List String)
     }
 
 
@@ -70,7 +70,7 @@ init _ =
         m =
             new_model
     in
-    ( m, httpLoadFiles m )
+    ( m, Cmd.none )
 
 
 
@@ -90,20 +90,26 @@ update msg model =
             ( { model | toggle = not model.toggle }, Cmd.none )
 
         LoadFiles ->
-            let
-                a =
-                    Debug.todo "implement load files"
-            in
-            ( model, Cmd.none )
+            ( model, httpLoadFiles model )
 
         LoadedFiles result ->
             -- TODO add rails response with  the files and convert the response later from string to sensible json
             case result of
                 Ok fullText ->
-                    ( model, Cmd.none )
+                    Debug.log (Debug.toString fullText)
+                        ( { model
+                            | dir =
+                                { pwd = [ "todo" ]
+                                , showHidden = False
+                                , files = Just [ fullText ]
+                                }
+                          }
+                        , Cmd.none
+                        )
 
                 Err errMsg ->
-                    ( model, Cmd.none )
+                    Debug.log (Debug.toString errMsg)
+                        ( model, Cmd.none )
 
 
 
@@ -164,6 +170,8 @@ view model =
                     ]
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
+            , html (Html.hr [] [])
+            , text (Debug.toString model)
             ]
         )
 
@@ -274,7 +282,7 @@ myElement model =
 
 httpLoadFiles model =
     Http.post
-        { url = "http://localost:3000/api/list-files"
+        { url = "http://localhost:3000/api/list-files"
         , body =
             Http.jsonBody
                 (Encode.object

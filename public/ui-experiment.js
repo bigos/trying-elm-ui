@@ -5371,6 +5371,26 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$UiExperiment$new_model = {
+	dir: {
+		files: $elm$core$Maybe$Nothing,
+		pwd: _List_fromArray(
+			['~']),
+		showHidden: false
+	},
+	toggle: true
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$UiExperiment$init = function (_v0) {
+	var m = $author$project$UiExperiment$new_model;
+	return _Utils_Tuple2(m, $elm$core$Platform$Cmd$none);
+};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$UiExperiment$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
 var $author$project$UiExperiment$LoadedFiles = function (a) {
 	return {$: 'LoadedFiles', a: a};
 };
@@ -6188,33 +6208,12 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 							$elm$json$Json$Encode$bool(false))
 						]))),
 			expect: $elm$http$Http$expectString($author$project$UiExperiment$LoadedFiles),
-			url: 'http://localost:3000/api/list-files'
+			url: 'http://localhost:3000/api/list-files'
 		});
 };
-var $author$project$UiExperiment$new_model = {
-	dir: {
-		files: $elm$core$Maybe$Nothing,
-		pwd: _List_fromArray(
-			['~']),
-		showHidden: false
-	},
-	toggle: true
-};
-var $author$project$UiExperiment$init = function (_v0) {
-	var m = $author$project$UiExperiment$new_model;
-	return _Utils_Tuple2(
-		m,
-		$author$project$UiExperiment$httpLoadFiles(m));
-};
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$UiExperiment$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
-var $elm$core$Debug$todo = _Debug_todo;
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6225,21 +6224,36 @@ var $author$project$UiExperiment$update = F2(
 						{toggle: !model.toggle}),
 					$elm$core$Platform$Cmd$none);
 			case 'LoadFiles':
-				var a = _Debug_todo(
-					'UiExperiment',
-					{
-						start: {line: 95, column: 21},
-						end: {line: 95, column: 31}
-					})('implement load files');
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					model,
+					$author$project$UiExperiment$httpLoadFiles(model));
 			default:
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var fullText = result.a;
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					return A2(
+						$elm$core$Debug$log,
+						$elm$core$Debug$toString(fullText),
+						_Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									dir: {
+										files: $elm$core$Maybe$Just(
+											_List_fromArray(
+												[fullText])),
+										pwd: _List_fromArray(
+											['todo']),
+										showHidden: false
+									}
+								}),
+							$elm$core$Platform$Cmd$none));
 				} else {
 					var errMsg = result.a;
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					return A2(
+						$elm$core$Debug$log,
+						$elm$core$Debug$toString(errMsg),
+						_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
 				}
 		}
 	});
@@ -12841,7 +12855,11 @@ var $author$project$UiExperiment$view = function (model) {
 					{
 						label: $mdgriffith$elm_ui$Element$text('Load Files'),
 						onPress: $elm$core$Maybe$Just($author$project$UiExperiment$LoadFiles)
-					})
+					}),
+					$mdgriffith$elm_ui$Element$html(
+					A2($elm$html$Html$hr, _List_Nil, _List_Nil)),
+					$mdgriffith$elm_ui$Element$text(
+					$elm$core$Debug$toString(model))
 				])));
 };
 var $author$project$UiExperiment$main = $elm$browser$Browser$element(
