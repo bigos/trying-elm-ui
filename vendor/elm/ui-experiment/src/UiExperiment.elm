@@ -90,7 +90,11 @@ update msg model =
             ( { model | toggle = not model.toggle }, Cmd.none )
 
         LoadFiles ->
-            Debug.todo
+            let
+                a =
+                    Debug.todo
+            in
+            ( model, Cmd.none )
 
         LoadedFiles result ->
             -- TODO add rails response with  the files and convert the response later from string to sensible json
