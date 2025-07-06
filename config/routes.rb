@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post "api/list-files" => "api/files#list"
+
   get "home/page"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
