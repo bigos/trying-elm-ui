@@ -29,5 +29,5 @@ https://package.elm-lang.org/
   POST http://localhost:3000/api/list-files
   Content-Type: application/json
 
-  {"pwd":"/","show_hidden":true}
+  {"pwd":"/home/jacek/","show_hidden":true}
 #+end_src
