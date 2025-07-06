@@ -17,3 +17,26 @@ file:~/Programming/Rails/trying-elm-ui/vendor/elm/ui-experiment/
 
 ** Elm documentation
 https://package.elm-lang.org/
+
+** restclient
+
+#+begin_src restclient
+  GET http://localhost:3000/
+#+end_src
+
+
+#+begin_src restclient
+    POST http://localhost:3000/api/list-files
+    Content-Type: application/json
+
+  {
+          "jql": "project = HCPUB",
+          "startAt": 0,
+          "maxResults": 15,
+          "fields": [
+                  "summary",
+                  "status",
+                  "assignee"
+          ]
+  }
+#+end_src
