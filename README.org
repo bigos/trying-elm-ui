@@ -36,3 +36,17 @@ file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.e
 
   {"pwd":"/home/jacek/","show_hidden":false}
 #+end_src
+
+** Purescript
+We have example of incorporating a PureScript app in rails view
+
+[[file:app/views/pure_script/show.html.erb::js_filename = 'index.js']]
+
+On PureScript side we compile the app: ~npm run build-prod~
+and then we link it on rails side
+
+#+begin_example
+  cd ~/Programming/Rails/trying-elm-ui/public/
+  rm ./index.js
+  ln -s /home/jacek/Programming/Pyrulis/Purescript/halogen/counter/prod/index.js ./index.js
+#+end_example
