@@ -2,8 +2,14 @@
 <p>Find me in app/views/pure_script/show.html.erb</p>
 
 <p>
-  ln -s /home/jacek/Programming/Pyrulis/Purescript/halogen/counter/prod/index.js ./index.js
+  We need to link the index.js file from the PureScript app to the public folder of the Rails app
 </p>
+
+<pre>
+  cd ~/Programming/Rails/trying-elm-ui/public/
+  rm ./index.js
+  ln -s /home/jacek/Programming/Pyrulis/Purescript/halogen/counter/prod/index.js ./index.js
+</pre>
 
 
 <%
