@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "pure_script/show"
   post "api/list-files" => "api/files#list"
 
   get "home/page"

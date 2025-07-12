@@ -21,8 +21,14 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
   <body>
+    <div>
+      <a href="/">Home Elm</a>
+      |
+      <a href="/pure_script/show">Purescript</a>
+
+    </div>
+
     <%= yield %>
   </body>
 </html>
