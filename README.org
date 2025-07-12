@@ -29,12 +29,17 @@ file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.e
   GET http://localhost:3000/
 #+end_src
 
-
 #+begin_src restclient
   POST http://localhost:3000/api/list-files
   Content-Type: application/json
 
   {"pwd":"/home/jacek/","show_hidden":false}
+#+end_src
+
+#+begin_src restclient
+  GET http://localhost:3000/api/get-files?pwd=/home/jacek/&show_hidden=true
+  Content-Type: application/json
+
 #+end_src
 
 ** Purescript

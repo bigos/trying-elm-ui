@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get "pure_script/show"
+
   post "api/list-files" => "api/files#list"
+  #  second example for clarity
+  get  "api/get-files"  => "api/files#get"
 
   get "home/page"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
