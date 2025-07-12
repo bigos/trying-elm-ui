@@ -45,6 +45,8 @@ We have example of incorporating a PureScript app in rails view
 On PureScript side we compile the app: ~npm run build-prod~
 and then we link it on rails side
 
+https://github.com/bigos/Pyrulis/blob/master/Purescript/halogen/counter/src/App/Counter.purs
+
 #+begin_example
   cd ~/Programming/Rails/trying-elm-ui/public/
   rm ./index.js
