@@ -10,7 +10,7 @@ file:~/Programming/Rails/trying-elm-ui/config/routes.rb::1
 file:~/Programming/Rails/trying-elm-ui/app/controllers/
 
 ** view
-[[file:app/views/home/page.html.erb::<script src]]
+file:~/Programming/Rails/trying-elm-ui/app/views/home/page.html.erb::1
 
 ** elm folder
 file:~/Programming/Rails/trying-elm-ui/vendor/elm/ui-experiment/
