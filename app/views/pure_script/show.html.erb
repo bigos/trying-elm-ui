@@ -15,9 +15,8 @@
 <%
 js_filename = 'index.js'
 js_file = File.join(Rails.root, 'public', js_filename)
+# prepare my own fingerprinting
 js_mtime =File.mtime(js_file).to_i
-
-flag_data = { a: 1, be: "2", base_url: request.base_url }
 %>
 
 <script src=<%=  "/#{js_filename}?#{js_mtime}" %> type="module">
