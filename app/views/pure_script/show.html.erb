@@ -1,2 +1,18 @@
 <h1>PureScript#show</h1>
 <p>Find me in app/views/pure_script/show.html.erb</p>
+
+<p>
+  ln -s /home/jacek/Programming/Pyrulis/Purescript/halogen/counter/prod/index.js ./index.js
+</p>
+
+
+<%
+js_filename = 'index.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+js_mtime =File.mtime(js_file).to_i
+
+flag_data = { a: 1, be: "2", base_url: request.base_url }
+%>
+
+<script src=<%=  "/#{js_filename}?#{js_mtime}" %> type="module">
+</script>
