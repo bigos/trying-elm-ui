@@ -23,9 +23,10 @@
   </head>
   <body>
     <div>
-      <a href="/">Home Elm</a>
+
+      <%= link_to 'Home Elm', '/', data: {turbo: false} %>
       |
-      <a href="/pure_script/show">Purescript</a>
+      <%= link_to 'PureScript', '/pure_script/show', data: {turbo: false} %>
 
     </div>
 

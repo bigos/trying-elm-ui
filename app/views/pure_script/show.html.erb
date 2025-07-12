@@ -19,5 +19,4 @@ js_file = File.join(Rails.root, 'public', js_filename)
 js_mtime =File.mtime(js_file).to_i
 %>
 
-<script src=<%=  "/#{js_filename}?#{js_mtime}" %> type="module">
-</script>
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module' %>
