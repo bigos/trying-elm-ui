@@ -57,3 +57,10 @@ https://github.com/bigos/Pyrulis/blob/master/Purescript/halogen/counter/src/App/
   rm ./index.js
   ln -s /home/jacek/Programming/Pyrulis/Purescript/halogen/counter/prod/index.js ./index.js
 #+end_example
+
+** temporary notes
+file:~/Programming/Rails/trying-elm-ui/config/routes.rb::1
+file:~/Programming/Rails/trying-elm-ui/app/controllers/pure_script_controller.rb::1
+
+file:~/Programming/Rails/trying-elm-ui/app/views/layouts/application.html.erb::1
+file:~/Programming/Rails/trying-elm-ui/app/views/pure_script/

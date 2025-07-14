@@ -1,0 +1,21 @@
+<h1>PureScript#show</h1>
+<p>Find me in app/views/pure_script/show_flame.html.erb</p>
+
+<p>
+  We need to link the index.js file from the PureScript app to the public folder of the Rails app
+</p>
+
+<pre>
+  cd ~/Programming/Rails/trying-elm-ui/public/
+  cp -v /home/jacek/Programming/Pyrulis/Purescript/flame/counter/prod/index.js ./index_flame.js
+</pre>
+
+
+<%
+js_filename = 'index_flame.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+# prepare my own fingerprinting
+js_mtime =File.mtime(js_file).to_i
+%>
+
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module' %>
