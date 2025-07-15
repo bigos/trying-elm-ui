@@ -67,3 +67,6 @@ file:~/Programming/Rails/trying-elm-ui/app/controllers/pure_script_controller.rb
 
 file:~/Programming/Rails/trying-elm-ui/app/views/layouts/application.html.erb::1
 file:~/Programming/Rails/trying-elm-ui/app/views/pure_script/
+
+this may be the answer for elm like div in halogen
+https://pursuit.purescript.org/packages/purescript-halogen/7.0.0/docs/Halogen.Aff.Util#v:awaitBody
