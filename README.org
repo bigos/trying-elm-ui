@@ -2,6 +2,9 @@
 
 This is example Rails 8 app that uses Elm and elm-ui.
 
+Important find about colors liminance
+https://www.w3.org/TR/WCAG20-TECHS/G17.html
+
 ** Rails
 https://ruby-doc.org/3.4.1/
 
