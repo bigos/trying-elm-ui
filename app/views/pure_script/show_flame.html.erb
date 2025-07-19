@@ -22,4 +22,4 @@ js_file = File.join(Rails.root, 'public', js_filename)
 js_mtime =File.mtime(js_file).to_i
 %>
 
-<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module' %>
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module', id: 'flame_flags', :'data-counter-start' => '12' %>
