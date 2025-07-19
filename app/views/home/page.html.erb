@@ -11,7 +11,10 @@ js_filename = 'ui-experiment.js'
 js_file = File.join(Rails.root, 'public', js_filename)
 js_mtime =File.mtime(js_file).to_i
 
-flag_data = { a: 1, be: "2", base_url: request.base_url }
+flag_data = {base_url: request.base_url,
+             logname:  ENV['LOGNAME'],
+             home:  ENV['HOME'],
+             showHidden: false}
 %>
 <script src="<%= "#{js_filename}?#{js_mtime}" %>"></script>
 <script>

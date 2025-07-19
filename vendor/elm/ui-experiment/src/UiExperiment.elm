@@ -30,12 +30,17 @@ main =
 
 type alias Model =
     { toggle : Bool
-    , dir : Files
+    , dirs : Dirs
+    , flags : Flags
     }
 
 
 type alias Flags =
-    ()
+    { base_url : String
+    , logname : String
+    , home : String
+    , showHidden : Bool
+    }
 
 
 type alias Files =
@@ -45,26 +50,29 @@ type alias Files =
     }
 
 
+type alias Dirs =
+    { leftDir : Maybe Files
+    , rightDir : Maybe Files
+    }
+
+
 
 -- INIT
 
 
-new_model : Model
-new_model =
+new_model : Flags -> Model
+new_model flags =
     { toggle = True
-    , dir =
-        { pwd = "~"
-        , showHidden = False
-        , files = []
-        }
+    , dirs = buildOnlyLeftDir { pwd = flags.home, showHidden = False, files = [] }
+    , flags = flags
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
-init _ =
+init flags =
     let
         m =
-            new_model
+            new_model flags
     in
     ( m, Cmd.none )
 
@@ -93,11 +101,8 @@ update msg model =
                 Ok fullText ->
                     Debug.log (Debug.toString fullText)
                         ( { model
-                            | dir =
-                                { pwd = fullText.pwd
-                                , showHidden = fullText.showHidden
-                                , files = fullText.files
-                                }
+                            | dirs =
+                                buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
                           }
                         , Cmd.none
                         )
@@ -105,6 +110,27 @@ update msg model =
                 Err errMsg ->
                     Debug.log (Debug.toString errMsg)
                         ( model, Cmd.none )
+
+
+buildOnlyLeftDir : Files -> Dirs
+buildOnlyLeftDir dir =
+    { leftDir = Just dir
+    , rightDir = Nothing
+    }
+
+
+buildOnlyRightDir : Files -> Dirs
+buildOnlyRightDir dir =
+    { leftDir = Nothing
+    , rightDir = Just dir
+    }
+
+
+buildBothDirs : Files -> Files -> Dirs
+buildBothDirs dirLeft dirRight =
+    { leftDir = Just dirLeft
+    , rightDir = Just dirRight
+    }
 
 
 
