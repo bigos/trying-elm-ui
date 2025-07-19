@@ -63,7 +63,7 @@ type alias Dirs =
 new_model : Flags -> Model
 new_model flags =
     { toggle = True
-    , dirs = buildOnlyLeftDir { pwd = flags.home, showHidden = False, files = [] }
+    , dirs = { leftDir = Nothing, rightDir = Nothing }
     , flags = flags
     }
 
@@ -157,7 +157,7 @@ view model =
             -- , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
-                , label = Input.labelRight [] (text "Switch colours")
+                , label = Input.labelRight [] (text "Switch Toggle")
                 , checked = model.toggle
                 , icon =
                     toggleCheckboxWidget
@@ -168,7 +168,7 @@ view model =
                         , toggleHeight = 28
                         }
                 }
-            , myRowOfStuff model
+            , el [] (text "----------------------")
             , html (Html.hr [] [])
             , Input.button
                 [ padding 10
@@ -191,7 +191,6 @@ view model =
                     ]
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
-            , html (Html.hr [] [])
             , paragraph [] [ text (Debug.toString model) ]
             ]
         )
@@ -269,15 +268,6 @@ green =
 white : Color
 white =
     rgb255 255 255 255
-
-
-myRowOfStuff : Model -> Element msg
-myRowOfStuff model =
-    row [ width fill, centerY, spacing 30 ]
-        [ myElement model
-        , myElement model
-        , el [ alignRight ] (myElement model)
-        ]
 
 
 myElement : Model -> Element msg
