@@ -25,10 +25,15 @@ type Model =
   { url ∷ String
   , result ∷ Result
   , counter :: Int
+  , flags :: Flags
   }
 
 type Flags =
   { counter_start :: Maybe String
+  , base_url :: Maybe String
+  , logname :: Maybe String
+  , home :: Maybe String
+  , show_hidden :: Maybe String
   }
 
 data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags
@@ -42,6 +47,13 @@ init =
   { url: "https://httpbin.org/get"
   , result: NotFetched
   , counter: 0
+  , flags:
+      { counter_start: Nothing
+      , base_url: Nothing
+      , logname: Nothing
+      , home: Nothing
+      , show_hidden: Nothing
+      }
   }
 
 flagsCounter :: Flags -> Int
@@ -62,6 +74,7 @@ update { display, model, message } =
       { url: model.url
       , result: model.result
       , counter: flagsCounter flags
+      , flags: flags
       }
     UpdateUrl url → FAE.diff
       { url, result: NotFetched }
@@ -131,6 +144,8 @@ main = do
       buildFlags =
         ( { counter_start: _ }
             <$> getAttribute "data-counter-start" element
-            <*> getAttribute "data-counter-start" element
-
+            <*> getAttribute "data-base_url" element
+            <*> getAttribute "data-logname" element
+            <*> getAttribute "data-home" element
+            <*> getAttribute "data-show_hidden" element
         )
