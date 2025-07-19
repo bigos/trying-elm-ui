@@ -1,7 +1,7 @@
 module UiExperiment exposing (Files, Model)
 
 import Browser
-import Element exposing (Color, Element, alignRight, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb255, row, spacing, text, width)
+import Element exposing (Color, Element, alignRight, alignTop, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -146,6 +146,58 @@ subscriptions _ =
 -- VIEW
 
 
+my_border =
+    [ Border.width 1, Border.color color.blue ]
+
+
+file_panel : Model -> String -> Element msg
+file_panel model lr =
+    let
+        lrdir =
+            if lr == "left" then
+                model.dirs.leftDir
+
+            else
+                model.dirs.rightDir
+    in
+    column
+        ([ alignTop ]
+            ++ my_border
+        )
+        [ case lrdir of
+            Nothing ->
+                el ([ Background.color color.lightBlue ] ++ my_border) (text ("toolbar " ++ lr))
+
+            Just files ->
+                el ([ Background.color color.lightBlue ] ++ my_border) (text files.pwd)
+        , case lrdir of
+            Nothing ->
+                el my_border (text "No files")
+
+            Just files ->
+                panel_files model files
+        ]
+
+
+file_panel_left : Model -> Element msg
+file_panel_left model =
+    file_panel model "left"
+
+
+file_panel_right : Model -> Element msg
+file_panel_right model =
+    file_panel model "right"
+
+
+panel_files : Model -> Files -> Element msg
+panel_files model files =
+    column []
+        (List.map
+            (\x -> el [] (text x))
+            (List.sort files.files)
+        )
+
+
 view : Model -> Html Msg
 view model =
     -- elm-ui layout
@@ -168,8 +220,17 @@ view model =
                         , toggleHeight = 28
                         }
                 }
-            , el [] (text "----------------------")
-            , html (Html.hr [] [])
+            , el [ padding 20 ]
+                (column
+                    ([ alignTop ] ++ my_border)
+                    [ el [] (text "general toolbar")
+                    , row my_border
+                        [ file_panel_left model
+                        , file_panel_right model
+                        ]
+                    , el ([ Background.color (rgb 0.5 0.5 0.5) ] ++ my_border) (text "status")
+                    ]
+                )
             , Input.button
                 [ padding 10
                 , Border.width 3
