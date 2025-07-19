@@ -131,5 +131,6 @@ main = do
       buildFlags =
         ( { counter_start: _ }
             <$> getAttribute "data-counter-start" element
+            <*> getAttribute "data-counter-start" element
 
         )

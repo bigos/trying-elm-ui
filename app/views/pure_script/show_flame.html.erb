@@ -20,6 +20,14 @@ js_filename = 'index_flame.js'
 js_file = File.join(Rails.root, 'public', js_filename)
 # prepare my own fingerprinting
 js_mtime =File.mtime(js_file).to_i
+
+flags = {
+  'counter-start' => '12',
+  'base_url' => request.base_url,
+  'logname' => ENV['LOGNAME'],
+  'home'  => ENV['HOME'],
+  'show_hidden' => false
+        }
 %>
 
-<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module', id: 'flame_flags', :'data-counter-start' => '12' %>
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module', id: 'flame_flags', data: flags  %>
