@@ -23,4 +23,4 @@ js_file = File.join(Rails.root, 'public', js_filename)
 js_mtime =File.mtime(js_file).to_i
 %>
 
-<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module' %>
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", type: 'module', id: 'script_with_flags', :'data-my-app--api-endpoint'=> "https://example.com/", :'data-my-app--api-key' => '123456', :'data-my-app--count-start' => 7 %>
