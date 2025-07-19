@@ -4,7 +4,7 @@ SOURCE_FOLDER = __dir__
 
 
 puts "running script in #{SOURCE_FOLDER}"
-puts "to copy the JS files to the destination folder: ./public/"
+puts "to link the JS files to the destination folder: ./public/"
 
 `rm -v ./public/index_halogen.js`
 `ln -s #{SOURCE_FOLDER}/vendor/purescript/halogen/counter/prod/index.js  ./public/index_halogen.js`
