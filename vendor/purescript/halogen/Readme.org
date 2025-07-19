@@ -1,0 +1,36 @@
+* Readme
+
+Repo
+https://github.com/purescript-halogen
+https://github.com/purescript-halogen/purescript-halogen
+
+template for starting projects
+https://github.com/purescript-halogen/purescript-halogen-template
+
+Guides
+https://purescript-halogen.github.io/purescript-halogen/index.html
+
+https://github.com/thomashoneyman/purescript-halogen-realworld
+
+https://github.com/JordanMartinez/learn-halogen
+
+Affjax example
+https://pursuit.purescript.org/packages/purescript-affjax/12.0.0
+
+https://purescript-halogen.github.io/purescript-halogen/guide/03-Performing-Effects.html#an-aff-example-http-requests
+
+get example
+https://github.com/purescript-halogen/purescript-halogen/blob/master/docs/guide/03-Performing-Effects.md#an-aff-example-http-requests
+
+Pursuit
+https://pursuit.purescript.org/packages/purescript-halogen/2.0.0/docs/Halogen
+
+For Halogen production build we need
+#+begin_example
+npm install --save-exact --save-dev esbuild
+#+end_example
+
+solution to the handleAction signature problem
+https://github.com/purescript-halogen/purescript-halogen/blob/master/docs/guide/03-Performing-Effects.md#the-halogenm-type
+
+https://github.com/purescript-halogen/purescript-halogen/tree/master/docs/guide
