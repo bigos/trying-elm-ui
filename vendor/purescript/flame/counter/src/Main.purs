@@ -10,11 +10,12 @@ import Data.Int (fromString)
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Exception (throw)
-import Flame (QuerySelector(..), Html, (:>))
+import Flame (QuerySelector(..))
 import Flame.Application.Effectful (AffUpdate)
 import Flame.Application.Effectful as FAE
 import Flame.Html.Attribute as HA
 import Flame.Html.Element as HE
+import Flame.Types (Html, NodeData, (:>))
 import Web.DOM.Element (getAttribute)
 import Web.DOM.NonElementParentNode (getElementById)
 import Web.HTML (window)
@@ -128,15 +129,22 @@ view { url, result, counter, flags } = HE.main "main"
   , HE.p_ (show flags)
   ]
 
+names :: Array String
 names = [ "Ala", "ma", "kota" ]
 
+panel :: forall h. String -> Array (Html h)
 panel side =
   [ HE.div_ (side <> " toolbar")
   , HE.div_ "boo"
   ] <> (map (\n -> HE.div_ n) names)
 
+da_border_red :: forall t. Array (NodeData t)
 da_border_red = [ HA.styleAttr ("border: solid red 1px") ]
+
+da_border_green :: forall t. Array (NodeData t)
 da_border_green = [ HA.styleAttr ("border: solid green 1px") ]
+
+da_border_blue :: forall t. Array (NodeData t)
 da_border_blue = [ HA.styleAttr ("border: solid blue 1px") ]
 
 main ∷ Effect Unit
