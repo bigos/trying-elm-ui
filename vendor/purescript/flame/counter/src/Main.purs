@@ -94,6 +94,7 @@ update { display, model, message } =
         Right payload → Ok payload.body
     FetchFiles -> do
       display $ FAE.diff' { resulFiles: FetchingFile }
+      -- https://github.com/JordanMartinez/purescript-cookbook/blob/d6256a70d609fabeb3674dad62fb4d436895b1c6/recipes/AffjaxPostNode/src/Main.purs#L46
       response <- A.post AR.json
         ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
         ( Just (AR.json { pwd: "/home/jacek", show_hidden: false })
