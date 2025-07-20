@@ -117,9 +117,27 @@ view { url, result, counter, flags } = HE.main "main"
         HE.pre_ <<< HE.code_ $ "Ok: " <> ok
       Error error →
         HE.div_ $ "Error: " <> error
+  , HE.div (da_border_red)
+      [ HE.div (da_border_green) "general toolbar"
+      , HE.div [ HA.styleAttr "display: inline-flex" ]
+          [ HE.div da_border_red (panel "left")
+          , HE.div da_border_green (panel "right")
+          ]
+      ]
   , HE.h3_ "flags"
   , HE.p_ (show flags)
   ]
+
+names = [ "Ala", "ma", "kota" ]
+
+panel side =
+  [ HE.div_ (side <> " toolbar")
+  , HE.div_ "boo"
+  ] <> (map (\n -> HE.div_ n) names)
+
+da_border_red = [ HA.styleAttr ("border: solid red 1px") ]
+da_border_green = [ HA.styleAttr ("border: solid green 1px") ]
+da_border_blue = [ HA.styleAttr ("border: solid blue 1px") ]
 
 main ∷ Effect Unit
 main = do
