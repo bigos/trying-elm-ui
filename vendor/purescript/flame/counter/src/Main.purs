@@ -93,7 +93,7 @@ bgColor :: Int -> String
 bgColor counter = if counter < 0 then "red" else "lime"
 
 view ∷ Model → Html Message
-view { url, result, counter } = HE.main "main"
+view { url, result, counter, flags } = HE.main "main"
   [ HE.button [ HA.onClick Decrement ] "-"
   , HE.span
       [ HA.styleAttr
@@ -117,6 +117,8 @@ view { url, result, counter } = HE.main "main"
         HE.pre_ <<< HE.code_ $ "Ok: " <> ok
       Error error →
         HE.div_ $ "Error: " <> error
+  , HE.h3_ "flags"
+  , HE.p_ (show flags)
   ]
 
 main ∷ Effect Unit
@@ -142,10 +144,10 @@ main = do
       where
       buildFlags :: Effect Flags
       buildFlags =
-        ( { counter_start: _ }
+        ( { counter_start: _, base_url: _, logname: _, home: _, show_hidden: _ }
             <$> getAttribute "data-counter-start" element
-            <*> getAttribute "data-base_url" element
+            <*> getAttribute "data-base-url" element
             <*> getAttribute "data-logname" element
             <*> getAttribute "data-home" element
-            <*> getAttribute "data-show_hidden" element
+            <*> getAttribute "data-show-hidden" element
         )
