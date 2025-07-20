@@ -1,13 +1,13 @@
 -- | Counter example using side effects free updating
 module Main where
 
+import Data.List
 import Prelude
 
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List
 import Data.Maybe (Maybe(..), fromMaybe)
 import Effect (Effect)
 import Effect.Exception (throw)
@@ -31,6 +31,7 @@ type Model =
   , counter :: Int
   , flags :: Flags
   , dirs :: Dirs
+  , resultFiles :: ResultFiles
   }
 
 type Flags =
@@ -45,9 +46,12 @@ type Files = { pwd :: String, showHidden :: Boolean, files :: List String }
 
 type Dirs = { leftDir :: Maybe Files, rightDir :: Maybe Files }
 
-data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags
+type FetchingFilePost = { pwd :: String, show_hidden :: Boolean }
+
+data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags | FetchFiles
 
 data Result = NotFetched | Fetching | Ok String | Error String
+data ResultFiles = NotFetchedFile | FetchingFile | OkFile String | ErrorFile String
 
 derive instance eqResult ∷ Eq Result
 
@@ -66,6 +70,7 @@ init =
       , show_hidden: Nothing
       }
   , dirs: { leftDir: Nothing, rightDir: Nothing }
+  , resultFiles: NotFetchedFile
   }
 
 -- *UPDATE --
@@ -87,6 +92,15 @@ update { display, model, message } =
       FAE.diff <<< { result: _ } $ case response of
         Left error → Error $ A.printError error
         Right payload → Ok payload.body
+    FetchFiles -> do
+      display $ FAE.diff' { resulFiles: FetchingFile }
+      response <- A.post AR.json
+        ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
+        ( Just (AR.json { pwd: "/home/jacek", show_hidden: false })
+        )
+      FAE.diff <<< { resultFiles: _ } $ case response of
+        Left error -> Error $ A.printError error
+        Right payload -> OkFile payload.body
     Increment -> FAE.diff
       { url: model.url, result: model.result, counter: model.counter + 1 }
     Decrement -> FAE.diff
