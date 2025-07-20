@@ -143,7 +143,7 @@ panel :: forall h. String -> Array (Html h)
 panel side =
   [ HE.div da_border_blue (side <> " toolbar")
   , HE.div_ "boo"
-  ] <> (map (\n -> HE.div_ n) names)
+  ] <> (map (\n -> HE.div_ n) names) <> [ HE.div ([ HA.styleAttr "background: yellow" ] <> da_border_blue) (side <> " status") ]
 
 da_border_red :: forall t. Array (NodeData t)
 da_border_red = [ HA.styleAttr ("border: solid red 1px") ]
