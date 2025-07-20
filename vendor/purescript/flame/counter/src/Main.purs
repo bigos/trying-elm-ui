@@ -7,7 +7,8 @@ import Affjax.ResponseFormat as AR
 import Affjax.Web as A
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.Maybe (Maybe(..))
+import Data.List
+import Data.Maybe (Maybe(..), fromMaybe)
 import Effect (Effect)
 import Effect.Exception (throw)
 import Flame (QuerySelector(..))
@@ -22,11 +23,14 @@ import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
 
+-- *TYPES --
+
 type Model =
   { url ∷ String
   , result ∷ Result
   , counter :: Int
   , flags :: Flags
+  , dirs :: Dirs
   }
 
 type Flags =
@@ -37,11 +41,17 @@ type Flags =
   , show_hidden :: Maybe String
   }
 
+type Files = { pwd :: String, showHidden :: Boolean, files :: List String }
+
+type Dirs = { leftDir :: Maybe Files, rightDir :: Maybe Files }
+
 data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags
 
 data Result = NotFetched | Fetching | Ok String | Error String
 
 derive instance eqResult ∷ Eq Result
+
+-- *INIT --
 
 init ∷ Model
 init =
@@ -55,18 +65,10 @@ init =
       , home: Nothing
       , show_hidden: Nothing
       }
+  , dirs: { leftDir: Nothing, rightDir: Nothing }
   }
 
-flagsCounter :: Flags -> Int
-flagsCounter flags =
-  ( case flags.counter_start of
-      Nothing -> (-10)
-      Just flag2 ->
-        ( case (fromString flag2) of
-            Nothing -> (-5)
-            Just val -> val
-        )
-  )
+-- *UPDATE --
 
 update ∷ AffUpdate Model Message
 update { display, model, message } =
@@ -90,6 +92,11 @@ update { display, model, message } =
     Decrement -> FAE.diff
       { url: model.url, result: model.result, counter: model.counter - 1 }
 
+flagsCounter :: Flags -> Int
+flagsCounter flags =
+  fromMaybe (-5) (fromString (fromMaybe "" flags.counter_start))
+
+-- *VIEW --
 bgColor :: Int -> String
 bgColor counter = if counter < 0 then "red" else "lime"
 
@@ -147,6 +154,7 @@ da_border_green = [ HA.styleAttr ("border: solid green 1px") ]
 da_border_blue :: forall t. Array (NodeData t)
 da_border_blue = [ HA.styleAttr ("border: solid blue 1px") ]
 
+-- *MAIN --
 main ∷ Effect Unit
 main = do
   let outputTag = "#flame"

@@ -30,8 +30,8 @@ main =
 
 type alias Model =
     { toggle : Bool
-    , dirs : Dirs
     , flags : Flags
+    , dirs : Dirs
     }
 
 
