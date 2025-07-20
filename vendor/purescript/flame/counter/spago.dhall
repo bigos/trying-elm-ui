@@ -8,6 +8,7 @@
   , "exceptions"
   , "flame"
   , "integers"
+  , "lists"
   , "maybe"
   , "prelude"
   , "web-dom"

@@ -141,7 +141,7 @@ names = [ "Ala", "ma", "kota" ]
 
 panel :: forall h. String -> Array (Html h)
 panel side =
-  [ HE.div_ (side <> " toolbar")
+  [ HE.div da_border_blue (side <> " toolbar")
   , HE.div_ "boo"
   ] <> (map (\n -> HE.div_ n) names)
 
