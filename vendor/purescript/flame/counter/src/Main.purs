@@ -1,6 +1,8 @@
 -- | Counter example using side effects free updating
 module Main where
 
+import Data.Argonaut.Decode.Class
+import Data.Argonaut.Encode.Class
 import Data.List
 import Prelude
 
@@ -8,8 +10,6 @@ import Affjax.ResponseFormat as AR
 import Affjax.Web as A
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError)
-import Data.Argonaut.Encode.Class
-import Data.Argonaut.Decode.Class
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
@@ -110,9 +110,11 @@ update { display, model, message } =
             ( Just
                 ( AR.json
                     ( fetchingFilePostToJson
-                        { pwd: "/home/jacek/"
-                        , show_hidden: false
-                        }
+                        ( -- FetchingFilePost "/home/jacek/" false
+                          { pwd: "/home/jacek/"
+                          , show_hidden: false
+                          }
+                        )
                     )
                 )
             )
