@@ -6,6 +6,10 @@ import Prelude
 
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
+import Data.Argonaut.Core (Json)
+import Data.Argonaut.Decode.Error (JsonDecodeError)
+import Data.Argonaut.Encode.Class
+import Data.Argonaut.Decode.Class
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
