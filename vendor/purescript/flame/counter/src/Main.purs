@@ -1,19 +1,20 @@
 -- | Counter example using side effects free updating
 module Main where
 
-import Data.Argonaut.Decode.Class
-import Data.Argonaut.Encode.Class
-import Data.List
 import Prelude
 
+import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
+import Data.Argonaut
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError)
 import Data.Either (Either(..))
 import Data.Int (fromString)
+import Data.List
 import Data.Maybe (Maybe(..), fromMaybe)
 import Effect (Effect)
+import Effect.Aff (launchAff_)
 import Effect.Exception (throw)
 import Flame (QuerySelector(..))
 import Flame.Application.Effectful (AffUpdate)
@@ -46,11 +47,18 @@ type Flags =
   , show_hidden :: Maybe String
   }
 
-type Files = { pwd :: String, showHidden :: Boolean, files :: List String }
+type Files =
+  { pwd :: String
+  , show_hidden :: Boolean
+  , files :: List String
+  }
 
 type Dirs = { leftDir :: Maybe Files, rightDir :: Maybe Files }
 
-type FetchingFilePost = { pwd :: String, show_hidden :: Boolean }
+type FetchingFilePost =
+  { pwd :: String
+  , show_hidden :: Boolean
+  }
 
 data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags | FetchFiles
 
@@ -104,21 +112,15 @@ update { display, model, message } =
         Right payload → Ok payload.body
     FetchFiles -> do
       display $ FAE.diff' { resulFiles: FetchingFile }
-      -- https://github.com/JordanMartinez/purescript-cookbook/blob/d6256a70d609fabeb3674dad62fb4d436895b1c6/recipes/AffjaxPostNode/src/Main.purs#L46
       response <-
         ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
             ( Just
-                ( AR.json
+                ( json
                     ( fetchingFilePostToJson
-                        ( -- FetchingFilePost "/home/jacek/" false
-                          { pwd: "/home/jacek/"
-                          , show_hidden: false
-                          }
-                        )
+                        ({ pwd: "/home/jacek/", show_hidden: false })
                     )
                 )
             )
-
         )
       FAE.diff <<< { resultFiles: _ } $ case response of
         Left error -> Error $ A.printError error

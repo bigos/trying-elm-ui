@@ -2,6 +2,7 @@
 , dependencies =
   [ "affjax"
   , "affjax-web"
+  , "argonaut"
   , "console"
   , "effect"
   , "either"
