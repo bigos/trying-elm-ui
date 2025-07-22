@@ -111,7 +111,7 @@ update { display, model, message } =
         Left error → Error $ A.printError error
         Right payload → Ok payload.body
     FetchFiles -> do
-      display $ FAE.diff' { resulFiles: FetchingFile }
+      --display $ FAE.diff' { resulFiles: FetchingFile }
       response <-
         ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
             ( Just
@@ -129,7 +129,7 @@ update { display, model, message } =
           , counter: model.counter
           , flags: model.flags
           , dirs: model.dirs
-          , resultFiles: (ErrorFile (show error))
+          , resultFiles: (ErrorFile (A.printError error))
           }
 
         Right payload ->
