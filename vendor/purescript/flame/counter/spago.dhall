@@ -1,8 +1,11 @@
 { name = "counter"
 , dependencies =
-  [ "affjax"
+  [ "aff"
+  , "affjax"
   , "affjax-web"
   , "argonaut"
+  , "argonaut-codecs"
+  , "argonaut-core"
   , "console"
   , "effect"
   , "either"

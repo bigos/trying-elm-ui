@@ -3,6 +3,7 @@ module Main where
 
 import Data.Argonaut
 import Data.List
+import Data.Show.Generic
 import Prelude
 
 import Affjax.RequestBody (json)
@@ -13,6 +14,7 @@ import Data.Argonaut.Decode.Error (JsonDecodeError)
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Show (show)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Exception (throw)
@@ -66,6 +68,22 @@ data Result = NotFetched | Fetching | Ok String | Error String
 data ResultFiles = NotFetchedFile | FetchingFile | OkFile Files | ErrorFile String
 
 derive instance eqResult ∷ Eq Result
+
+derive instance eqResultFiles ∷ Eq ResultFiles
+
+instance showResult :: Show (Result) where
+  show :: Result -> String
+  show (NotFetched) = "NotFetched"
+  show (Fetching) = "Fetching"
+  show (Ok a) = "Ok " <> show a
+  show (Error a) = "Error " <> show a
+
+instance showResultFiles :: Show (ResultFiles) where
+  show :: ResultFiles -> String
+  show (NotFetchedFile) = "NotFetchedFile"
+  show (FetchingFile) = "FetchingFile"
+  show (OkFile a) = "OkFile " <> show a
+  show (ErrorFile a) = "ErrorFile " <> show a
 
 -- *INIT --
 
@@ -168,22 +186,23 @@ bgColor :: Int -> String
 bgColor counter = if counter < 0 then "red" else "lime"
 
 view ∷ Model → Html Message
-view { url, result, counter, flags } = HE.main "main"
+view model -- { url, result, counter, flags, dirs, resultFiles }
+  = HE.main "main"
   [ HE.button [ HA.onClick Decrement ] "-"
   , HE.span
       [ HA.styleAttr
           ( "background-color: "
-              <> (bgColor counter)
+              <> (bgColor model.counter)
               <> "; "
               <> "margin: auto 1em;"
           )
       ]
-      [ HE.text (show counter) ]
+      [ HE.text (show model.counter) ]
   , HE.button [ HA.onClick Increment ] "+"
   , HE.br
-  , HE.input [ HA.onInput UpdateUrl, HA.value url, HA.type' "text" ]
-  , HE.button [ HA.onClick Fetch, HA.disabled $ result == Fetching ] "Fetch"
-  , case result of
+  , HE.input [ HA.onInput UpdateUrl, HA.value model.url, HA.type' "text" ]
+  , HE.button [ HA.onClick Fetch, HA.disabled $ model.result == Fetching ] "Fetch"
+  , case model.result of
       NotFetched →
         HE.div_ "Not Fetched..."
       Fetching →
@@ -200,7 +219,10 @@ view { url, result, counter, flags } = HE.main "main"
           ]
       ]
   , HE.h3_ "flags"
-  , HE.p_ (show flags)
+  , HE.p_ (show model.flags)
+  , HE.h3_ "model"
+  , HE.p_ (show model)
+  , HE.button [ HA.onClick FetchFiles, HA.disabled $ model.resultFiles == FetchingFile ] "Fetch Fieles"
   ]
 
 names :: Array String
