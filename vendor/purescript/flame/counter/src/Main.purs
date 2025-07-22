@@ -1,17 +1,17 @@
 -- | Counter example using side effects free updating
 module Main where
 
+import Data.Argonaut
+import Data.List
 import Prelude
 
 import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
-import Data.Argonaut
-import Data.Argonaut.Core (Json)
+import Data.Argonaut.Core (Json, jsonTrue)
 import Data.Argonaut.Decode.Error (JsonDecodeError)
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List
 import Data.Maybe (Maybe(..), fromMaybe)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
@@ -63,7 +63,7 @@ type FetchingFilePost =
 data Message = UpdateUrl String | Fetch | Increment | Decrement | Initialize Flags | FetchFiles
 
 data Result = NotFetched | Fetching | Ok String | Error String
-data ResultFiles = NotFetchedFile | FetchingFile | OkFile String | ErrorFile String
+data ResultFiles = NotFetchedFile | FetchingFile | OkFile Files | ErrorFile String
 
 derive instance eqResult ∷ Eq Result
 
@@ -122,9 +122,31 @@ update { display, model, message } =
                 )
             )
         )
-      FAE.diff <<< { resultFiles: _ } $ case response of
-        Left error -> Error $ A.printError error
-        Right payload -> OkFile payload.body
+      case response of
+        Left error -> FAE.diff
+          { url: model.url
+          , result: model.result
+          , counter: model.counter
+          , flags: model.flags
+          , dirs: model.dirs
+          , resultFiles: (ErrorFile (show error))
+          }
+
+        Right payload ->
+          FAE.diff
+            { url: model.url
+            , result: model.result
+            , counter: model.counter
+            , flags: model.flags
+            , dirs: model.dirs
+            , resultFiles:
+                case (jsonToFiles payload.body) of
+                  Left e ->
+                    ErrorFile "json error"
+                  Right f ->
+                    OkFile (f)
+            }
+
     Increment -> FAE.diff
       { url: model.url, result: model.result, counter: model.counter + 1 }
     Decrement -> FAE.diff
