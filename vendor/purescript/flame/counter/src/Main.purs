@@ -2,14 +2,13 @@
 module Main where
 
 --import Prelude
-import Prelude (class Eq, class Show, Unit, bind, discard, map, negate, show, ($), (+), (-), (<), (<$>), (<*>), (<<<), (<>), (==))
 
 import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
-import Data.Argonaut (encodeJson, decodeJson)
+import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
-import Data.Argonaut.Decode.Error (JsonDecodeError)
+import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.List (List)
@@ -22,6 +21,7 @@ import Flame.Application.Effectful as FAE
 import Flame.Html.Attribute as HA
 import Flame.Html.Element as HE
 import Flame.Types (Html, NodeData, (:>))
+import Prelude (class Eq, class Show, Unit, bind, discard, map, negate, show, ($), (+), (-), (<), (<$>), (<*>), (<<<), (<>), (==))
 import Web.DOM.Element (getAttribute)
 import Web.DOM.NonElementParentNode (getElementById)
 import Web.HTML (window)
@@ -141,8 +141,8 @@ update { display, model, message } =
           FAE.diff
             { resultFiles:
                 case (jsonToFiles payload.body) of
-                  Left _e ->
-                    ErrorFile "json error"
+                  Left e ->
+                    ErrorFile (printJsonDecodeError e)
                   Right f ->
                     OkFile (f)
             }
