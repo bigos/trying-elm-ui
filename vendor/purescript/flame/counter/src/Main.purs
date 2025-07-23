@@ -1,4 +1,4 @@
--- | Counter example using side effects free updating
+-- | Example of loading files and displaying them
 module Main where
 
 import Prelude
@@ -60,6 +60,7 @@ type FetchingFilePost =
 data Message = Initialize Flags | FetchFiles
 
 data Result = NotFetched | Fetching | Ok String | Error String
+
 data ResultFiles = NotFetchedFile | FetchingFile | OkFile Files | ErrorFile String
 
 derive instance eqResult ∷ Eq Result
@@ -138,6 +139,7 @@ flagsCounter flags =
   fromMaybe (-5) (fromString (fromMaybe "" flags.counter_start))
 
 -- *VIEW --
+
 bgColor :: Int -> String
 bgColor counter = if counter < 0 then "red" else "lime"
 
@@ -189,6 +191,7 @@ da_border_blue :: forall t. Array (NodeData t)
 da_border_blue = [ HA.styleAttr ("border: solid blue 1px") ]
 
 -- *MAIN --
+
 main ∷ Effect Unit
 main = do
   let outputTag = "#flame"
