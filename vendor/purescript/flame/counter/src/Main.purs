@@ -8,7 +8,6 @@ import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
 import Data.Argonaut (encodeJson, decodeJson)
-
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError)
 import Data.Either (Either(..))
