@@ -116,17 +116,21 @@ update { display, model, message } =
         )
       case response of
         Left error -> FAE.diff
-          { resultFiles: (ErrorFile (A.printError error)) }
-
+          { resultFiles: (ErrorFile (A.printError error))
+          , dirs: { leftDir: Nothing, rightDir: Nothing }
+          }
         Right payload ->
-          FAE.diff
-            { resultFiles:
-                case (jsonToFiles payload.body) of
-                  Left e ->
-                    ErrorFile (printJsonDecodeError e)
-                  Right f ->
-                    OkFile (f)
-            }
+          case (jsonToFiles payload.body) of
+            Left e ->
+              FAE.diff
+                { resultFiles: ErrorFile (printJsonDecodeError e)
+                , dirs: { leftDir: Nothing, rightDir: Nothing }
+                }
+            Right f ->
+              FAE.diff
+                { resultFiles: OkFile (f)
+                , dirs: { leftDir: Just f, rightDir: Nothing }
+                }
 
 flagsCounter :: Flags -> Int
 flagsCounter flags =
