@@ -146,32 +146,41 @@ view model = HE.main "main"
       [ HE.div (da_border_red)
           [ HE.div (da_border_green) "general toolbar"
           , HE.div [ HA.styleAttr "display: inline-flex" ]
-              [ HE.div da_border_red (panel "left")
-              , HE.div da_border_green (panel "right")
+              [ HE.div da_border_red (panel model.dirs.leftDir "left")
+              , HE.div da_border_green (panel model.dirs.rightDir "right")
               ]
           ]
       , HE.h3_ "flags"
       , HE.p_ (show model.flags)
       , HE.h3_ "model"
       , HE.p_ (show model)
-      , HE.button [ HA.onClick FetchFiles, HA.disabled $ model.resultFiles == FetchingFile ] "Fetch Fieles"
+      , HE.button [ HA.onClick FetchFiles, HA.disabled $ model.resultFiles == FetchingFile ] "Fetch Files"
       ]
   ]
 
 names :: Array String
 names = [ "Ala", "ma", "kota" ]
 
-panel :: forall h. String -> Array (Html h)
-panel side =
+panel :: forall h. Maybe Files -> String -> Array (Html h)
+panel mFiles side =
   [ HE.div da_border_blue (side <> " toolbar")
   , HE.div_ "boo"
-  ] <> (map (\n -> HE.div_ n) names) <>
-    [ HE.div
-        ( [ HA.styleAttr "background: yellow" ]
+  ]
+    <>
+      ( map (\n -> HE.div_ n)
+          ( case mFiles of
+              Nothing -> []
+              Just f ->
+                f.files
+          )
+      )
+    <>
+      [ HE.div
+          ( [ HA.styleAttr "background: yellow" ]
 
-        )
-        (side <> " status")
-    ]
+          )
+          (side <> " status")
+      ]
 
 da_border_red :: forall t. Array (NodeData t)
 da_border_red = [ HA.styleAttr ("border: solid red 1px") ]
