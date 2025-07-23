@@ -1,22 +1,21 @@
 -- | Counter example using side effects free updating
 module Main where
 
-import Data.Argonaut
-import Data.List
-import Data.Show.Generic
-import Prelude
+--import Prelude
+import Prelude (class Eq, class Show, Unit, bind, discard, map, negate, show, ($), (+), (-), (<), (<$>), (<*>), (<<<), (<>), (==))
 
 import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
-import Data.Argonaut.Core (Json, jsonTrue)
+import Data.Argonaut (encodeJson, decodeJson)
+
+import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError)
 import Data.Either (Either(..))
 import Data.Int (fromString)
+import Data.List (List)
 import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Show (show)
 import Effect (Effect)
-import Effect.Aff (launchAff_)
 import Effect.Exception (throw)
 import Flame (QuerySelector(..))
 import Flame.Application.Effectful (AffUpdate)
@@ -166,7 +165,7 @@ update { display, model, message } =
             , dirs: model.dirs
             , resultFiles:
                 case (jsonToFiles payload.body) of
-                  Left e ->
+                  Left _e ->
                     ErrorFile "json error"
                   Right f ->
                     OkFile (f)
