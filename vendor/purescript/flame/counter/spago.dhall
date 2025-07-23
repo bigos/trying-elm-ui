@@ -5,6 +5,7 @@
   , "argonaut"
   , "argonaut-codecs"
   , "argonaut-core"
+  , "arrays"
   , "console"
   , "effect"
   , "either"

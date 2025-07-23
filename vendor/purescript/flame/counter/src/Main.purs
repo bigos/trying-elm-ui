@@ -9,6 +9,7 @@ import Affjax.Web as A
 import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
+import Data.Array (fromFoldable)
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.List (List)
@@ -163,15 +164,14 @@ names = [ "Ala", "ma", "kota" ]
 
 panel :: forall h. Maybe Files -> String -> Array (Html h)
 panel mFiles side =
-  [ HE.div da_border_blue (side <> " toolbar")
-  , HE.div_ "boo"
-  ]
+  [ HE.div da_border_blue (side <> " toolbar") ]
     <>
       ( map (\n -> HE.div_ n)
           ( case mFiles of
-              Nothing -> []
+              Nothing ->
+                [ "nic" ]
               Just f ->
-                f.files
+                fromFoldable f.files
           )
       )
     <>
