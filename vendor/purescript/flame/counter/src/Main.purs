@@ -159,9 +159,6 @@ view model = HE.main "main"
       ]
   ]
 
-names :: Array String
-names = [ "Ala", "ma", "kota" ]
-
 panel :: forall h. Maybe Files -> String -> Array (Html h)
 panel mFiles side =
   [ HE.div da_border_blue (side <> " toolbar") ]
