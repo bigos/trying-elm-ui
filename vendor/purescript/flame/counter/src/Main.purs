@@ -1,6 +1,7 @@
 -- | Counter example using side effects free updating
 module Main where
 
+import Prelude (class Eq, class Show, Unit, bind, discard, map, negate, show, ($), (+), (-), (<), (<$>), (<*>), (<<<), (<>), (==))
 --import Prelude
 
 import Affjax.RequestBody (json)
@@ -21,7 +22,6 @@ import Flame.Application.Effectful as FAE
 import Flame.Html.Attribute as HA
 import Flame.Html.Element as HE
 import Flame.Types (Html, NodeData, (:>))
-import Prelude (class Eq, class Show, Unit, bind, discard, map, negate, show, ($), (+), (-), (<), (<$>), (<*>), (<<<), (<>), (==))
 import Web.DOM.Element (getAttribute)
 import Web.DOM.NonElementParentNode (getElementById)
 import Web.HTML (window)
