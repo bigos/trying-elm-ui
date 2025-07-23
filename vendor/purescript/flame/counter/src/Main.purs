@@ -128,41 +128,18 @@ update { display, model, message } =
         Right payload → Ok payload.body
     FetchFiles -> do
       display $ FAE.diff'
-        { url: model.url
-        , result: model.result
-        , counter: model.counter
-        , flags: model.flags
-        , dirs: model.dirs
-        , resultFiles: FetchingFile
-        }
+        { resultFiles: FetchingFile }
       response <-
         ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
-            ( Just
-                ( json
-                    ( fetchingFilePostToJson
-                        ({ pwd: "/home/jacek/", show_hidden: false })
-                    )
-                )
-            )
+            (Just $ json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false })
         )
       case response of
         Left error -> FAE.diff
-          { url: model.url
-          , result: model.result
-          , counter: model.counter
-          , flags: model.flags
-          , dirs: model.dirs
-          , resultFiles: (ErrorFile (A.printError error))
-          }
+          { resultFiles: (ErrorFile (A.printError error)) }
 
         Right payload ->
           FAE.diff
-            { url: model.url
-            , result: model.result
-            , counter: model.counter
-            , flags: model.flags
-            , dirs: model.dirs
-            , resultFiles:
+            { resultFiles:
                 case (jsonToFiles payload.body) of
                   Left _e ->
                     ErrorFile "json error"
