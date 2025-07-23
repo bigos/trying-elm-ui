@@ -182,13 +182,16 @@ panel mFiles side =
       ]
 
 da_border_red :: forall t. Array (NodeData t)
-da_border_red = [ HA.styleAttr ("border: solid red 1px") ]
+da_border_red = da_border_color "red"
 
 da_border_green :: forall t. Array (NodeData t)
-da_border_green = [ HA.styleAttr ("border: solid green 1px") ]
+da_border_green = da_border_color "green"
 
 da_border_blue :: forall t. Array (NodeData t)
-da_border_blue = [ HA.styleAttr ("border: solid blue 1px") ]
+da_border_blue = da_border_color "blue"
+
+da_border_color :: forall t. String -> Array (NodeData t)
+da_border_color color = [ HA.styleAttr ("border: solid " <> color <> " 1px") ]
 
 -- *MAIN --
 
