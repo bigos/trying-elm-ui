@@ -2,26 +2,61 @@ module App.Counter where
 
 import Prelude
 
+import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
+import Data.Argonaut (decodeJson, encodeJson, printJsonDecodeError)
+import Data.Argonaut.Core (Json)
+import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
+import Data.Array (fromFoldable)
+import Data.Either (Either(..))
 import Data.Either (hush)
 import Data.Int (fromString)
-import Data.Maybe (Maybe(..))
+import Data.List (List)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
+import Effect.Class.Console (log)
+import Effect.Exception (throw)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 
-type State = { count :: Int, loading :: Boolean, result :: Maybe String, arg :: TagDataConfig }
+type State =
+  { count :: Int
+  , loading :: Boolean
+  , result :: Maybe String
+  , arg :: TagDataConfig
+  , postStatus :: PostStatus
+  }
 
-data Action = Increment | Decrement | MakeRequest
+type Files =
+  { pwd :: String
+  , show_hidden :: Boolean
+  , files :: List String
+  }
+
+type FetchingFilePost =
+  { pwd :: String
+  , show_hidden :: Boolean
+  }
+
+data PostStatus = Empty | Posting | OkPosted Files | ErrorPosted String
+
+data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost
 
 type TagDataConfig =
   { api_endpoint :: Maybe String
   , api_key :: Maybe String
   , start :: Maybe String
   }
+
+fetchingFilePostToJson :: FetchingFilePost -> Json
+fetchingFilePostToJson = encodeJson
+
+jsonToFiles :: Json -> Either JsonDecodeError Files
+jsonToFiles = decodeJson
 
 counter_color :: Int -> String
 counter_color count =
@@ -50,7 +85,7 @@ initialState arg =
   , loading: false
   , result: Nothing
   , arg: arg
-
+  , postStatus: Empty
   }
 
 --component :: forall q i o m. ?whatisit q i o m
@@ -85,8 +120,11 @@ render state =
         []
         [ HH.p []
             [ HH.button
-                [ HE.onClick \_ -> MakeRequest ]
+                [ HE.onClick \_ -> MakeRequestGet ]
                 [ HH.text "Get the data" ]
+            , HH.button
+                [ HE.onClick \_ -> MakeRequestPost ]
+                [ HH.text "POST the data" ]
             ]
         , HH.div_
             ( case state.result of
@@ -109,21 +147,33 @@ handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   Decrement -> H.modify_ \st -> st { count = st.count - 1 }
-  MakeRequest -> do
+  MakeRequestGet -> do
     H.modify_ \st -> st { loading = true }
     response <- H.liftAff $ AX.get AXRF.string
       ( "http://localhost:3000/api/get-files"
           <> "?"
-          <> getArgs
+          <> ("pwd=/home/jacek/" <> "&" <> "show_hidden=true")
       )
     H.modify_ \st -> st
       { loading = false
       , result = map _.body (hush response)
       }
-
-  where
-  getArgs =
-    ( "pwd=/home/jacek/"
-        <> "&"
-        <> "show_hidden=true"
-    )
+  MakeRequestPost -> do
+    H.modify_ \st -> st { postStatus = Posting }
+    response <-
+      ( AX.post AXRF.json
+          ("http://localhost:3000" <> "/api/list-files")
+          (Just $ json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false })
+      )
+    H.modify_ \st -> st
+      { postStatus =
+          case response of
+            Left error ->
+              ErrorPosted (AX.printError error)
+            Right payload ->
+              case (jsonToFiles payload.body) of
+                Left e ->
+                  ErrorPosted (printJsonDecodeError e)
+                Right f ->
+                  OkPosted (f)
+      }
