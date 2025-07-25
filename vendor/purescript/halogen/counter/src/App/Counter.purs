@@ -45,6 +45,13 @@ type FetchingFilePost =
 
 data PostStatus = Empty | Posting | OkPosted Files | ErrorPosted String
 
+instance showPostStatus :: Show (PostStatus) where
+  show :: PostStatus -> String
+  show Empty = "Empty"
+  show Posting = "Posting"
+  show (OkPosted a) = "OkPosted " <> show a
+  show (ErrorPosted a) = "ErrorPosted " <> show a
+
 data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost
 
 type TagDataConfig =
@@ -141,6 +148,8 @@ render state =
         ]
     , HH.h3_ [ HH.text "Configured values" ]
     , HH.p [] [ HH.text (show state.arg) ]
+    , HH.h3_ [ HH.text "model" ]
+    , HH.p [] [ HH.text (show state) ]
 
     ]
 
