@@ -2,7 +2,7 @@ module App.Counter where
 
 import Prelude
 
-import Affjax.RequestBody (json)
+import Affjax.RequestBody as AXRB
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
 import Data.Argonaut (decodeJson, encodeJson, printJsonDecodeError)
@@ -15,6 +15,7 @@ import Data.Int (fromString)
 import Data.List (List)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Effect (Effect)
+import Effect.Aff (launchAff_)
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class.Console (log)
 import Effect.Exception (throw)
@@ -160,11 +161,8 @@ handleAction = case _ of
       }
   MakeRequestPost -> do
     H.modify_ \st -> st { postStatus = Posting }
-    response <-
-      ( AX.post AXRF.json
-          ("http://localhost:3000" <> "/api/list-files")
-          (Just $ json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false })
-      )
+    response <- H.liftAff $
+      (AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files") (Just $ AXRB.json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false }))
     H.modify_ \st -> st
       { postStatus =
           case response of
