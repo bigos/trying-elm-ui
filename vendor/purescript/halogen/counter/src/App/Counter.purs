@@ -162,8 +162,7 @@ render state =
     ]
 
 panel state side =
-  [ HH.div [] [ HH.text "panel will go here" ]
-  , HH.div (da_border_color "blue") [ HH.text (side <> " toolbar") ]
+  [ HH.div (da_border_color "blue") [ HH.text (side <> " toolbar") ]
   ]
     <>
       ( map (\n -> HH.div [] [ HH.text n ])
