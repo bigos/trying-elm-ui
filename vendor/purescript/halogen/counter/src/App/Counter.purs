@@ -66,19 +66,6 @@ fetchingFilePostToJson = encodeJson
 jsonToFiles :: Json -> Either JsonDecodeError Files
 jsonToFiles = decodeJson
 
-counter_color :: Int -> String
-counter_color count =
-  if count == 0 then "background: white"
-  else (if count < 0 then "background: red" else "background: lime")
-
-outer_style :: String
-outer_style =
-  ( "display: inline-flex;"
-      <> "margin: 1em;"
-      <> "padding:1em;"
-      <> "background: lightcyan;"
-  )
-
 initialState :: TagDataConfig -> State
 initialState arg =
   { count:
@@ -95,6 +82,19 @@ initialState arg =
   , arg: arg
   , postStatus: Empty
   }
+
+counter_color :: Int -> String
+counter_color count =
+  if count == 0 then "background: white"
+  else (if count < 0 then "background: red" else "background: lime")
+
+outer_style :: String
+outer_style =
+  ( "display: inline-flex;"
+      <> "margin: 1em;"
+      <> "padding:1em;"
+      <> "background: lightcyan;"
+  )
 
 --component :: forall q i o m. ?whatisit q i o m
 component =
@@ -150,8 +150,33 @@ render state =
     , HH.p [] [ HH.text (show state.arg) ]
     , HH.h3_ [ HH.text "model" ]
     , HH.p [] [ HH.text (show state) ]
-
+    , HH.div (da_border_color "green")
+        [ HH.div (da_border_color "red")
+            [ HH.div (da_border_color "green") [ HH.text "general toolbar" ]
+            , HH.div [ HP.style "display: inline-flex" ]
+                [ HH.div (da_border_color "red") (panel state "left")
+                , HH.div (da_border_color "green") (panel state "right")
+                ]
+            ]
+        ]
     ]
+
+panel state side =
+  [ HH.div [] [ HH.text "panel will go here" ]
+  , HH.div (da_border_color "blue") [ HH.text (side <> " toolbar") ]
+  ]
+    <>
+      ( map (\n -> HH.div [] [ HH.text n ])
+          ( case state.postStatus of
+              OkPosted fx ->
+                fromFoldable fx.files
+              _ ->
+                [ "nic" ]
+          )
+      )
+    <> [ HH.div [ HP.style "background: yellow" ] [ HH.text (side <> " status") ] ]
+
+da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
