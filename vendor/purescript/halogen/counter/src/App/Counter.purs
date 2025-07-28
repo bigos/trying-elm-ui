@@ -166,11 +166,14 @@ panel state side =
   ]
     <>
       ( map (\n -> HH.div [] [ HH.text n ])
-          ( case state.postStatus of
-              OkPosted fx ->
-                fromFoldable fx.files
-              _ ->
-                [ "nic" ]
+          ( if side == "right" then [ "nothing" ]
+            else
+              ( case state.postStatus of
+                  OkPosted fx ->
+                    fromFoldable fx.files
+                  _ ->
+                    [ "nothing" ]
+              )
           )
       )
     <> [ HH.div [ HP.style "background: yellow" ] [ HH.text (side <> " status") ] ]

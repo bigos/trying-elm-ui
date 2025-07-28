@@ -1,1 +1,1 @@
-/home/jacek/Programming/Rails/trying-elm-ui/vendor/purescript/flame/counter/prod/index.js
+/home/jacek/Programming/Ruby/trying-elm-ui/vendor/purescript/flame/counter/prod/index.js
