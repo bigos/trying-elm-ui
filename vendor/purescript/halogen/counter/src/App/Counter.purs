@@ -11,9 +11,11 @@ import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Array (fromFoldable)
 import Data.Either (Either(..))
 import Data.Either (hush)
+import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
 import Data.List (List)
 import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Show.Generic (genericShow, genericShow', genericShowArgs)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Aff.Class (class MonadAff)
@@ -45,12 +47,10 @@ type FetchingFilePost =
 
 data PostStatus = Empty | Posting | OkPosted Files | ErrorPosted String
 
-instance showPostStatus :: Show (PostStatus) where
-  show :: PostStatus -> String
-  show Empty = "Empty"
-  show Posting = "Posting"
-  show (OkPosted a) = "OkPosted " <> show a
-  show (ErrorPosted a) = "ErrorPosted " <> show a
+derive instance genericPostStatus :: Generic PostStatus _
+
+instance showPostStatus :: Show PostStatus where
+  show = genericShow
 
 data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost
 
