@@ -133,15 +133,24 @@ update msg model =
                         pwdxLen =
                             List.length pwdxSplit
 
+                        pwdxStr =
+                            pwdxSplit
+                                |> List.take (pwdxLen - 1)
+                                |> String.join "/"
+                                |> String.append "/"
+
+                        pwdxStrOk =
+                            if String.slice 0 2 pwdxStr == "//" then
+                                String.dropLeft 1 pwdxStr
+
+                            else
+                                pwdxStr
+
                         m2 =
                             { model
                                 | dirs =
                                     buildOnlyLeftDir
-                                        { pwd =
-                                            pwdxSplit
-                                                |> List.take (pwdxLen - 1)
-                                                |> String.join "/"
-                                                |> String.append "/"
+                                        { pwd = pwdxStrOk
                                         , showHidden = False
                                         , files = []
                                         }

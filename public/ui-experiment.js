@@ -6435,21 +6435,19 @@ var $author$project$UiExperiment$update = F2(
 					var pwdx = files.pwd;
 					var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
 					var pwdxLen = $elm$core$List$length(pwdxSplit);
+					var pwdxStr = A2(
+						$elm$core$String$append,
+						'/',
+						A2(
+							$elm$core$String$join,
+							'/',
+							A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
+					var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
 					var m2 = _Utils_update(
 						model,
 						{
 							dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-								{
-									files: _List_Nil,
-									pwd: A2(
-										$elm$core$String$append,
-										'/',
-										A2(
-											$elm$core$String$join,
-											'/',
-											A2($elm$core$List$take, pwdxLen - 1, pwdxSplit))),
-									showHidden: false
-								})
+								{files: _List_Nil, pwd: pwdxStrOk, showHidden: false})
 						});
 					return _Utils_Tuple2(
 						model,
