@@ -5393,6 +5393,7 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$UiExperiment$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $elm$core$String$append = _String_append;
 var $author$project$UiExperiment$buildOnlyLeftDir = function (dir) {
 	return {
 		leftDir: $elm$core$Maybe$Just(dir),
@@ -6244,7 +6245,15 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 						[
 							_Utils_Tuple2(
 							'pwd',
-							$elm$json$Json$Encode$string('/home/jacek')),
+							function () {
+								var _v0 = model.dirs.leftDir;
+								if (_v0.$ === 'Nothing') {
+									return $elm$json$Json$Encode$string('/home/jacek');
+								} else {
+									var files = _v0.a;
+									return $elm$json$Json$Encode$string(files.pwd);
+								}
+							}()),
 							_Utils_Tuple2(
 							'show_hidden',
 							$elm$json$Json$Encode$bool(false))
@@ -6255,6 +6264,132 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 };
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
@@ -6269,7 +6404,7 @@ var $author$project$UiExperiment$update = F2(
 				return _Utils_Tuple2(
 					model,
 					$author$project$UiExperiment$httpLoadFiles(model));
-			default:
+			case 'LoadedFiles':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var fullText = result.a;
@@ -6290,6 +6425,35 @@ var $author$project$UiExperiment$update = F2(
 						$elm$core$Debug$log,
 						$elm$core$Debug$toString(errMsg),
 						_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+				}
+			default:
+				var m1fx = model.dirs.leftDir;
+				if (m1fx.$ === 'Nothing') {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				} else {
+					var files = m1fx.a;
+					var pwdx = files.pwd;
+					var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
+					var pwdxLen = $elm$core$List$length(pwdxSplit);
+					var m2 = _Utils_update(
+						model,
+						{
+							dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+								{
+									files: _List_Nil,
+									pwd: A2(
+										$elm$core$String$append,
+										'/',
+										A2(
+											$elm$core$String$join,
+											'/',
+											A2($elm$core$List$take, pwdxLen - 1, pwdxSplit))),
+									showHidden: false
+								})
+						});
+					return _Utils_Tuple2(
+						model,
+						$author$project$UiExperiment$httpLoadFiles(m2));
 				}
 		}
 	});
@@ -12163,7 +12327,8 @@ var $author$project$UiExperiment$color = {
 	darkCharcoal: A3($mdgriffith$elm_ui$Element$rgb255, 46, 52, 54),
 	lightBlue: A3($mdgriffith$elm_ui$Element$rgb255, 197, 232, 247),
 	lightGrey: A3($mdgriffith$elm_ui$Element$rgb255, 224, 224, 224),
-	white: A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)
+	white: A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255),
+	yellow: A3($mdgriffith$elm_ui$Element$rgb255, 255, 235, 0)
 };
 var $mdgriffith$elm_ui$Element$column = F2(
 	function (attrs, children) {
@@ -12200,6 +12365,7 @@ var $mdgriffith$elm_ui$Element$el = F2(
 				_List_fromArray(
 					[child])));
 	});
+var $author$project$UiExperiment$LoadParent = {$: 'LoadParent'};
 var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
 	function (a, b, c, d, e) {
 		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
@@ -12221,6 +12387,24 @@ var $author$project$UiExperiment$my_border = _List_fromArray(
 		$mdgriffith$elm_ui$Element$Border$width(1),
 		$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.blue)
 	]);
+var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
+	function (a, b, c, d, e) {
+		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$padding = $mdgriffith$elm_ui$Internal$Flag$flag(2);
+var $mdgriffith$elm_ui$Element$padding = function (x) {
+	var f = x;
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$padding,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+			'p-' + $elm$core$String$fromInt(x),
+			f,
+			f,
+			f,
+			f));
+};
 var $elm$core$List$sortBy = _List_sortBy;
 var $elm$core$List$sort = function (xs) {
 	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
@@ -12246,6 +12430,43 @@ var $author$project$UiExperiment$panel_files = F2(
 				},
 				$elm$core$List$sort(files.files)));
 	});
+var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
+var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + $elm$core$String$fromInt(radius),
+			'border-radius',
+			$elm$core$String$fromInt(radius) + 'px'));
+};
+var $mdgriffith$elm_ui$Internal$Model$VariantActive = function (a) {
+	return {$: 'VariantActive', a: a};
+};
+var $mdgriffith$elm_ui$Element$Font$smallCaps = $mdgriffith$elm_ui$Internal$Model$VariantActive('smcp');
+var $mdgriffith$elm_ui$Internal$Flag$fontVariant = $mdgriffith$elm_ui$Internal$Flag$flag(48);
+var $mdgriffith$elm_ui$Element$Font$variant = function (_var) {
+	switch (_var.$) {
+		case 'VariantActive':
+			var name = _var.a;
+			return A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontVariant, 'v-' + name);
+		case 'VariantOff':
+			var name = _var.a;
+			return A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontVariant, 'v-' + (name + '-off'));
+		default:
+			var name = _var.a;
+			var index = _var.b;
+			return A2(
+				$mdgriffith$elm_ui$Internal$Model$StyleClass,
+				$mdgriffith$elm_ui$Internal$Flag$fontVariant,
+				A3(
+					$mdgriffith$elm_ui$Internal$Model$Single,
+					'v-' + (name + ('-' + $elm$core$String$fromInt(index))),
+					'font-feature-settings',
+					'\"' + (name + ('\" ' + $elm$core$String$fromInt(index)))));
+	}
+};
 var $author$project$UiExperiment$file_panel = F2(
 	function (model, lr) {
 		var lrdir = (lr === 'left') ? model.dirs.leftDir : model.dirs.rightDir;
@@ -12264,6 +12485,7 @@ var $author$project$UiExperiment$file_panel = F2(
 							_Utils_ap(
 								_List_fromArray(
 									[
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 										$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue)
 									]),
 								$author$project$UiExperiment$my_border),
@@ -12271,14 +12493,44 @@ var $author$project$UiExperiment$file_panel = F2(
 					} else {
 						var files = lrdir.a;
 						return A2(
-							$mdgriffith$elm_ui$Element$el,
-							_Utils_ap(
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue)
-									]),
-								$author$project$UiExperiment$my_border),
-							$mdgriffith$elm_ui$Element$text(files.pwd));
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.yellow)
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_Nil,
+									$mdgriffith$elm_ui$Element$text('parent button will go here')),
+									A2(
+									$mdgriffith$elm_ui$Element$Input$button,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$padding(10),
+											$mdgriffith$elm_ui$Element$Border$width(3),
+											$mdgriffith$elm_ui$Element$Border$rounded(6),
+											$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.blue),
+											$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue),
+											$mdgriffith$elm_ui$Element$Font$variant($mdgriffith$elm_ui$Element$Font$smallCaps)
+										]),
+									{
+										label: $mdgriffith$elm_ui$Element$text('Parent'),
+										onPress: $elm$core$Maybe$Just($author$project$UiExperiment$LoadParent)
+									}),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_Utils_ap(
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+												$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue)
+											]),
+										$author$project$UiExperiment$my_border),
+									$mdgriffith$elm_ui$Element$text(files.pwd))
+								]));
 					}
 				}(),
 					function () {
@@ -12713,24 +12965,6 @@ var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Hover,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
-var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
-	function (a, b, c, d, e) {
-		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$padding = $mdgriffith$elm_ui$Internal$Flag$flag(2);
-var $mdgriffith$elm_ui$Element$padding = function (x) {
-	var f = x;
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$padding,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-			'p-' + $elm$core$String$fromInt(x),
-			f,
-			f,
-			f,
-			f));
-};
 var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
 var $mdgriffith$elm_ui$Element$paragraph = F2(
 	function (attrs, children) {
@@ -12754,17 +12988,6 @@ var $mdgriffith$elm_ui$Element$rgb = F3(
 	function (r, g, b) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
 	});
-var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
-var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + $elm$core$String$fromInt(radius),
-			'border-radius',
-			$elm$core$String$fromInt(radius) + 'px'));
-};
 var $mdgriffith$elm_ui$Element$row = F2(
 	function (attrs, children) {
 		return A4(
@@ -12783,10 +13006,6 @@ var $mdgriffith$elm_ui$Element$row = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var $mdgriffith$elm_ui$Internal$Model$VariantActive = function (a) {
-	return {$: 'VariantActive', a: a};
-};
-var $mdgriffith$elm_ui$Element$Font$smallCaps = $mdgriffith$elm_ui$Internal$Model$VariantActive('smcp');
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(
@@ -12873,28 +13092,6 @@ var $author$project$UiExperiment$toggleCheckboxWidget = F2(
 				]),
 			$mdgriffith$elm_ui$Element$text(''));
 	});
-var $mdgriffith$elm_ui$Internal$Flag$fontVariant = $mdgriffith$elm_ui$Internal$Flag$flag(48);
-var $mdgriffith$elm_ui$Element$Font$variant = function (_var) {
-	switch (_var.$) {
-		case 'VariantActive':
-			var name = _var.a;
-			return A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontVariant, 'v-' + name);
-		case 'VariantOff':
-			var name = _var.a;
-			return A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontVariant, 'v-' + (name + '-off'));
-		default:
-			var name = _var.a;
-			var index = _var.b;
-			return A2(
-				$mdgriffith$elm_ui$Internal$Model$StyleClass,
-				$mdgriffith$elm_ui$Internal$Flag$fontVariant,
-				A3(
-					$mdgriffith$elm_ui$Internal$Model$Single,
-					'v-' + (name + ('-' + $elm$core$String$fromInt(index))),
-					'font-feature-settings',
-					'\"' + (name + ('\" ' + $elm$core$String$fromInt(index)))));
-	}
-};
 var $author$project$UiExperiment$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
 var $author$project$UiExperiment$view = function (model) {
 	return A2(
@@ -12953,6 +13150,7 @@ var $author$project$UiExperiment$view = function (model) {
 								_Utils_ap(
 									_List_fromArray(
 										[
+											$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 											$mdgriffith$elm_ui$Element$Background$color(
 											A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.5, 0.5))
 										]),

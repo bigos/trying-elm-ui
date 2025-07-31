@@ -85,6 +85,7 @@ type Msg
     = Toggle
     | LoadFiles
     | LoadedFiles (Result Http.Error Files)
+    | LoadParent
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -110,6 +111,43 @@ update msg model =
                 Err errMsg ->
                     Debug.log (Debug.toString errMsg)
                         ( model, Cmd.none )
+
+        LoadParent ->
+            let
+                m1fx =
+                    model.dirs.leftDir
+            in
+            case m1fx of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just files ->
+                    -- create new parent model
+                    let
+                        pwdx =
+                            files.pwd
+
+                        pwdxSplit =
+                            String.split "/" pwdx
+
+                        pwdxLen =
+                            List.length pwdxSplit
+
+                        m2 =
+                            { model
+                                | dirs =
+                                    buildOnlyLeftDir
+                                        { pwd =
+                                            pwdxSplit
+                                                |> List.take (pwdxLen - 1)
+                                                |> String.join "/"
+                                                |> String.append "/"
+                                        , showHidden = False
+                                        , files = []
+                                        }
+                            }
+                    in
+                    ( model, httpLoadFiles m2 )
 
 
 buildOnlyLeftDir : Files -> Dirs
@@ -150,7 +188,7 @@ my_border =
     [ Border.width 1, Border.color color.blue ]
 
 
-file_panel : Model -> String -> Element msg
+file_panel : Model -> String -> Element Msg
 file_panel model lr =
     let
         lrdir =
@@ -166,10 +204,22 @@ file_panel model lr =
         )
         [ case lrdir of
             Nothing ->
-                el ([ Background.color color.lightBlue ] ++ my_border) (text ("toolbar " ++ lr))
+                el ([ width fill, Background.color color.lightBlue ] ++ my_border) (text ("toolbar " ++ lr))
 
             Just files ->
-                el ([ Background.color color.lightBlue ] ++ my_border) (text files.pwd)
+                column [ width fill, Background.color color.yellow ]
+                    [ el [] (text "parent button will go here")
+                    , Input.button
+                        [ padding 10
+                        , Border.width 3
+                        , Border.rounded 6
+                        , Border.color color.blue
+                        , Background.color color.lightBlue
+                        , Font.variant Font.smallCaps
+                        ]
+                        { onPress = Just LoadParent, label = text "Parent" }
+                    , el ([ width fill, Background.color color.lightBlue ] ++ my_border) (text files.pwd)
+                    ]
         , case lrdir of
             Nothing ->
                 el my_border (text "No files")
@@ -179,12 +229,12 @@ file_panel model lr =
         ]
 
 
-file_panel_left : Model -> Element msg
+file_panel_left : Model -> Element Msg
 file_panel_left model =
     file_panel model "left"
 
 
-file_panel_right : Model -> Element msg
+file_panel_right : Model -> Element Msg
 file_panel_right model =
     file_panel model "right"
 
@@ -228,7 +278,13 @@ view model =
                         [ file_panel_left model
                         , file_panel_right model
                         ]
-                    , el ([ Background.color (rgb 0.5 0.5 0.5) ] ++ my_border) (text "status")
+                    , el
+                        ([ width fill
+                         , Background.color (rgb 0.5 0.5 0.5)
+                         ]
+                            ++ my_border
+                        )
+                        (text "status")
                     ]
                 )
             , Input.button
@@ -263,6 +319,7 @@ color =
     , lightBlue = rgb255 0xC5 0xE8 0xF7
     , lightGrey = rgb255 0xE0 0xE0 0xE0
     , white = rgb255 0xFF 0xFF 0xFF
+    , yellow = rgb255 0xFF 0xEB 0x00
     }
 
 
@@ -359,7 +416,14 @@ httpLoadFiles model =
         , body =
             Http.jsonBody
                 (Encode.object
-                    [ ( "pwd", Encode.string "/home/jacek" )
+                    [ ( "pwd"
+                      , case model.dirs.leftDir of
+                            Nothing ->
+                                Encode.string "/home/jacek"
+
+                            Just files ->
+                                Encode.string files.pwd
+                      )
                     , ( "show_hidden", Encode.bool False )
                     ]
                 )
