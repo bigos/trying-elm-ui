@@ -5,6 +5,7 @@ class Files
     @files = @dir.entries.sort
   end
 
+  # puts Files.new('/home/jacek/', false).data.to_json
   def data
     { pwd: @dir.to_path,
       show_hidden: @show_hidden,
