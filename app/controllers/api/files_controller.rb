@@ -4,19 +4,7 @@ class Api::FilesController < ApplicationController
   def list
     params.permit!
 
-    dir = Dir.open(params["pwd"])
-
-    files = dir.entries.sort
-    files_filtered =
-      if params["show_hidden"]
-        files
-      else
-        files.reject { |f| f.start_with?(".") }
-      end
-
-    render json: { pwd: dir.to_path,
-                   show_hidden: params['show_hidden'],
-                   files: files_filtered }.to_json
+    render json: Files.new(params['pwd'], params['show_hidden']).data
   end
 
   def get
