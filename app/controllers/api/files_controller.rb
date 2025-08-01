@@ -4,7 +4,7 @@ class Api::FilesController < ApplicationController
   def list
     params.permit!
 
-    render json: Files.new(params['pwd'], params['show_hidden']).data
+    render json: Files.new(params["pwd"], params["show_hidden"]).data
   end
 
   def get
@@ -23,7 +23,7 @@ class Api::FilesController < ApplicationController
       end
 
     render json: { pwd: dir.to_path,
-                   show_hidden: params['show_hidden'],
+                   show_hidden: params["show_hidden"],
                    files: files_filtered }.to_json
   end
 end
