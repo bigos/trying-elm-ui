@@ -12414,7 +12414,7 @@ var $mdgriffith$elm_ui$Element$text = function (content) {
 	return $mdgriffith$elm_ui$Internal$Model$Text(content);
 };
 var $author$project$UiExperiment$panel_files = F2(
-	function (model, files) {
+	function (_v0, files) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_Nil,
@@ -12470,10 +12470,7 @@ var $author$project$UiExperiment$file_panel = F2(
 		var lrdir = (lr === 'left') ? model.dirs.leftDir : model.dirs.rightDir;
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
-			_Utils_ap(
-				_List_fromArray(
-					[$mdgriffith$elm_ui$Element$alignTop]),
-				$author$project$UiExperiment$my_border),
+			A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$alignTop, $author$project$UiExperiment$my_border),
 			_List_fromArray(
 				[
 					function () {
@@ -13125,10 +13122,7 @@ var $author$project$UiExperiment$view = function (model) {
 						]),
 					A2(
 						$mdgriffith$elm_ui$Element$column,
-						_Utils_ap(
-							_List_fromArray(
-								[$mdgriffith$elm_ui$Element$alignTop]),
-							$author$project$UiExperiment$my_border),
+						A2($elm$core$List$cons, $mdgriffith$elm_ui$Element$alignTop, $author$project$UiExperiment$my_border),
 						_List_fromArray(
 							[
 								A2(

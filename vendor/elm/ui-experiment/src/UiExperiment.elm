@@ -1,4 +1,4 @@
-module UiExperiment exposing (Files, Model)
+module UiExperiment exposing (Dirs, Files, Flags, Model)
 
 import Browser
 import Element exposing (Color, Element, alignRight, alignTop, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, spacing, text, width)
@@ -193,6 +193,7 @@ subscriptions _ =
 -- VIEW
 
 
+my_border : List (Element.Attribute msg)
 my_border =
     [ Border.width 1, Border.color color.blue ]
 
@@ -208,8 +209,8 @@ file_panel model lr =
                 model.dirs.rightDir
     in
     column
-        ([ alignTop ]
-            ++ my_border
+        (alignTop
+            :: my_border
         )
         [ case lrdir of
             Nothing ->
@@ -249,7 +250,7 @@ file_panel_right model =
 
 
 panel_files : Model -> Files -> Element msg
-panel_files model files =
+panel_files _ files =
     column []
         (List.map
             (\x -> el [] (text x))
@@ -281,7 +282,7 @@ view model =
                 }
             , el [ padding 20 ]
                 (column
-                    ([ alignTop ] ++ my_border)
+                    (alignTop :: my_border)
                     [ el [] (text "general toolbar")
                     , row my_border
                         [ file_panel_left model
@@ -395,23 +396,6 @@ green =
 white : Color
 white =
     rgb255 255 255 255
-
-
-myElement : Model -> Element msg
-myElement model =
-    el
-        [ Background.color
-            (if model.toggle then
-                rgb255 57 180 111
-
-             else
-                rgb255 111 120 97
-            )
-        , Font.color (rgb255 255 255 255)
-        , Border.rounded 3
-        , padding 30
-        ]
-        (Element.text "stylish!")
 
 
 
