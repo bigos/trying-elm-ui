@@ -9,19 +9,31 @@ class Files
       begin
         File.new(File.join(@dir.path, f))
       rescue
-        nil
+        [ f, $! ]
       end
-    }.reject(&:blank?) # this is wrong
+    }
                .map { |f|
-      { name: File.basename(f),
-        executable: File.executable?(f),
-        extname: File.extname(f),
-        ftype: File.ftype(f),
-        size: File.size(f),
-        mtime: File.stat(f).mtime,
-        mode: File.stat(f).mode,
-        symlink: File.stat(f).symlink?
-      }
+      if f.is_a?(File)
+        { name: File.basename(f),
+          executable: File.executable?(f),
+          extname: File.extname(f),
+          ftype: File.ftype(f),
+          size: File.size(f),
+          mtime: File.stat(f).mtime,
+          mode: File.stat(f).mode,
+          symlink: File.stat(f).symlink?
+        }
+      else # dodgy second variant
+        { name: f.first,
+          executable: false,
+          extname: "",
+          ftype: f.second,
+          size: 0,
+          mtime: "",
+          mode: 0,
+          symlink: false
+        }
+      end
     }
   end
 
