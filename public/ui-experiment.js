@@ -6022,7 +6022,11 @@ var $author$project$UiExperiment$Files = F3(
 	function (pwd, showHidden, files) {
 		return {files: files, pwd: pwd, showHidden: showHidden};
 	});
-var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$UiExperiment$FileObject = F8(
+	function (name, executable, extname, ftype, size, mtime, mode, symlink) {
+		return {executable: executable, extname: extname, ftype: ftype, mode: mode, mtime: mtime, name: name, size: size, symlink: symlink};
+	});
+var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	function (key, valDecoder, decoder) {
@@ -6031,10 +6035,44 @@ var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 			A2($elm$json$Json$Decode$field, key, valDecoder),
 			decoder);
 	});
+var $author$project$UiExperiment$fileDecoder = A3(
+	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+	'symlink',
+	$elm$json$Json$Decode$bool,
+	A3(
+		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+		'mode',
+		$elm$json$Json$Decode$int,
+		A3(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+			'mtime',
+			$elm$json$Json$Decode$string,
+			A3(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+				'size',
+				$elm$json$Json$Decode$int,
+				A3(
+					$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+					'ftype',
+					$elm$json$Json$Decode$string,
+					A3(
+						$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+						'extname',
+						$elm$json$Json$Decode$string,
+						A3(
+							$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+							'executable',
+							$elm$json$Json$Decode$bool,
+							A3(
+								$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
+								'name',
+								$elm$json$Json$Decode$string,
+								$elm$json$Json$Decode$succeed($author$project$UiExperiment$FileObject)))))))));
+var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$UiExperiment$fileListDecoder = A3(
 	$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'files',
-	$elm$json$Json$Decode$list($elm$json$Json$Decode$string),
+	$elm$json$Json$Decode$list($author$project$UiExperiment$fileDecoder),
 	A3(
 		$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'show_hidden',
@@ -12403,10 +12441,6 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 			f,
 			f));
 };
-var $elm$core$List$sortBy = _List_sortBy;
-var $elm$core$List$sort = function (xs) {
-	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
-};
 var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
 	return {$: 'Text', a: a};
 };
@@ -12426,7 +12460,12 @@ var $author$project$UiExperiment$panel_files = F2(
 						_List_Nil,
 						$mdgriffith$elm_ui$Element$text(x));
 				},
-				$elm$core$List$sort(files.files)));
+				A2(
+					$elm$core$List$map,
+					function (f) {
+						return f.name;
+					},
+					files.files)));
 	});
 var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
 var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {

@@ -46,7 +46,7 @@ type alias Flags =
 type alias Files =
     { pwd : String
     , showHidden : Bool
-    , files : List String
+    , files : List FileObject
     }
 
 
@@ -254,7 +254,7 @@ panel_files _ files =
     column []
         (List.map
             (\x -> el [] (text x))
-            (List.sort files.files)
+            (List.map (\f -> f.name) files.files)
         )
 
 
@@ -429,4 +429,45 @@ fileListDecoder =
     Decode.succeed Files
         |> required "pwd" string
         |> required "show_hidden" bool
-        |> required "files" (list string)
+        |> required "files" (list fileDecoder)
+
+
+
+--filesDecoder : Decoder (List FileObject)
+
+
+fileDecoder : Decoder FileObject
+fileDecoder =
+    Decode.succeed FileObject
+        |> required "name" string
+        |> required "executable" bool
+        |> required "extname" string
+        |> required "ftype" string
+        |> required "size" int
+        |> required "mtime" string
+        |> required "mode" int
+        |> required "symlink" bool
+
+
+type alias FileObject =
+    { name : String
+    , executable : Bool
+    , extname : String
+    , ftype : String
+    , size : Int
+    , mtime : String
+    , mode : Int
+    , symlink : Bool
+    }
+
+
+
+-- zzzzzzzzzzzzzzzzzz
+-- {"name":"various-readings.org",
+--      "executable":false,
+--      "extname":".org",
+--      "ftype":"file",
+--      "size":390,
+--      "mtime":"2025-07-03T18:49:25.634+01:00",
+--      "mode":33204,
+--      "symlink":false}
