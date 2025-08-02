@@ -22,6 +22,7 @@ import Effect.Aff.Class (class MonadAff)
 import Effect.Class.Console (log)
 import Effect.Exception (throw)
 import Halogen as H
+import Halogen.Component
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
@@ -107,7 +108,16 @@ outer_style =
       <> "background: lightcyan;"
   )
 
---component :: forall q i o m. ?whatisit q i o m
+component
+  :: forall output410 m411 t425
+   . MonadAff m411
+  => Component t425
+       { api_endpoint :: Maybe String
+       , api_key :: Maybe String
+       , start :: Maybe String
+       }
+       output410
+       m411
 component =
   H.mkComponent
     { initialState
