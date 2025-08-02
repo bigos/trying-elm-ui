@@ -7,6 +7,9 @@ https://github.com/purescript-halogen/purescript-halogen
 template for starting projects
 https://github.com/purescript-halogen/purescript-halogen-template
 
+Discord
+https://discord.com/channels/864614189094928394/865396386090713128
+
 Guides
 https://purescript-halogen.github.io/purescript-halogen/index.html
 
