@@ -285,12 +285,11 @@ panel_files _ files =
                 in
                 if isDirectory then
                     Input.button
-                        [ padding 10
-                        , Border.width 3
-                        , Border.rounded 6
+                        [ padding 1
+                        , width fill
+                        , Border.width 1
                         , Border.color color.blue
                         , Background.color color.lightBlue
-                        , Font.variant Font.smallCaps
                         ]
                         { onPress = Just (LoadChild x.name), label = text x.name }
 
@@ -482,10 +481,6 @@ fileListDecoder =
         |> required "files" (list fileDecoder)
 
 
-
---filesDecoder : Decoder (List FileObject)
-
-
 fileDecoder : Decoder FileObject
 fileDecoder =
     Decode.succeed FileObject
@@ -509,15 +504,3 @@ type alias FileObject =
     , mode : Int
     , symlink : Bool
     }
-
-
-
--- zzzzzzzzzzzzzzzzzz
--- {"name":"various-readings.org",
---      "executable":false,
---      "extname":".org",
---      "ftype":"file",
---      "size":390,
---      "mtime":"2025-07-03T18:49:25.634+01:00",
---      "mode":33204,
---      "symlink":false}
