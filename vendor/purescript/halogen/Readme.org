@@ -14,6 +14,8 @@ https://github.com/thomashoneyman/purescript-halogen-realworld
 
 https://github.com/JordanMartinez/learn-halogen
 
+https://github.com/purescript-halogen/purescript-halogen/tree/master/docs/guide
+
 Affjax example
 https://pursuit.purescript.org/packages/purescript-affjax/12.0.0
 

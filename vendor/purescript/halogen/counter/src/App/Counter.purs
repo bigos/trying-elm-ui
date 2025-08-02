@@ -34,10 +34,21 @@ type State =
   , postStatus :: PostStatus
   }
 
+type FileObject =
+  { name :: String
+  , executable :: Boolean
+  , extname :: String
+  , ftype :: String
+  , size :: Int
+  , mtime :: String
+  , mode :: Int
+  , symlink :: Boolean
+  }
+
 type Files =
   { pwd :: String
   , show_hidden :: Boolean
-  , files :: List String
+  , files :: List FileObject
   }
 
 type FetchingFilePost =
@@ -170,7 +181,7 @@ panel state side =
             else
               ( case state.postStatus of
                   OkPosted fx ->
-                    fromFoldable fx.files
+                    (map (\f -> f.name) (fromFoldable fx.files))
                   _ ->
                     [ "nothing" ]
               )
