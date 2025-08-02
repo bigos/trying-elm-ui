@@ -1,31 +1,29 @@
 module App.Counter where
 
-import Prelude
+--import Prelude
+import Prelude (class Show, Unit, bind, discard, map, show, ($), (+), (-), (<), (<>), (==))
 
 import Affjax.RequestBody as AXRB
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
-import Data.Argonaut (decodeJson, encodeJson, printJsonDecodeError)
+import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Array (fromFoldable)
-import Data.Either (Either(..))
-import Data.Either (hush)
+import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
 import Data.List (List)
-import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Show.Generic (genericShow, genericShow', genericShowArgs)
-import Effect (Effect)
-import Effect.Aff (launchAff_)
+import Data.Maybe (Maybe(..))
+import Data.Show.Generic (genericShow)
 import Effect.Aff.Class (class MonadAff)
-import Effect.Class.Console (log)
-import Effect.Exception (throw)
 import Halogen as H
-import Halogen.Component
+import Halogen.Component (Component)
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
+import Halogen.HTML.Core (HTML)
+import Halogen.HTML.Properties (IProp)
 
 type State =
   { count :: Int
@@ -182,6 +180,14 @@ render state =
         ]
     ]
 
+panel
+  :: forall w236 i237 t254
+   . { postStatus :: PostStatus
+     | t254
+     }
+  -> String
+  -> Array (HTML w236 i237)
+
 panel state side =
   [ HH.div (da_border_color "blue") [ HH.text (side <> " toolbar") ]
   ]
@@ -199,6 +205,16 @@ panel state side =
       )
     <> [ HH.div [ HP.style "background: yellow" ] [ HH.text (side <> " status") ] ]
 
+da_border_color
+  :: forall r227 i228
+   . String
+  -> Array
+       ( IProp
+           ( style :: String
+           | r227
+           )
+           i228
+       )
 da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
