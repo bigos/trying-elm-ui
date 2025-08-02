@@ -157,14 +157,31 @@ update msg model =
                                         }
                             }
                     in
-                    ( model, httpLoadFiles m2 )
+                    ( m2, httpLoadFiles m2 )
 
         LoadChild child ->
             Debug.log
                 (Debug.toString
                     ("loading child " ++ child)
                 )
-                ( model, Cmd.none )
+                (case model.dirs.leftDir of
+                    Nothing ->
+                        ( model, Cmd.none )
+
+                    Just files ->
+                        let
+                            m2 =
+                                { model
+                                    | dirs =
+                                        buildOnlyLeftDir
+                                            { pwd = files.pwd ++ "/" ++ child
+                                            , showHidden = False
+                                            , files = []
+                                            }
+                                }
+                        in
+                        ( m2, httpLoadFiles m2 )
+                )
 
 
 buildOnlyLeftDir : Files -> Dirs

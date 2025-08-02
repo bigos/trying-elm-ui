@@ -6488,15 +6488,31 @@ var $author$project$UiExperiment$update = F2(
 								{files: _List_Nil, pwd: pwdxStrOk, showHidden: false})
 						});
 					return _Utils_Tuple2(
-						model,
+						m2,
 						$author$project$UiExperiment$httpLoadFiles(m2));
 				}
 			default:
 				var child = msg.a;
 				return A2(
 					$elm$core$Debug$log,
-					$elm$core$Debug$toString('loading child' + child),
-					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+					$elm$core$Debug$toString('loading child ' + child),
+					function () {
+						var _v3 = model.dirs.leftDir;
+						if (_v3.$ === 'Nothing') {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var files = _v3.a;
+							var m2 = _Utils_update(
+								model,
+								{
+									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+										{files: _List_Nil, pwd: files.pwd + ('/' + child), showHidden: false})
+								});
+							return _Utils_Tuple2(
+								m2,
+								$author$project$UiExperiment$httpLoadFiles(m2));
+						}
+					}());
 		}
 	});
 var $author$project$UiExperiment$LoadFiles = {$: 'LoadFiles'};
