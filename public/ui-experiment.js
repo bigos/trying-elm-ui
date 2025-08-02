@@ -6464,7 +6464,7 @@ var $author$project$UiExperiment$update = F2(
 						$elm$core$Debug$toString(errMsg),
 						_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
 				}
-			default:
+			case 'LoadParent':
 				var m1fx = model.dirs.leftDir;
 				if (m1fx.$ === 'Nothing') {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -6491,6 +6491,12 @@ var $author$project$UiExperiment$update = F2(
 						model,
 						$author$project$UiExperiment$httpLoadFiles(m2));
 				}
+			default:
+				var child = msg.a;
+				return A2(
+					$elm$core$Debug$log,
+					$elm$core$Debug$toString('loading child' + child),
+					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
 		}
 	});
 var $author$project$UiExperiment$LoadFiles = {$: 'LoadFiles'};
@@ -12441,32 +12447,9 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 			f,
 			f));
 };
-var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
-	return {$: 'Text', a: a};
+var $author$project$UiExperiment$LoadChild = function (a) {
+	return {$: 'LoadChild', a: a};
 };
-var $mdgriffith$elm_ui$Element$text = function (content) {
-	return $mdgriffith$elm_ui$Internal$Model$Text(content);
-};
-var $author$project$UiExperiment$panel_files = F2(
-	function (_v0, files) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_Nil,
-			A2(
-				$elm$core$List$map,
-				function (x) {
-					return A2(
-						$mdgriffith$elm_ui$Element$el,
-						_List_Nil,
-						$mdgriffith$elm_ui$Element$text(x));
-				},
-				A2(
-					$elm$core$List$map,
-					function (f) {
-						return f.name;
-					},
-					files.files)));
-	});
 var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
 var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 	return A2(
@@ -12482,6 +12465,12 @@ var $mdgriffith$elm_ui$Internal$Model$VariantActive = function (a) {
 	return {$: 'VariantActive', a: a};
 };
 var $mdgriffith$elm_ui$Element$Font$smallCaps = $mdgriffith$elm_ui$Internal$Model$VariantActive('smcp');
+var $mdgriffith$elm_ui$Internal$Model$Text = function (a) {
+	return {$: 'Text', a: a};
+};
+var $mdgriffith$elm_ui$Element$text = function (content) {
+	return $mdgriffith$elm_ui$Internal$Model$Text(content);
+};
 var $mdgriffith$elm_ui$Internal$Flag$fontVariant = $mdgriffith$elm_ui$Internal$Flag$flag(48);
 var $mdgriffith$elm_ui$Element$Font$variant = function (_var) {
 	switch (_var.$) {
@@ -12504,6 +12493,40 @@ var $mdgriffith$elm_ui$Element$Font$variant = function (_var) {
 					'\"' + (name + ('\" ' + $elm$core$String$fromInt(index)))));
 	}
 };
+var $author$project$UiExperiment$panel_files = F2(
+	function (_v0, files) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_Nil,
+			A2(
+				$elm$core$List$map,
+				function (x) {
+					var isDirectory = x.ftype === 'directory';
+					return isDirectory ? A2(
+						$mdgriffith$elm_ui$Element$Input$button,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(10),
+								$mdgriffith$elm_ui$Element$Border$width(3),
+								$mdgriffith$elm_ui$Element$Border$rounded(6),
+								$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.blue),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue),
+								$mdgriffith$elm_ui$Element$Font$variant($mdgriffith$elm_ui$Element$Font$smallCaps)
+							]),
+						{
+							label: $mdgriffith$elm_ui$Element$text(x.name),
+							onPress: $elm$core$Maybe$Just(
+								$author$project$UiExperiment$LoadChild(x.name))
+						}) : A2(
+						$mdgriffith$elm_ui$Element$el,
+						(x.mtime === '') ? _List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.yellow)
+							]) : _List_Nil,
+						$mdgriffith$elm_ui$Element$text(x.name));
+				},
+				files.files));
+	});
 var $author$project$UiExperiment$file_panel = F2(
 	function (model, lr) {
 		var lrdir = (lr === 'left') ? model.dirs.leftDir : model.dirs.rightDir;

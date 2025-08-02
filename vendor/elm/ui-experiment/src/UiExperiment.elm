@@ -86,6 +86,7 @@ type Msg
     | LoadFiles
     | LoadedFiles (Result Http.Error Files)
     | LoadParent
+    | LoadChild String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -157,6 +158,13 @@ update msg model =
                             }
                     in
                     ( model, httpLoadFiles m2 )
+
+        LoadChild child ->
+            Debug.log
+                (Debug.toString
+                    ("loading child " ++ child)
+                )
+                ( model, Cmd.none )
 
 
 buildOnlyLeftDir : Files -> Dirs
@@ -249,12 +257,37 @@ file_panel_right model =
     file_panel model "right"
 
 
-panel_files : Model -> Files -> Element msg
+panel_files : Model -> Files -> Element Msg
 panel_files _ files =
     column []
         (List.map
-            (\x -> el [] (text x))
-            (List.map (\f -> f.name) files.files)
+            (\x ->
+                let
+                    isDirectory =
+                        x.ftype == "directory"
+                in
+                if isDirectory then
+                    Input.button
+                        [ padding 10
+                        , Border.width 3
+                        , Border.rounded 6
+                        , Border.color color.blue
+                        , Background.color color.lightBlue
+                        , Font.variant Font.smallCaps
+                        ]
+                        { onPress = Just (LoadChild x.name), label = text x.name }
+
+                else
+                    el
+                        (if x.mtime == "" then
+                            [ Background.color color.yellow ]
+
+                         else
+                            []
+                        )
+                        (text x.name)
+            )
+            files.files
         )
 
 
