@@ -5,7 +5,13 @@ class Files
     @files = @dir
                .entries
                .sort
-               .map { |f|  File.new(File.join(@dir.path, f)) }
+               .map { |f|
+      begin
+        File.new(File.join(@dir.path, f))
+      rescue
+        nil
+      end
+    }.reject(&:blank?) # this is wrong
                .map { |f|
       { name: File.basename(f),
         executable: File.executable?(f),
