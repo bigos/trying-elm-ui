@@ -83,6 +83,7 @@ init flags =
 
 type Msg
     = Toggle
+    | Reload
     | LoadFiles
     | LoadedFiles (Result Http.Error Files)
     | LoadParent
@@ -93,7 +94,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Toggle ->
-            ( { model | toggle = not model.toggle }, Cmd.none )
+            let
+                m2 =
+                    { model | toggle = not model.toggle }
+            in
+            update Reload m2
 
         LoadFiles ->
             ( model, httpLoadFiles model )
@@ -175,13 +180,32 @@ update msg model =
                                     | dirs =
                                         buildOnlyLeftDir
                                             { pwd = files.pwd ++ "/" ++ child
-                                            , showHidden = False
+                                            , showHidden = model.toggle
                                             , files = []
                                             }
                                 }
                         in
                         ( m2, httpLoadFiles m2 )
                 )
+
+        Reload ->
+            case model.dirs.leftDir of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just files ->
+                    let
+                        m2 =
+                            { model
+                                | dirs =
+                                    buildOnlyLeftDir
+                                        { pwd = files.pwd
+                                        , showHidden = model.toggle
+                                        , files = []
+                                        }
+                            }
+                    in
+                    ( m2, httpLoadFiles m2 )
 
 
 buildOnlyLeftDir : Files -> Dirs
@@ -318,7 +342,7 @@ view model =
             -- , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
-                , label = Input.labelRight [] (text "Switch Toggle")
+                , label = Input.labelRight [] (text "Show Hidden")
                 , checked = model.toggle
                 , icon =
                     toggleCheckboxWidget
@@ -466,7 +490,7 @@ httpLoadFiles model =
                             Just files ->
                                 Encode.string files.pwd
                       )
-                    , ( "show_hidden", Encode.bool False )
+                    , ( "show_hidden", Encode.bool model.toggle )
                     ]
                 )
         , expect = Http.expectJson LoadedFiles fileListDecoder
