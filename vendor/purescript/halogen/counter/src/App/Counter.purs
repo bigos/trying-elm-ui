@@ -58,14 +58,14 @@ type FetchingFilePost =
   , show_hidden :: Boolean
   }
 
-data PostStatus = Empty | Posting | OkPosted Files | ErrorPosted String
+data PostStatus = Empty | OkPosted Files | ErrorPosted String
 
 derive instance genericPostStatus :: Generic PostStatus _
 
 instance showPostStatus :: Show PostStatus where
   show = genericShow
 
-data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost
+data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost | LoadParent
 
 type TagDataConfig =
   { api_endpoint :: Maybe String
@@ -192,7 +192,14 @@ panel
   -> Array (HTML w236 i237)
 
 panel state side =
-  [ HH.div (da_border_color "blue") [ HH.text (side <> " toolbar") ]
+  [ HH.div [] --(da_border_color "blue")
+      -- why this won't work
+      [ --  HH.button
+        --     [ HE.onClick \_ -> LoadParent ]
+        --     [ HH.text "Parent" ]
+        -- ,
+        HH.text (side <> " toolbar")
+      ]
   ]
     <>
       ( map (\n -> HH.div [] [ HH.text n ])
@@ -220,9 +227,8 @@ da_border_color
        )
 da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
--- we loose the previous status here ;-(
-try_pwd :: State -> String
-try_pwd sta =
+parent_pwd :: State -> String
+parent_pwd sta =
   case sta.postStatus of
     OkPosted files -> joinWith "/" (DA.take 2 (split (Pattern "/") files.pwd))
     _ -> "/home/jacek/"
@@ -243,13 +249,12 @@ handleAction = case _ of
       , result = map _.body (hush response)
       }
   MakeRequestPost -> do
-    H.modify_ \st -> st { postStatus = Posting }
     sta <- H.get -- get the state
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $
               -- how do I access state?
-              { pwd: (try_pwd sta)
+              { pwd: ("/home/jacek/")
               , show_hidden: false
               }
           )
@@ -265,4 +270,24 @@ handleAction = case _ of
                   ErrorPosted (printJsonDecodeError e)
                 Right f ->
                   OkPosted (f)
+      }
+  LoadParent -> do
+    sta <- H.get
+    response <- H.liftAff $
+      ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
+          ( Just $ AXRB.json $ fetchingFilePostToJson $ -- how do I access state?
+              { pwd: (parent_pwd sta)
+              , show_hidden: false
+              }
+          )
+      )
+    H.modify_ \st -> st
+      { postStatus = case response of
+          Left error -> ErrorPosted (AX.printError error)
+          Right payload ->
+            case (jsonToFiles payload.body) of
+              Left e ->
+                ErrorPosted (printJsonDecodeError e)
+              Right f ->
+                OkPosted (f)
       }
