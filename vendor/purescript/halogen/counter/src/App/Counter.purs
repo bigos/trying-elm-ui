@@ -217,6 +217,9 @@ da_border_color
        )
 da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
+try_pwd :: State -> Sting
+try_pwd st = if st.postStatus == Empty then "/home/jacek/" else "/home/"
+
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
@@ -235,7 +238,14 @@ handleAction = case _ of
   MakeRequestPost -> do
     H.modify_ \st -> st { postStatus = Posting }
     response <- H.liftAff $
-      (AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files") (Just $ AXRB.json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false }))
+      ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
+          ( Just $ AXRB.json $ fetchingFilePostToJson $
+              -- how do I access state?
+              { pwd: (try_pwd st)
+              , show_hidden: false
+              }
+          )
+      )
     H.modify_ \st -> st
       { postStatus =
           case response of
