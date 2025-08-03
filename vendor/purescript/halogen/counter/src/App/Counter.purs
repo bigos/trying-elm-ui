@@ -192,13 +192,12 @@ panel
   -> Array (HTML w236 i237)
 
 panel state side =
-  [ HH.div [] --(da_border_color "blue")
-      -- why this won't work
-      [ --  HH.button
-        --     [ HE.onClick \_ -> LoadParent ]
-        --     [ HH.text "Parent" ]
-        -- ,
-        HH.text (side <> " toolbar")
+  [ HH.div (da_border_color "blue")
+      [ HH.button
+          -- why this won't work
+          [] --  [ HE.onClick \_ -> LoadParent ]
+          [ HH.text "Parent" ]
+      , HH.text (side <> " toolbar")
       ]
   ]
     <>
