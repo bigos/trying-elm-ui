@@ -1,7 +1,8 @@
 module App.Counter where
 
 --import Prelude
-import Prelude (class Show, Unit, bind, discard, map, show, ($), (+), (-), (<), (<>), (==))
+
+import Data.String
 
 import Affjax.RequestBody as AXRB
 import Affjax.ResponseFormat as AXRF
@@ -10,6 +11,7 @@ import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Array (fromFoldable)
+import Data.Array as DA
 import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
@@ -20,10 +22,11 @@ import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.Component (Component)
 import Halogen.HTML as HH
-import Halogen.HTML.Events as HE
-import Halogen.HTML.Properties as HP
 import Halogen.HTML.Core (HTML)
+import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties (IProp)
+import Halogen.HTML.Properties as HP
+import Prelude (class Show, Unit, bind, discard, map, show, ($), (+), (-), (<), (<>), (==))
 
 type State =
   { count :: Int
@@ -217,8 +220,12 @@ da_border_color
        )
 da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
-try_pwd :: State -> Sting
-try_pwd st = if st.postStatus == Empty then "/home/jacek/" else "/home/"
+-- we loose the previous status here ;-(
+try_pwd :: State -> String
+try_pwd sta =
+  case sta.postStatus of
+    OkPosted files -> joinWith "/" (DA.take 2 (split (Pattern "/") files.pwd))
+    _ -> "/home/jacek/"
 
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
@@ -237,11 +244,12 @@ handleAction = case _ of
       }
   MakeRequestPost -> do
     H.modify_ \st -> st { postStatus = Posting }
+    sta <- H.get -- get the state
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $
               -- how do I access state?
-              { pwd: (try_pwd st)
+              { pwd: (try_pwd sta)
               , show_hidden: false
               }
           )

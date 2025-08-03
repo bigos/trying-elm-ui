@@ -16,6 +16,7 @@
   , "lists"
   , "maybe"
   , "prelude"
+  , "strings"
   , "transformers"
   , "web-dom"
   , "web-html"
