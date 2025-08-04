@@ -183,8 +183,8 @@ render state =
         ]
     ]
 
-aaa :: forall w472 i473. HTML w472 i473
-aaa = HH.text "aaa"
+--aaa :: forall w472 i473. HTML w472 i473
+aaa z = HH.text "aaa" <> z
 
 bbb :: forall w472 i473. HTML w472 i473
 bbb = HH.button [] [ HH.text "bbb" ]
