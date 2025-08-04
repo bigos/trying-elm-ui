@@ -1,7 +1,5 @@
 module App.Counter where
 
---import Prelude
-
 import Prelude
 
 import Affjax.RequestBody as AXRB
@@ -19,6 +17,7 @@ import Data.List (List, length)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Data.String as DS
+import Data.String.Common (joinWith)
 import Data.String.Utils (endsWith)
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
@@ -28,7 +27,6 @@ import Halogen.HTML.Core (HTML)
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties (IProp)
 import Halogen.HTML.Properties as HP
-import Data.String.Common (joinWith)
 
 type State =
   { count :: Int
@@ -185,14 +183,14 @@ render state =
         ]
     ]
 
-panel
-  :: forall w254 t279
-   . { postStatus :: PostStatus
-     | t279
-     }
-  -> String
-  -> Array (HTML w254 Action)
+zzz n =
+  -- how do i check if object is a string
+  if isA n String then
+    HH.text n
+  else
+    HH.button [] [ HH.text n.name ]
 
+panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
   [ HH.div (da_border_color "blue")
       [ HH.button
@@ -203,7 +201,8 @@ panel state side =
       ]
   ]
     <>
-      ( map (\n -> HH.div [] [ HH.text n ])
+      ( map
+          (\n -> HH.div [] [ zzz n ])
           ( if side == "right" then [ "nothing" ]
             else
               ( case state.postStatus of
