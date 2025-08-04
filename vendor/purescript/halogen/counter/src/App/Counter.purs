@@ -184,18 +184,18 @@ render state =
     ]
 
 panel
-  :: forall w236 i237 t254
+  :: forall w254 t279
    . { postStatus :: PostStatus
-     | t254
+     | t279
      }
   -> String
-  -> Array (HTML w236 i237)
+  -> Array (HTML w254 Action)
 
 panel state side =
   [ HH.div (da_border_color "blue")
       [ HH.button
           -- why this won't work
-          [] --  [ HE.onClick \_ -> LoadParent ]
+          [ HE.onClick \_ -> LoadParent ]
           [ HH.text "Parent" ]
       , HH.text (side <> " toolbar")
       ]
