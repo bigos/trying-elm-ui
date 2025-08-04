@@ -5,9 +5,28 @@ SOURCE_FOLDER = __dir__
 
 puts "running script in #{SOURCE_FOLDER}"
 puts "to link the JS files to the destination folder: ./public/"
+puts ''
 
-puts `rm -v ./public/index_halogen.js`
-puts `ln -sv #{SOURCE_FOLDER}/vendor/purescript/halogen/counter/prod/index.js  ./public/index_halogen.js`
+puts "removing halogen"
+`rm -v ./public/index_halogen.js`
+puts "copying halogen"
+`ln -sv #{SOURCE_FOLDER}/vendor/purescript/halogen/counter/prod/index.js  ./public/index_halogen.js`
 
-puts `rm -v ./public/index_flame.js`
-puts `ln -sv #{SOURCE_FOLDER}/vendor/purescript/flame/counter/prod/index.js ./public/index_flame.js`
+if File.exist? "./public/index_halogen.js"
+  puts "success"
+else
+  puts "missing"
+end
+
+puts "\n"
+
+puts "removing flame"
+`rm -v ./public/index_flame.js`
+puts "copying flame"
+`ln -sv #{SOURCE_FOLDER}/vendor/purescript/flame/counter/prod/index.js ./public/index_flame.js`
+
+if File.exist? "./public/index_flame.js"
+  puts "success"
+else
+  puts "missing"
+end
