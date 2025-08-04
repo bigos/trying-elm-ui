@@ -183,12 +183,18 @@ render state =
         ]
     ]
 
-zzz n =
-  -- how do i check if object is a string
-  if isA n String then
-    HH.text n
-  else
-    HH.button [] [ HH.text n.name ]
+aaa :: forall w472 i473. HTML w472 i473
+aaa = HH.text "aaa"
+
+bbb :: forall w472 i473. HTML w472 i473
+bbb = HH.button [] [ HH.text "bbb" ]
+
+-- zzz n =
+--   -- how do i check if object is a string
+--   if isA n String then
+--     HH.text n
+--   else
+--     HH.button [] [ HH.text n.name ]
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
@@ -202,7 +208,10 @@ panel state side =
   ]
     <>
       ( map
-          (\n -> HH.div [] [ zzz n ])
+          ( \n -> HH.div []
+              [ --zzz n
+              ]
+          )
           ( if side == "right" then [ "nothing" ]
             else
               ( case state.postStatus of
