@@ -2,7 +2,7 @@ module App.Counter where
 
 --import Prelude
 
-import Data.String
+import Prelude
 
 import Affjax.RequestBody as AXRB
 import Affjax.ResponseFormat as AXRF
@@ -15,9 +15,11 @@ import Data.Array as DA
 import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
-import Data.List (List)
+import Data.List (List, length)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
+import Data.String as DS
+import Data.String.Utils (endsWith)
 import Effect.Aff.Class (class MonadAff)
 import Halogen as H
 import Halogen.Component (Component)
@@ -26,7 +28,7 @@ import Halogen.HTML.Core (HTML)
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties (IProp)
 import Halogen.HTML.Properties as HP
-import Prelude (class Show, Unit, bind, discard, map, show, ($), (+), (-), (<), (<>), (==))
+import Data.String.Common (joinWith)
 
 type State =
   { count :: Int
@@ -226,11 +228,35 @@ da_border_color
        )
 da_border_color color = [ HP.style ("border: solid " <> color <> " 1px") ]
 
+parent_thepwd :: String -> String
+parent_thepwd pwd =
+  if pwd == "/" then "/"
+  else
+    let
+      pwd2 =
+        ( if endsWith "/" pwd then
+            ( let
+                x = DS.length pwd - 1
+              in
+                DS.take x pwd
+            )
+          else pwd
+        )
+      joined =
+        ( joinWith "/"
+            ( DA.take
+                (DA.length (DS.split (DS.Pattern "/") pwd2) - 1)
+                (DS.split (DS.Pattern "/") pwd2)
+            )
+        )
+    in
+      if joined == "" then "/" else joined
+
 parent_pwd :: State -> String
 parent_pwd sta =
   case sta.postStatus of
-    OkPosted files -> joinWith "/" (DA.take 2 (split (Pattern "/") files.pwd))
-    _ -> "/home/jacek/"
+    OkPosted files -> parent_thepwd files.pwd
+    _ -> "/home/jacek"
 
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of

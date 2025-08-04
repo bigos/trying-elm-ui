@@ -17,6 +17,7 @@
   , "maybe"
   , "prelude"
   , "strings"
+  , "stringutils"
   , "transformers"
   , "web-dom"
   , "web-html"
