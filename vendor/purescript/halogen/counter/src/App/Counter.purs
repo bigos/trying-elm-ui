@@ -235,18 +235,14 @@ parent_thepwd pwd =
     let
       pwd2 =
         ( if endsWith "/" pwd then
-            ( let
-                x = DS.length pwd - 1
-              in
-                DS.take x pwd
-            )
+            DS.take (DS.length pwd - 1) pwd
           else pwd
         )
+      splitPwd2 =
+        (DS.split (DS.Pattern "/") pwd2)
       joined =
         ( joinWith "/"
-            ( DA.take
-                (DA.length (DS.split (DS.Pattern "/") pwd2) - 1)
-                (DS.split (DS.Pattern "/") pwd2)
+            ( DA.take (DA.length splitPwd2 - 1) splitPwd2
             )
         )
     in
