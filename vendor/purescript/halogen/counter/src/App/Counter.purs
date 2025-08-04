@@ -184,10 +184,10 @@ render state =
     ]
 
 --aaa :: forall w472 i473. HTML w472 i473
-aaa z = HH.text "aaa" <> z
+-- aaa z = HH.text "aaa" <> z
 
-bbb :: forall w472 i473. HTML w472 i473
-bbb = HH.button [] [ HH.text "bbb" ]
+-- bbb :: forall w472 i473. HTML w472 i473
+-- bbb = HH.button [] [ HH.text "bbb" ]
 
 -- zzz n =
 --   -- how do i check if object is a string
