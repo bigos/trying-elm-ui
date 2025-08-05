@@ -60,6 +60,8 @@ type FetchingFilePost =
 
 data PostStatus = Empty | OkPosted Files | ErrorPosted String
 
+--data ZzzOption = String | FileObject
+
 derive instance genericPostStatus :: Generic PostStatus _
 
 instance showPostStatus :: Show PostStatus where
@@ -183,18 +185,12 @@ render state =
         ]
     ]
 
---aaa :: forall w472 i473. HTML w472 i473
--- aaa z = HH.text "aaa" <> z
-
--- bbb :: forall w472 i473. HTML w472 i473
--- bbb = HH.button [] [ HH.text "bbb" ]
-
 -- zzz n =
---   -- how do i check if object is a string
---   if isA n String then
---     HH.text n
---   else
---     HH.button [] [ HH.text n.name ]
+--   case n of
+--     String ->
+--       HH.text n
+--     FileObject ->
+--       HH.button [] [ HH.text n.name ]
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
@@ -209,16 +205,17 @@ panel state side =
     <>
       ( map
           ( \n -> HH.div []
-              [ --zzz n
+              [ -- zzz n
+                HH.text n.name
               ]
           )
-          ( if side == "right" then [ "nothing" ]
+          ( if side == "right" then []
             else
               ( case state.postStatus of
                   OkPosted fx ->
                     (map (\f -> f.name) (fromFoldable fx.files))
                   _ ->
-                    [ "nothing" ]
+                    []
               )
           )
       )
