@@ -184,8 +184,11 @@ render state =
     ]
 
 -- what was the point?
-zzz :: String -> HTML ?aaaa t0
-zzz n = HH.text "nnn"
+zzz :: String -> HTML t1 t2
+zzz n = HH.text "string"
+
+zzz :: FileObject -> HTML ?t1 t2
+zzz n = HH.button [] [ HH.text "object" ]
 
 --zzz n = HH.text "nnn"
 
