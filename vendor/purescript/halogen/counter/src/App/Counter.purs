@@ -183,21 +183,15 @@ render state =
         ]
     ]
 
--- what was the point?
-zzz :: String -> HTML t1 t2
-zzz n = HH.text "string"
-
-zzz :: FileObject -> HTML ?t1 t2
-zzz n = HH.button [] [ HH.text "object" ]
-
---zzz n = HH.text "nnn"
-
--- ( case n of
---     FileObject ->
---       HH.text n.name
---     _ ->
---       HH.text "nnn"
--- )
+zzz :: forall w i. Either String FileObject -> HTML w i
+zzz n = case n of
+  Left str ->
+    HH.text str
+  Right fileobject ->
+    if fileobject.ftype == "directory" then
+      HH.button [] [ HH.text fileobject.name ]
+    else
+      HH.text fileobject.name
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
@@ -215,13 +209,13 @@ panel state side =
               [ zzz n
               ]
           )
-          ( if side == "right" then []
+          ( if side == "right" then [ Left "" ]
             else
               ( case state.postStatus of
                   OkPosted fx ->
-                    (map (\f -> f.name) (fromFoldable fx.files))
+                    (map (\f -> Right f) (fromFoldable fx.files))
                   _ ->
-                    []
+                    [ Left "" ]
               )
           )
       )
