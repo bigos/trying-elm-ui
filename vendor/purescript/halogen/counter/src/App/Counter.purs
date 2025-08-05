@@ -184,13 +184,17 @@ render state =
     ]
 
 -- what was the point?
-zzz n =
-  ( case n of
-      FileObject ->
-        HH.text n.name
-      _ ->
-        HH.text "nnn"
-  )
+zzz :: String -> HTML ?aaaa t0
+zzz n = HH.text "nnn"
+
+--zzz n = HH.text "nnn"
+
+-- ( case n of
+--     FileObject ->
+--       HH.text n.name
+--     _ ->
+--       HH.text "nnn"
+-- )
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
