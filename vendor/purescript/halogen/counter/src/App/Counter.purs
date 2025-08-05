@@ -206,7 +206,11 @@ panel state side =
       ( map
           ( \n -> HH.div []
               [ -- zzz n
-                HH.text n.name
+                case n of
+                  String _ ->
+                    HH.text "nnn"
+                  _ ->
+                    HH.text n.name
               ]
           )
           ( if side == "right" then []
