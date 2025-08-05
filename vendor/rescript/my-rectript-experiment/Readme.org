@@ -14,3 +14,7 @@ file:~/Programming/Ruby/trying-elm-ui/app/views/pure_script
 
 ** routes
 file:~/Programming/Ruby/trying-elm-ui/config/routes.rb::1
+
+
+** disappointment
+So far i was not able to see the ReScript content in the browser window.
