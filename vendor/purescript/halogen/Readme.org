@@ -41,3 +41,6 @@ solution to the handleAction signature problem
 https://github.com/purescript-halogen/purescript-halogen/blob/master/docs/guide/03-Performing-Effects.md#the-halogenm-type
 
 https://github.com/purescript-halogen/purescript-halogen/tree/master/docs/guide
+
+rendering halogen
+https://purescript-halogen.github.io/purescript-halogen/guide/01-Rendering-Halogen-HTML.html
