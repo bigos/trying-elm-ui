@@ -60,8 +60,6 @@ type FetchingFilePost =
 
 data PostStatus = Empty | OkPosted Files | ErrorPosted String
 
---data ZzzOption = String | FileObject
-
 derive instance genericPostStatus :: Generic PostStatus _
 
 instance showPostStatus :: Show PostStatus where
@@ -185,12 +183,14 @@ render state =
         ]
     ]
 
--- zzz n =
---   case n of
---     String ->
---       HH.text n
---     FileObject ->
---       HH.button [] [ HH.text n.name ]
+-- what was the point?
+zzz n =
+  ( case n of
+      FileObject ->
+        HH.text n.name
+      _ ->
+        HH.text "nnn"
+  )
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
@@ -205,12 +205,7 @@ panel state side =
     <>
       ( map
           ( \n -> HH.div []
-              [ -- zzz n
-                case n of
-                  String _ ->
-                    HH.text "nnn"
-                  _ ->
-                    HH.text n.name
+              [ zzz n
               ]
           )
           ( if side == "right" then []
