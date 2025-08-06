@@ -15,6 +15,10 @@ file:~/Programming/Ruby/trying-elm-ui/app/views/pure_script
 ** routes
 file:~/Programming/Ruby/trying-elm-ui/config/routes.rb::1
 
+** head modification
+https://guides.rubyonrails.org/layouts_and_rendering.html#using-the-content-for-method
+
+file:~/Programming/Ruby/trying-elm-ui/app/views/re_script/show.html.erb::1
 
 ** disappointment
 So far i was not able to see the ReScript content in the browser window.
