@@ -71,4 +71,15 @@ https://github.com/bigos/Pyrulis/blob/master/Purescript/halogen/counter/src/App/
 simple projects
 file:~/Programming/Pyrulis/Purescript/
 
+** Rescript
+I was able to modify the html file
+file:~/Programming/Rails/trying-elm-ui/app/views/re_script/show.html.erb::19
+modifying src of the script
+
+and copied the JS file
+from
+file:~/Programming/Rails/trying-elm-ui/vendor/rescript/my-rectript-experiment/dist/assets/index-CGiRQrRV.js::1
+to
+file:~/Programming/Rails/trying-elm-ui/public/
+
 ** temporary notes
