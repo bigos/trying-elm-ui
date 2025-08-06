@@ -20,7 +20,7 @@ https://guides.rubyonrails.org/layouts_and_rendering.html#using-the-content-for-
 
 file:~/Programming/Ruby/trying-elm-ui/app/views/re_script/show.html.erb::1
 
-file:~/Programming/Ruby/trying-elm-ui/vendor/rescript/my-rectript-experiment/index.html::1
+file:~/Programming/Ruby/trying-elm-ui/vendor/rescript/my-rectript-experiment/
 
 
 ** disappointment
