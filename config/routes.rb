@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get "pure_script/show_halogen"
   get "pure_script/show_flame"
+  get "re_script/show"
 
   post "api/list-files" => "api/files#list"
   #  second example for clarity

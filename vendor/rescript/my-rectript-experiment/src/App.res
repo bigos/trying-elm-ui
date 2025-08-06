@@ -9,7 +9,6 @@ let make = () => {
   let (count, setCount) = React.useState(() => 0)
 
   <div className="max-w-200">
-    <h1>First heading</h1>
     <div className="flex justify-evenly items-center">
       <img src={vite} alt={"Vite logo"} className="h-24" />
       <img src={rescript} alt={"ReScript logo"} className="h-24" />
