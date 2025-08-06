@@ -183,11 +183,13 @@ render state =
         ]
     ]
 
-zzz :: forall w i. Either String FileObject -> HTML w i
+data ZzzValue = Fob FileObject | Str String
+
+zzz :: forall w i. ZzzValue -> HTML w i
 zzz n = case n of
-  Left str ->
+  Str str ->
     HH.text str
-  Right fileobject ->
+  Fob fileobject ->
     if fileobject.ftype == "directory" then
       HH.button [] [ HH.text fileobject.name ]
     else
@@ -209,13 +211,13 @@ panel state side =
               [ zzz n
               ]
           )
-          ( if side == "right" then [ Left "" ]
+          ( if side == "right" then [ Str "" ]
             else
               ( case state.postStatus of
                   OkPosted fx ->
-                    (map (\f -> Right f) (fromFoldable fx.files))
+                    (map (\f -> Fob f) (fromFoldable fx.files))
                   _ ->
-                    [ Left "" ]
+                    [ Str "" ]
               )
           )
       )
