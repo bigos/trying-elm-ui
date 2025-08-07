@@ -65,7 +65,7 @@ derive instance genericPostStatus :: Generic PostStatus _
 instance showPostStatus :: Show PostStatus where
   show = genericShow
 
-data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost | LoadParent
+data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost | LoadParent | LoadChild
 
 type TagDataConfig =
   { api_endpoint :: Maybe String
@@ -185,15 +185,18 @@ render state =
 
 data ZzzValue = Fob FileObject | Str String
 
-zzz :: forall w i. ZzzValue -> HTML w i
+--zzz :: forall w i. ZzzValue -> HTML w i
+--zzz :: forall w31. ZzzValue -> HTML w31 Action
 zzz n = case n of
   Str str ->
     HH.text str
   Fob fileobject ->
     if fileobject.ftype == "directory" then
-      HH.button [] [ HH.text fileobject.name ]
+      HH.button
+        [ HE.onClick \_ -> LoadChild ]
+        [ HH.text fileobject.name ]
     else
-      HH.text fileobject.name
+      HH.span [] [ HH.text fileobject.name ]
 
 panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
 panel state side =
@@ -261,7 +264,13 @@ parent_pwd sta =
     OkPosted files -> parent_thepwd files.pwd
     _ -> "/home/jacek"
 
-handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
+child_pwd :: State -> String -> String
+child_pwd sta child =
+  case sta.postStatus of
+    OkPosted files -> files.pwd -- <> "/" <> child
+    _ -> "/home/jacek"
+
+--handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   Decrement -> H.modify_ \st -> st { count = st.count - 1 }
@@ -277,7 +286,7 @@ handleAction = case _ of
       , result = map _.body (hush response)
       }
   MakeRequestPost -> do
-    sta <- H.get -- get the state
+    --sta <- H.get -- get the state
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $
@@ -318,4 +327,24 @@ handleAction = case _ of
                 ErrorPosted (printJsonDecodeError e)
               Right f ->
                 OkPosted (f)
+      }
+  LoadChild -> do
+    sta <- H.get
+    response <- H.liftAff $
+      ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
+          ( Just $ AXRB.json $ fetchingFilePostToJson $ -- how do I access state?
+              { pwd: (parent_pwd sta)
+              , show_hidden: false
+              }
+          )
+      )
+    H.modify_ \st -> st
+      { postStatus = case response of
+          Left error -> ErrorPosted (AX.printError error)
+          Right payload ->
+            case (jsonToFiles payload.body) of
+              Left e ->
+                ErrorPosted (printJsonDecodeError e)
+          Right f ->
+            OkPosted (f)
       }
