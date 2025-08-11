@@ -44,10 +44,21 @@ type Flags =
   , show_hidden :: Maybe String
   }
 
+type FileObject =
+  { name :: String
+  , executable :: Boolean
+  , extname :: String
+  , ftype :: String
+  , size :: Int
+  , mtime :: String
+  , mode :: Int
+  , symlink :: Boolean
+  }
+
 type Files =
   { pwd :: String
   , show_hidden :: Boolean
-  , files :: List String
+  , files :: List FileObject
   }
 
 type Dirs = { leftDir :: Maybe Files, rightDir :: Maybe Files }
@@ -170,7 +181,7 @@ panel mFiles side =
               Nothing ->
                 [ "nic" ]
               Just f ->
-                fromFoldable f.files
+                map (\n -> n.name) (fromFoldable f.files)
           )
       )
     <>
