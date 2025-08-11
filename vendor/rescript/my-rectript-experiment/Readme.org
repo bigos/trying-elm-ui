@@ -21,3 +21,24 @@ https://guides.rubyonrails.org/layouts_and_rendering.html#using-the-content-for-
 file:~/Programming/Ruby/trying-elm-ui/app/views/re_script/show.html.erb::1
 
 file:~/Programming/Ruby/trying-elm-ui/vendor/rescript/my-rectript-experiment/
+
+** running server
+In two tabs.
+https://github.com/rescript-lang/create-rescript-app/blob/master/templates/rescript-template-vite/README.md#development
+
+#+begin_example
+npm run res:dev
+#+end_example
+
+and
+#+begin_example
+npm run dev
+#+end_example
+
+** building
+#+begin_example
+npm install
+npm run
+npm build
+tree ./dist
+#+end_example
