@@ -1,0 +1,5 @@
+* Readme
+
+Giving up on this nonsense. What was the point of all ot this?
+
+I need to investigate ReScript next.
