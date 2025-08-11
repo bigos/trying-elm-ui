@@ -30,3 +30,19 @@ if File.exist? "./public/index_flame.js"
 else
   puts "missing"
 end
+
+puts 'removing rescript'
+
+`rm -v ./public/index_rescript.*`
+
+ASSETS_FOLDER = "#{SOURCE_FOLDER}/vendor/rescript/my-rectript-experiment/dist/assets/"
+dir = Dir.open ASSETS_FOLDER
+dir.children.each do |c|
+  if c.to_s.end_with? '.js'
+    `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.js`
+  end
+
+  if c.to_s.end_with? '.css'
+    `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.css`
+  end
+end
