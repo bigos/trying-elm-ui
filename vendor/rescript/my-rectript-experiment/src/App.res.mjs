@@ -38,7 +38,7 @@ function App(props) {
                       className: "text-6xl m-16 font-semibold text-center"
                     }),
                 JsxRuntime.jsx(Button.make, {
-                      children: Caml_option.some("count is " + match[0].toString()),
+                      children: Caml_option.some("THE count is " + match[0].toString()),
                       onClick: (function (param) {
                           setCount(function (count) {
                                 return count + 1 | 0;

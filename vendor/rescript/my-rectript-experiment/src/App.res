@@ -15,7 +15,7 @@ let make = () => {
     </div>
     <h1 className="text-6xl m-16 font-semibold text-center"> {"Vite + ReScript"->React.string} </h1>
     <Button onClick={_ => setCount(count => count + 1)}>
-      {React.string(`count is ${count->Int.toString}`)}
+      {React.string(`THE count is ${count->Int.toString}`)}
     </Button>
     <p className="my-6 text-center">
       {React.string("Edit ")}
