@@ -174,7 +174,11 @@ view model = HE.main "main"
 
 panel :: forall h. Maybe Files -> String -> Array (Html h)
 panel mFiles side =
-  [ HE.div da_border_blue (side <> " toolbar") ]
+  [ HE.div da_border_red
+      [ HE.button [ HA.onClick FetchFiles ] "Fetch Files"
+      , HE.div da_border_blue (side <> " toolbar")
+      ]
+  ]
     <>
       ( map (\n -> HE.div_ n)
           ( case mFiles of
