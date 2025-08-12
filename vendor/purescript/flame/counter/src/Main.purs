@@ -68,7 +68,7 @@ type FetchingFilePost =
   , show_hidden :: Boolean
   }
 
-data Message = Initialize Flags | FetchFiles
+data Message = Initialize Flags | FetchFiles | LoadParent
 
 data Result = NotFetched | Fetching | Ok String | Error String
 
@@ -144,6 +144,46 @@ update { display, model, message } =
                 { resultFiles: OkFile (f)
                 , dirs: { leftDir: Just f, rightDir: Nothing }
                 }
+    LoadParent -> do
+      display $ FAE.diff'
+        { resultFiles: FetchingFile }
+      response <-
+        ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
+            ( Just $ json $ fetchingFilePostToJson $
+                { pwd:
+                    ( case model.dirs.leftDir of
+                        Nothing ->
+                          "/home/jacek/"
+                        Just dir ->
+                          dir.pwd
+                    )
+                , show_hidden:
+                    ( case model.dirs.leftDir of
+                        Nothing ->
+                          false
+                        Just dir ->
+                          dir.show_hidden
+                    )
+                }
+            )
+        )
+      case response of
+        Left error -> FAE.diff
+          { resultFiles: (ErrorFile (A.printError error))
+          , dirs: { leftDir: Nothing, rightDir: Nothing }
+          }
+        Right payload ->
+          case (jsonToFiles payload.body) of
+            Left e ->
+              FAE.diff
+                { resultFiles: ErrorFile (printJsonDecodeError e)
+                , dirs: { leftDir: Nothing, rightDir: Nothing }
+                }
+            Right f ->
+              FAE.diff
+                { resultFiles: OkFile (f)
+                , dirs: { leftDir: Just f, rightDir: Nothing }
+                }
 
 flagsCounter :: Flags -> Int
 flagsCounter flags =
@@ -173,19 +213,19 @@ view model = HE.main "main"
   ]
 
 --panel :: forall h. Maybe Files -> String -> Array (Html h)
-panel
-  :: forall t215 f216 t218
-   . Foldable f216
-  => Maybe
-       { files ::
-           f216
-             { name :: String
-             | t215
-             }
-       | t218
-       }
-  -> String
-  -> Array (Html Message)
+-- panel
+--   :: forall t215 f216 t218
+--    . Foldable f216
+--   => Maybe
+--        { files ::
+--            f216
+--              { name :: String
+--              | t215
+--              }
+--        | t218
+--        }
+--   -> String
+--   -> Array (Html Message)
 
 panel mFiles side =
   [ HE.div da_border_green
