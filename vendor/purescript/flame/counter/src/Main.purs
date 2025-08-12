@@ -275,22 +275,8 @@ panel mFiles side =
       ]
   ]
     <>
-      ( map (\n -> HE.div_ n)
-          ( case mFiles of
-              Nothing ->
-                [ HE.span [] "nic" ]
-              Just f ->
-                map
-                  ( \n ->
-                      if (n.ftype == "directory") then
-                        (HE.button [ HA.onClick (LoadParent) ] n.name)
-                      else
-                        HE.span []
-                          n.name
-                  )
-                  (fromFoldable f.files)
-          )
-      )
+      panelInner mFiles
+
     <>
       [ HE.div
           ( [ HA.styleAttr "background: yellow" ]
@@ -298,6 +284,17 @@ panel mFiles side =
           )
           (side <> " status")
       ]
+
+panelInner mFiles =
+  ( case mFiles of
+      Nothing -> []
+      Just f -> panelInnerJust f
+
+  )
+
+panelInnerJust f =
+  map (\n -> HE.span [] n.name)
+    (f.files)
 
 da_border_red :: forall t. Array (NodeData t)
 da_border_red = da_border_color "red"
