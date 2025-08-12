@@ -1,1 +1,1 @@
-/home/jacek/Programming/Ruby/trying-elm-ui/vendor/rescript/my-rectript-experiment/dist/assets//index-C5vmaaTz.js
+/home/jacek/Programming/Rails/trying-elm-ui/vendor/rescript/my-rectript-experiment/dist/assets//index-CGiRQrRV.js
