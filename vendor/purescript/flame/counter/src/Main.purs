@@ -10,6 +10,7 @@ import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Array (fromFoldable)
+import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.List (List)
@@ -157,15 +158,19 @@ update { display, model, message } =
                         Nothing ->
                           "/home/jacek/"
                         Just dir ->
-                          --dir.pwd
                           let
                             dpwd = dir.pwd
+                            pwd2 =
+                              if dpwd == "/" then "/"
+                              else -- "/home/jacek/"
+                                ( if endsWith "/" dpwd then
+                                    DS.take ((DS.length dpwd) - 1) dpwd
+                                  else dpwd
+                                )
+                            splitPwd2 = (DS.split (DS.Pattern "/") pwd2)
+                            joined = (DS.joinWith "/" (DA.take (DA.length splitPwd2 - 1) splitPwd2))
                           in
-                            if dpwd == "/" then "/"
-                            else -- "/home/jacek/"
-                              ( if endsWith "/" dpwd then "/"
-                                else dpwd
-                              )
+                            if joined == "" then "/" else joined
                     )
                 , show_hidden:
                     ( case model.dirs.leftDir of
@@ -239,7 +244,7 @@ view model = HE.main "main"
 
 panel mFiles side =
   [ HE.div da_border_green
-      [ HE.button [ HA.onClick FetchFiles ] "Fetch Files"
+      [ HE.button [ HA.onClick LoadParent ] "Parent"
       , HE.div da_border_blue (side <> " toolbar")
       ]
   ]
