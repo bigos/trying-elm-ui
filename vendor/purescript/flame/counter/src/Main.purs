@@ -14,6 +14,8 @@ import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.List (List)
 import Data.Maybe (Maybe(..), fromMaybe)
+import Data.String as DS
+import Data.String.Utils (endsWith)
 import Effect (Effect)
 import Effect.Exception (throw)
 import Flame (QuerySelector(..))
@@ -155,7 +157,15 @@ update { display, model, message } =
                         Nothing ->
                           "/home/jacek/"
                         Just dir ->
-                          dir.pwd
+                          --dir.pwd
+                          let
+                            dpwd = dir.pwd
+                          in
+                            if dpwd == "/" then "/"
+                            else -- "/home/jacek/"
+                              ( if endsWith "/" dpwd then "/"
+                                else dpwd
+                              )
                     )
                 , show_hidden:
                     ( case model.dirs.leftDir of
