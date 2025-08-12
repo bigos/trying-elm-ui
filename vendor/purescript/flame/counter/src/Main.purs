@@ -173,8 +173,22 @@ view model = HE.main "main"
   ]
 
 --panel :: forall h. Maybe Files -> String -> Array (Html h)
+panel
+  :: forall t215 f216 t218
+   . Foldable f216
+  => Maybe
+       { files ::
+           f216
+             { name :: String
+             | t215
+             }
+       | t218
+       }
+  -> String
+  -> Array (Html Message)
+
 panel mFiles side =
-  [ HE.div (da_border_green)
+  [ HE.div da_border_green
       [ HE.button [ HA.onClick FetchFiles ] "Fetch Files"
       , HE.div da_border_blue (side <> " toolbar")
       ]
