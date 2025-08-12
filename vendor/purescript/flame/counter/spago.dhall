@@ -15,6 +15,8 @@
   , "lists"
   , "maybe"
   , "prelude"
+  , "strings"
+  , "stringutils"
   , "web-dom"
   , "web-html"
   ]
