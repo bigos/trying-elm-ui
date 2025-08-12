@@ -172,9 +172,9 @@ view model = HE.main "main"
       ]
   ]
 
-panel :: forall h. Maybe Files -> String -> Array (Html h)
+--panel :: forall h. Maybe Files -> String -> Array (Html h)
 panel mFiles side =
-  [ HE.div da_border_red
+  [ HE.div (da_border_green)
       [ HE.button [ HA.onClick FetchFiles ] "Fetch Files"
       , HE.div da_border_blue (side <> " toolbar")
       ]
