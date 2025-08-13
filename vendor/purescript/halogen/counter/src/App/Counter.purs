@@ -298,28 +298,16 @@ handleAction = case _ of
       , result = map _.body (hush response)
       }
   MakeRequestPost -> do
-    --sta <- H.get -- get the state
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $
-              -- how do I access state?
               { pwd: ("/home/jacek/")
               , show_hidden: false
               }
           )
       )
     H.modify_ \st -> st
-      { postStatus =
-          case response of
-            Left error ->
-              ErrorPosted (AX.printError error)
-            Right payload ->
-              case (jsonToFiles payload.body) of
-                Left e ->
-                  ErrorPosted (printJsonDecodeError e)
-                Right f ->
-                  OkPosted (f)
-      }
+      { postStatus = handleResponse response }
   LoadParent -> do
     sta <- H.get
     response <- H.liftAff $
@@ -331,15 +319,7 @@ handleAction = case _ of
           )
       )
     H.modify_ \st -> st
-      { postStatus = case response of
-          Left error -> ErrorPosted (AX.printError error)
-          Right payload ->
-            case (jsonToFiles payload.body) of
-              Left e ->
-                ErrorPosted (printJsonDecodeError e)
-              Right f ->
-                OkPosted (f)
-      }
+      { postStatus = handleResponse response }
   LoadChild child -> do
     sta <- H.get
     response <- H.liftAff $
@@ -351,12 +331,15 @@ handleAction = case _ of
           )
       )
     H.modify_ \st -> st
-      { postStatus = case response of
-          Left error -> ErrorPosted (AX.printError error)
-          Right payload ->
-            case (jsonToFiles payload.body) of
-              Left e ->
-                ErrorPosted (printJsonDecodeError e)
-              Right f ->
-                OkPosted (f)
-      }
+      { postStatus = handleResponse response }
+  where
+  handleResponse resp =
+    case resp of
+      Left error ->
+        ErrorPosted (AX.printError error)
+      Right payload ->
+        case (jsonToFiles payload.body) of
+          Left e ->
+            ErrorPosted (printJsonDecodeError e)
+          Right f ->
+            OkPosted (f)
