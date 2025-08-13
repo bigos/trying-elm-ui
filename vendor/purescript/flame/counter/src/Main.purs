@@ -268,6 +268,7 @@ view model = HE.main "main"
       ]
   ]
 
+panel :: Maybe Files -> String -> Array (Html Message)
 panel mFiles side =
   [ HE.div da_border_green
       [ HE.button [ HA.onClick LoadParent ] "Parent"
@@ -285,6 +286,7 @@ panel mFiles side =
           (side <> " status")
       ]
 
+panelInner :: Maybe Files -> Array (Html Message)
 panelInner mFiles =
   ( case mFiles of
       Nothing -> []
@@ -292,9 +294,19 @@ panelInner mFiles =
 
   )
 
+panelInnerJust :: Files -> Array (Html Message)
 panelInnerJust f =
-  map (\n -> HE.span [] n.name)
-    (f.files)
+  map
+    ( \n ->
+        if n.ftype == "directory" then
+          HE.div_
+            [ (HE.button [ HA.onClick (LoadChild n.name) ] n.name)
+            ]
+        else
+          (HE.div_ n.name)
+
+    )
+    (fromFoldable f.files)
 
 da_border_red :: forall t. Array (NodeData t)
 da_border_red = da_border_color "red"
