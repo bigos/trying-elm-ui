@@ -65,7 +65,7 @@ derive instance genericPostStatus :: Generic PostStatus _
 instance showPostStatus :: Show PostStatus where
   show = genericShow
 
-data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost | LoadParent | LoadChild
+data Action = Increment | Decrement | MakeRequestGet | MakeRequestPost | LoadParent | LoadChild String
 
 type TagDataConfig =
   { api_endpoint :: Maybe String
@@ -193,7 +193,7 @@ zzz n = case n of
   Fob fileobject ->
     if fileobject.ftype == "directory" then
       HH.button
-        [ HE.onClick \_ -> LoadChild ]
+        [ HE.onClick \_ -> LoadChild fileobject.name ]
         [ HH.text fileobject.name ]
     else
       HH.span [] [ HH.text fileobject.name ]
@@ -267,7 +267,7 @@ parent_pwd sta =
 child_pwd :: State -> String -> String
 child_pwd sta child =
   case sta.postStatus of
-    OkPosted files -> files.pwd -- <> "/" <> child
+    OkPosted files -> files.pwd <> "/" <> child
     _ -> "/home/jacek"
 
 --handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
@@ -328,12 +328,12 @@ handleAction = case _ of
               Right f ->
                 OkPosted (f)
       }
-  LoadChild -> do
+  LoadChild child -> do
     sta <- H.get
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $ -- how do I access state?
-              { pwd: (parent_pwd sta)
+              { pwd: (child_pwd sta child)
               , show_hidden: false
               }
           )
