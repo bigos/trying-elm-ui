@@ -13,7 +13,7 @@ import Data.Array as DA
 import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
-import Data.List (List, length)
+import Data.List (List)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Data.String as DS
@@ -185,8 +185,7 @@ render state =
 
 data ZzzValue = Fob FileObject | Str String
 
---zzz :: forall w i. ZzzValue -> HTML w i
---zzz :: forall w31. ZzzValue -> HTML w31 Action
+zzz :: forall w31. ZzzValue -> HTML w31 Action
 zzz n = case n of
   Str str ->
     HH.text str
@@ -283,7 +282,7 @@ child_pwd sta child =
     OkPosted files -> files.pwd <> "/" <> child
     _ -> "/home/jacek"
 
---handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
+handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   Decrement -> H.modify_ \st -> st { count = st.count - 1 }
