@@ -1,1 +1,0 @@
-/home/jacek/Programming/Rails/trying-elm-ui/vendor/rescript/my-rectript-experiment/dist/assets//index-CGiRQrRV.js

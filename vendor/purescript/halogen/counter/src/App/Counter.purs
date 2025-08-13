@@ -205,6 +205,13 @@ panel state side =
           -- why this won't work
           [ HE.onClick \_ -> LoadParent ]
           [ HH.text "Parent" ]
+      , HH.div []
+          [ HH.text
+              ( case state.postStatus of
+                  OkPosted fx -> fx.pwd
+                  _ -> ""
+              )
+          ]
       , HH.text (side <> " toolbar")
       ]
   ]
@@ -257,6 +264,12 @@ parent_thepwd pwd =
         )
     in
       if joined == "" then "/" else joined
+
+current_pwd :: State -> String
+current_pwd sta =
+  case sta.postStatus of
+    OkPosted files -> files.pwd
+    _ -> ""
 
 parent_pwd :: State -> String
 parent_pwd sta =
