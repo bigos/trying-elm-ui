@@ -345,6 +345,6 @@ handleAction = case _ of
             case (jsonToFiles payload.body) of
               Left e ->
                 ErrorPosted (printJsonDecodeError e)
-          Right f ->
-            OkPosted (f)
+              Right f ->
+                OkPosted (f)
       }
