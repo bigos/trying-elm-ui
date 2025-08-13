@@ -272,6 +272,11 @@ panel :: Maybe Files -> String -> Array (Html Message)
 panel mFiles side =
   [ HE.div da_border_green
       [ HE.button [ HA.onClick LoadParent ] "Parent"
+      , HE.span_
+          ( case mFiles of
+              Nothing -> ""
+              Just f -> f.pwd
+          )
       , HE.div da_border_blue (side <> " toolbar")
       ]
   ]
