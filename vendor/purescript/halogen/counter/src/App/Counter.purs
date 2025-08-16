@@ -92,7 +92,7 @@ initialState arg =
       )
   , loading: false
   , result: Nothing
-  , arg: arg
+  , arg -- punning: replaced arg: arg
   , postStatus: Empty
   }
 
@@ -301,7 +301,7 @@ handleAction = case _ of
     response <- H.liftAff $
       ( AX.post AXRF.json ("http://localhost:3000" <> "/api/list-files")
           ( Just $ AXRB.json $ fetchingFilePostToJson $
-              { pwd: ("/home/jacek/")
+              { pwd: "/home/jacek/"
               , show_hidden: false
               }
           )
@@ -342,4 +342,4 @@ handleAction = case _ of
           Left e ->
             ErrorPosted (printJsonDecodeError e)
           Right f ->
-            OkPosted (f)
+            OkPosted f

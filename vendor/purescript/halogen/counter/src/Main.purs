@@ -47,7 +47,7 @@ main = do
       where
       awaitElement = do
         element <- HA.selectElement (QuerySelector elementName)
-        maybe (throwError (error ("could not find the expected element " <> elementName))) pure (element)
+        maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
       -- function that reads the data from the config tag attributes
       buildConfig element =
         ( { api_endpoint: _, api_key: _, start: _ }
