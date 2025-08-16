@@ -44,3 +44,8 @@ https://github.com/purescript-halogen/purescript-halogen/tree/master/docs/guide
 
 rendering halogen
 https://purescript-halogen.github.io/purescript-halogen/guide/01-Rendering-Halogen-HTML.html
+
+
+purescript linter
+https://github.com/JSuder-xx/purescript-linter
+I was able to add the initialised configuration file in parent folder of the src
