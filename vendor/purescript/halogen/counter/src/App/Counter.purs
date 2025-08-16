@@ -197,7 +197,8 @@ zzz n = case n of
     else
       HH.span [] [ HH.text fileobject.name ]
 
-panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
+--panel :: forall w254 t279. { postStatus :: PostStatus | t279 } -> String -> Array (HTML w254 Action)
+panel :: forall t0. State -> String -> Array (HTML t0 Action)
 panel state side =
   [ HH.div (da_border_color "blue")
       [ HH.button
