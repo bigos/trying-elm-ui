@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "elm_form/new"
+  get "elm_form/index"
+  post "elm_form/index"
+
   get "pure_script/show_halogen"
   get "pure_script/show_flame"
   get "re_script/show"
