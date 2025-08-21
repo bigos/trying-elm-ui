@@ -5199,54 +5199,7 @@ var $author$project$ElmFormNew$update = F2(
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $author$project$ElmFormNew$Name = function (a) {
-	return {$: 'Name', a: a};
-};
-var $author$project$ElmFormNew$Password = function (a) {
-	return {$: 'Password', a: a};
-};
-var $author$project$ElmFormNew$PasswordAgain = function (a) {
-	return {$: 'PasswordAgain', a: a};
-};
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
-};
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5255,43 +5208,17 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$ElmFormNew$viewInput = F4(
-	function (t, p, v, toMsg) {
-		return A2(
-			$elm$html$Html$input,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$type_(t),
-					$elm$html$Html$Attributes$placeholder(p),
-					$elm$html$Html$Attributes$value(v),
-					$elm$html$Html$Events$onInput(toMsg)
-				]),
-			_List_Nil);
-	});
-var $author$project$ElmFormNew$viewValidation = function (model) {
-	return _Utils_eq(model.password, model.passwordAgain) ? A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'green')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('OK')
-			])) : A2(
-		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				A2($elm$html$Html$Attributes$style, 'color', 'red')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text('Passwords do not match!')
-			]));
-};
 var $author$project$ElmFormNew$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5308,10 +5235,63 @@ var $author$project$ElmFormNew$view = function (model) {
 					[
 						$elm$html$Html$text('example of elm code')
 					])),
-				A4($author$project$ElmFormNew$viewInput, 'text', 'Name', model.name, $author$project$ElmFormNew$Name),
-				A4($author$project$ElmFormNew$viewInput, 'password', 'Password', model.password, $author$project$ElmFormNew$Password),
-				A4($author$project$ElmFormNew$viewInput, 'password', 'Re-enter Password', model.passwordAgain, $author$project$ElmFormNew$PasswordAgain),
-				$author$project$ElmFormNew$viewValidation(model)
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('fexid')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('fexid')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('fexid'),
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$name('fexid')
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('compid')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('compid')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('compid'),
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$name('compid')
+					]),
+				_List_Nil),
+				A2(
+				$elm$html$Html$label,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$for('brid')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('brid')
+					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('brid'),
+						$elm$html$Html$Attributes$type_('text'),
+						$elm$html$Html$Attributes$name('brid')
+					]),
+				_List_Nil)
 			]));
 };
 var $author$project$ElmFormNew$main = $elm$browser$Browser$element(

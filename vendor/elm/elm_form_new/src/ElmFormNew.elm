@@ -87,10 +87,18 @@ view : Model -> Html Msg
 view model =
     div [ style "border" "solid red 3px" ]
         [ p [] [ text "example of elm code" ]
-        , viewInput "text" "Name" model.name Name
-        , viewInput "password" "Password" model.password Password
-        , viewInput "password" "Re-enter Password" model.passwordAgain PasswordAgain
-        , viewValidation model
+        , label [ for "fexid" ] [ text "fexid" ]
+        , input [ id "fexid", type_ "text", name "fexid" ] []
+
+        --
+        , label [ for "compid" ] [ text "compid" ]
+        , input [ id "compid", type_ "text", name "compid" ] []
+
+        --
+        , label [ for "brid" ] [ text "brid" ]
+        , input [ id "brid", type_ "text", name "brid" ] []
+
+        --, viewInput "text" "Name" model.name Name
         ]
 
 

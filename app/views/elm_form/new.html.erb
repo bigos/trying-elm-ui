@@ -1,17 +1,20 @@
 elm for new
 
-<div id="elm"></div>
 
 <%= form_tag(elm_form_index_path, method: :post) do -%>
-  <%= label_tag 'fexid' %>
-  <%= text_field_tag 'fexid' %>
-  <br>
-  <%= label_tag 'compid' %>
-  <%= text_field_tag 'compid' %>
-  <br>
-  <%= label_tag 'brid' %>
-  <%= text_field_tag 'brid' %>
-  <br>
+  <div id="elm"></div>
+
+  <!--
+       <%= label_tag 'fexid' %>
+       <%= text_field_tag 'fexid' %>
+       <br>
+       <%= label_tag 'compid' %>
+       <%= text_field_tag 'compid' %>
+       <br>
+       <%= label_tag 'brid' %>
+       <%= text_field_tag 'brid' %>
+       <br>
+  -->
   <%= submit_tag "Submit"  %>
 <% end %>
 
