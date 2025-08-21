@@ -1,5 +1,7 @@
 elm for new
 
+<div id="elm"></div>
+
 <%= form_tag(elm_form_index_path, method: :post) do -%>
   <%= label_tag 'fexid' %>
   <%= text_field_tag 'fexid' %>
@@ -12,3 +14,18 @@ elm for new
   <br>
   <%= submit_tag "Submit"  %>
 <% end %>
+
+<%
+js_filename = 'elm_form_new.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+js_mtime =File.mtime(js_file).to_i
+
+flag_data = {base_url: request.base_url}
+%>
+<script src="<%= "/#{js_filename}?#{js_mtime}" %>"></script>
+<script>
+ var app = Elm.ElmFormNew.init({ node: document.getElementById('elm'),
+                                 flags: <%= raw JSON.generate flag_data %>
+ })
+ // you can use ports and stuff here
+</script>

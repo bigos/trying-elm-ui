@@ -12,7 +12,12 @@ import Html.Events exposing (onInput)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
 
 
 
@@ -26,9 +31,20 @@ type alias Model =
     }
 
 
-init : Model
-init =
-    Model "" "" ""
+type alias Flags =
+    { base_url : String }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    let
+        m =
+            { name = ""
+            , password = ""
+            , passwordAgain = ""
+            }
+    in
+    ( m, Cmd.none )
 
 
 
@@ -41,17 +57,26 @@ type Msg
     | PasswordAgain String
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Name name ->
-            { model | name = name }
+            ( { model | name = name }, Cmd.none )
 
         Password password ->
-            { model | password = password }
+            ( { model | password = password }, Cmd.none )
 
         PasswordAgain password ->
-            { model | passwordAgain = password }
+            ( { model | passwordAgain = password }, Cmd.none )
+
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.none
 
 
 
@@ -60,8 +85,9 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ viewInput "text" "Name" model.name Name
+    div [ style "border" "solid red 3px" ]
+        [ p [] [ text "example of elm code" ]
+        , viewInput "text" "Name" model.name Name
         , viewInput "password" "Password" model.password Password
         , viewInput "password" "Re-enter Password" model.passwordAgain PasswordAgain
         , viewValidation model
