@@ -39,6 +39,6 @@ npm run dev
 #+begin_example
 npm install
 npm run
-npm build
+npm run build
 tree ./dist
 #+end_example
