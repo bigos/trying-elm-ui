@@ -515,12 +515,12 @@ correctedStringDecoder =
     string
         |> andThen
             (\cstr ->
-                -- map2 CorrectedString
-                --     (succeed cstr)
-                --     (succeed Nothing)
-                Decode.succeed CorrectedString
-                    |> hardcoded cstr
-                    |> hardcoded Nothing
+                map2 CorrectedString
+                    (succeed cstr)
+                    (succeed Nothing)
+             -- Decode.succeed CorrectedString
+             --     |> hardcoded cstr
+             --     |> hardcoded Nothing
             )
 
 
