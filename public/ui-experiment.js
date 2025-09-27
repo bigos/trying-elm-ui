@@ -6019,6 +6019,10 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
+var $author$project$UiExperiment$CorrectedString = F2(
+	function (original, corrected) {
+		return {corrected: corrected, original: original};
+	});
 var $author$project$UiExperiment$Files = F3(
 	function (pwd, showHidden, files) {
 		return {files: files, pwd: pwd, showHidden: showHidden};
@@ -6081,7 +6085,16 @@ var $author$project$UiExperiment$fileListDecoder = A3(
 		A3(
 			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'pwd',
-			$elm$json$Json$Decode$string,
+			A2(
+				$elm$json$Json$Decode$andThen,
+				function (cstr) {
+					return A3(
+						$elm$json$Json$Decode$map2,
+						$author$project$UiExperiment$CorrectedString,
+						$elm$json$Json$Decode$succeed(cstr),
+						$elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing));
+				},
+				$elm$json$Json$Decode$string),
 			$elm$json$Json$Decode$succeed($author$project$UiExperiment$Files))));
 var $elm$http$Http$jsonBody = function (value) {
 	return A2(
@@ -6290,7 +6303,7 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 									return $elm$json$Json$Encode$string('/home/jacek');
 								} else {
 									var files = _v0.a;
-									return $elm$json$Json$Encode$string(files.pwd);
+									return $elm$json$Json$Encode$string(files.pwd.original);
 								}
 							}()),
 							_Utils_Tuple2(
@@ -6476,7 +6489,7 @@ var $author$project$UiExperiment$update = F2(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
 						var files = m1fx.a;
-						var pwdx = files.pwd;
+						var pwdx = files.pwd.original;
 						var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
 						var pwdxLen = $elm$core$List$length(pwdxSplit);
 						var pwdxStr = A2(
@@ -6491,7 +6504,11 @@ var $author$project$UiExperiment$update = F2(
 							model,
 							{
 								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{files: _List_Nil, pwd: pwdxStrOk, showHidden: false})
+									{
+										files: _List_Nil,
+										pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
+										showHidden: false
+									})
 							});
 						return _Utils_Tuple2(
 							m2,
@@ -6512,7 +6529,11 @@ var $author$project$UiExperiment$update = F2(
 									model,
 									{
 										dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-											{files: _List_Nil, pwd: files.pwd + ('/' + child), showHidden: model.toggle})
+											{
+												files: _List_Nil,
+												pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
+												showHidden: model.toggle
+											})
 									});
 								return _Utils_Tuple2(
 									m2,
@@ -12624,7 +12645,7 @@ var $author$project$UiExperiment$file_panel = F2(
 												$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue)
 											]),
 										$author$project$UiExperiment$my_border),
-									$mdgriffith$elm_ui$Element$text(files.pwd))
+									$mdgriffith$elm_ui$Element$text(files.pwd.original))
 								]));
 					}
 				}(),

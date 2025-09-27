@@ -9,7 +9,7 @@ import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes as HA
 import Http
-import Json.Decode as Decode exposing (Decoder, bool, decodeString, field, float, int, list, map4, nullable, string)
+import Json.Decode as Decode exposing (Decoder, andThen, bool, decodeString, field, float, int, list, map2, map4, nullable, string, succeed)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
 
@@ -43,8 +43,14 @@ type alias Flags =
     }
 
 
+type alias CorrectedString =
+    { original : String
+    , corrected : Maybe String
+    }
+
+
 type alias Files =
-    { pwd : String
+    { pwd : CorrectedString
     , showHidden : Bool
     , files : List FileObject
     }
@@ -131,7 +137,7 @@ update msg model =
                     -- create new parent model
                     let
                         pwdx =
-                            files.pwd
+                            files.pwd.original
 
                         pwdxSplit =
                             String.split "/" pwdx
@@ -156,7 +162,10 @@ update msg model =
                             { model
                                 | dirs =
                                     buildOnlyLeftDir
-                                        { pwd = pwdxStrOk
+                                        { pwd =
+                                            { original = pwdxStrOk
+                                            , corrected = Nothing
+                                            }
                                         , showHidden = False
                                         , files = []
                                         }
@@ -179,7 +188,11 @@ update msg model =
                                 { model
                                     | dirs =
                                         buildOnlyLeftDir
-                                            { pwd = files.pwd ++ "/" ++ child
+                                            { pwd =
+                                                { original =
+                                                    files.pwd.original ++ "/" ++ child
+                                                , corrected = Nothing
+                                                }
                                             , showHidden = model.toggle
                                             , files = []
                                             }
@@ -277,7 +290,7 @@ file_panel model lr =
                         , Font.variant Font.smallCaps
                         ]
                         { onPress = Just LoadParent, label = text "Parent" }
-                    , el ([ width fill, Background.color color.lightBlue ] ++ my_border) (text files.pwd)
+                    , el ([ width fill, Background.color color.lightBlue ] ++ my_border) (text files.pwd.original)
                     ]
         , case lrdir of
             Nothing ->
@@ -488,7 +501,7 @@ httpLoadFiles model =
                                 Encode.string "/home/jacek"
 
                             Just files ->
-                                Encode.string files.pwd
+                                Encode.string files.pwd.original
                       )
                     , ( "show_hidden", Encode.bool model.toggle )
                     ]
@@ -500,7 +513,15 @@ httpLoadFiles model =
 fileListDecoder : Decoder Files
 fileListDecoder =
     Decode.succeed Files
-        |> required "pwd" string
+        |> required "pwd"
+            (string
+                |> andThen
+                    (\cstr ->
+                        map2 CorrectedString
+                            (succeed cstr)
+                            (succeed Nothing)
+                    )
+            )
         |> required "show_hidden" bool
         |> required "files" (list fileDecoder)
 
