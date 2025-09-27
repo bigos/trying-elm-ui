@@ -6027,14 +6027,18 @@ var $author$project$UiExperiment$CorrectedString = F2(
 	function (original, corrected) {
 		return {corrected: corrected, original: original};
 	});
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded = A2($elm$core$Basics$composeR, $elm$json$Json$Decode$succeed, $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom);
 var $author$project$UiExperiment$correctedStringDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (cstr) {
-		return A3(
-			$elm$json$Json$Decode$map2,
-			$author$project$UiExperiment$CorrectedString,
-			$elm$json$Json$Decode$succeed(cstr),
-			$elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing));
+		return A2(
+			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
+			$elm$core$Maybe$Nothing,
+			A2(
+				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
+				cstr,
+				$elm$json$Json$Decode$succeed($author$project$UiExperiment$CorrectedString)));
 	},
 	$elm$json$Json$Decode$string);
 var $author$project$UiExperiment$FileObject = F8(
@@ -6042,7 +6046,6 @@ var $author$project$UiExperiment$FileObject = F8(
 		return {executable: executable, extname: extname, ftype: ftype, mode: mode, mtime: mtime, name: name, size: size, symlink: symlink};
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	function (key, valDecoder, decoder) {
 		return A2(

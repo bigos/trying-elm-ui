@@ -10,7 +10,7 @@ import Html exposing (Html)
 import Html.Attributes as HA
 import Http
 import Json.Decode as Decode exposing (Decoder, andThen, bool, decodeString, field, float, int, list, map2, map4, nullable, string, succeed)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode.Pipeline exposing (hardcoded, required)
 import Json.Encode as Encode
 
 
@@ -515,9 +515,12 @@ correctedStringDecoder =
     string
         |> andThen
             (\cstr ->
-                map2 CorrectedString
-                    (succeed cstr)
-                    (succeed Nothing)
+                -- map2 CorrectedString
+                --     (succeed cstr)
+                --     (succeed Nothing)
+                Decode.succeed CorrectedString
+                    |> hardcoded cstr
+                    |> hardcoded Nothing
             )
 
 
