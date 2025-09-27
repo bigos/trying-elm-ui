@@ -83,6 +83,19 @@ to
 file:~/Programming/Rails/trying-elm-ui/public/
 
 ** temporary notes
+[[file:vendor/elm/ui-experiment/src/UiExperiment.elm::type alias Model =]]
 
  try
 [[file:vendor/elm/ui-experiment/src/UiExperiment.elm::fileListDecoder : Decoder Files]]
+
+files
+[[file:vendor/elm/ui-experiment/src/UiExperiment.elm::type alias Files =]]
+has pwd
+that is shown at the bottom of the web page
+
+#+begin_example
+pwd = "/home/jacek", showHidden = True },
+#+end_example
+
+and is decoded here
+[[file:vendor/elm/ui-experiment/src/UiExperiment.elm::Decode.succeed Files]]
