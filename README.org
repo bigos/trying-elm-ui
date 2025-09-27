@@ -83,3 +83,6 @@ to
 file:~/Programming/Rails/trying-elm-ui/public/
 
 ** temporary notes
+
+ try
+[[file:vendor/elm/ui-experiment/src/UiExperiment.elm::fileListDecoder : Decoder Files]]
