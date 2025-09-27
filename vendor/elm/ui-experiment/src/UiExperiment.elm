@@ -510,18 +510,21 @@ httpLoadFiles model =
         }
 
 
+correctedStringDecoder : Decoder CorrectedString
+correctedStringDecoder =
+    string
+        |> andThen
+            (\cstr ->
+                map2 CorrectedString
+                    (succeed cstr)
+                    (succeed Nothing)
+            )
+
+
 fileListDecoder : Decoder Files
 fileListDecoder =
     Decode.succeed Files
-        |> required "pwd"
-            (string
-                |> andThen
-                    (\cstr ->
-                        map2 CorrectedString
-                            (succeed cstr)
-                            (succeed Nothing)
-                    )
-            )
+        |> required "pwd" correctedStringDecoder
         |> required "show_hidden" bool
         |> required "files" (list fileDecoder)
 
