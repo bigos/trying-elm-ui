@@ -82,6 +82,13 @@ file:~/Programming/Rails/trying-elm-ui/vendor/rescript/my-rectript-experiment/di
 to
 file:~/Programming/Rails/trying-elm-ui/public/
 
+** Interesting APIs
+
+*** TheCocktailDB
+https://www.thecocktaildb.com/
+
+[[https://github.com/nunntom/elm-ui-select/blob/9f80e5d943a51a034a11e76ba8a788ec2627a206/examples/src/RequestExample.elm#L71][el-request-example]]
+
 ** temporary notes
 [[file:vendor/elm/ui-experiment/src/UiExperiment.elm::type alias Model =]]
 
