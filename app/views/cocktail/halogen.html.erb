@@ -12,7 +12,7 @@ html_attributes = {type: 'module', id: 'halogen-cocktail'}
 flag_data = {
   base_url: request.base_url,
   logname:  ENV['LOGNAME']
-}.each{ |k,v| html_attributes.merge! { :"data-#{k} => v" } }
+}.each{ |k,v| html_attributes[:"data-#{k}"] = v }
 %>
 
 <%= javascript_include_tag "/#{js_filename}?#{js_mtime}", html_attributes %>
