@@ -135,5 +135,7 @@ halogen will be more complicated
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/flame/counter/README.org::1
 file:~/Programming/Ruby/trying-elm-ui/public/
 
-compilation
+firstly I tried compilation
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/compile-cocktails.sh::1
+
+then I moved the folder to backup
