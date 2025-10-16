@@ -29,8 +29,6 @@ function that reads from the data
 
 main :: Effect Unit
 main = HA.runHalogenAff do
-  -- body <- HA.awaitBody
-  -- runUI Button.component unit body
   let elementName = "#halogen-cocktail"
   let configTagId = "halogen-cocktail-flags"
   w <- window
