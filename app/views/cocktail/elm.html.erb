@@ -2,7 +2,7 @@
 
 <div id="elm"></div>
 <%
-js_filename = 'elm-cocktail.js'
+js_filename = 'elm-cocktails.js'
 js_file = File.join(Rails.root, 'public', js_filename)
 js_mtime =File.mtime(js_file).to_i
 
@@ -11,8 +11,8 @@ flag_data = {base_url: request.base_url,
 %>
 <script src="<%= "#{js_filename}?#{js_mtime}" %>"></script>
 <script>
- var app = Elm.Cocktail.init({ node: document.getElementById('elm'),
-                                   flags: <%= raw JSON.generate flag_data %>
+ var app = Elm.Cocktails.init({ node: document.getElementById('elm'),
+                                flags: <%= raw JSON.generate flag_data %>
  })
  // you can use ports and stuff here
 </script>

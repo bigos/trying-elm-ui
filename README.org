@@ -128,8 +128,12 @@ file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/
 
 example of compilation
 elm
+https://github.com/nunntom/elm-ui-select/blob/4.0.0/examples/src/RequestExample.elm
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/ui-experiment/compile.sh::1
 
 halogen will be more complicated
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/flame/counter/README.org::1
 file:~/Programming/Ruby/trying-elm-ui/public/
+
+compilation
+file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/compile-cocktails.sh::1
