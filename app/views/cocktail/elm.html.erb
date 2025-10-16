@@ -1,6 +1,6 @@
 <p>Elm widget will go here</p>
 
-<div id="elm"></div>
+<div id="elm">Please wait...</div>
 <%
 js_filename = 'elm-cocktails.js'
 js_file = File.join(Rails.root, 'public', js_filename)
@@ -9,7 +9,7 @@ js_mtime =File.mtime(js_file).to_i
 flag_data = {base_url: request.base_url,
              logname:  ENV['LOGNAME']}
 %>
-<script src="<%= "#{js_filename}?#{js_mtime}" %>"></script>
+<script src=/<%= "#{js_filename}?#{js_mtime}" %>></script>
 <script>
  var app = Elm.Cocktails.init({ node: document.getElementById('elm'),
                                 flags: <%= raw JSON.generate flag_data %>
