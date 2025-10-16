@@ -1,0 +1,1 @@
+/home/jacek/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/prod/index.js

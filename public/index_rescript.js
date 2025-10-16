@@ -1,1 +1,0 @@
-/home/jacek/Programming/Ruby/trying-elm-ui/vendor/rescript/my-rectript-experiment/dist/assets//index-B9dlw7Le.js

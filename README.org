@@ -169,3 +169,8 @@ and a very good description of solving such problems
 https://stackoverflow.com/a/79564703/1395810
 
 giving up on project with flags
+
+So I recreated the cocktails project from the template and built it
+
+now reviewing the linking of build files
+file:~/Programming/Rails/trying-elm-ui/link_files::1

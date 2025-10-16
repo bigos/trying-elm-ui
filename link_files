@@ -7,6 +7,20 @@ puts "running script in #{SOURCE_FOLDER}"
 puts "to link the JS files to the destination folder: ./public/"
 puts ''
 
+puts "removing cocktails"
+`rm -v ./public/halogen-cocktail.js`
+puts "copying cocktails"
+`ln -sv #{SOURCE_FOLDER}/vendor/purescript/cocktails/prod/index.js  ./public/halogen-cocktail.js`
+
+if File.exist? "./public/halogen-cocktail.js"
+  puts "success"
+else
+  puts "missing"
+end
+
+puts "\n"
+
+
 puts "removing halogen"
 `rm -v ./public/index_halogen.js`
 puts "copying halogen"
