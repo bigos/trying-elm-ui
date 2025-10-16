@@ -1,15 +1,13 @@
-module App.Button where
+module App.Cocktails where
 
 import Prelude
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 
-type State
-  = { count :: Int }
+type State = { count :: Int }
 
-data Action
-  = Increment
+data Action = Increment
 
 component :: forall q i o m. H.Component q i o m
 component =
