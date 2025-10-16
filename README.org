@@ -125,8 +125,7 @@ file:~/Programming/Ruby/trying-elm-ui/vendor/
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/
 
-
-example of compilation
+***** example of compilation
 elm
 https://github.com/nunntom/elm-ui-select/blob/4.0.0/examples/src/RequestExample.elm
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/ui-experiment/compile.sh::1
@@ -168,9 +167,12 @@ problem compiling the PS code
 and a very good description of solving such problems
 https://stackoverflow.com/a/79564703/1395810
 
-giving up on project with flags
+***** giving up on project with flags
 
 So I recreated the cocktails project from the template and built it
 
-now reviewing the linking of build files
+***** linking of built files
 file:~/Programming/Rails/trying-elm-ui/link_files::1
+
+***** no progress
+file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs::1
