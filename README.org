@@ -139,3 +139,14 @@ firstly I tried compilation
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/compile-cocktails.sh::1
 
 then I moved the folder to backup
+
+then i tried initial setup
+https://github.com/purescript-halogen/purescript-halogen-template#initial-setup
+with modification
+#+begin_example
+git clone https://github.com/purescript-halogen/purescript-halogen-template.git cocktails
+cd cocktails
+
+rm -rvf ./.github
+rm -rvf ./.git
+#+end_example
