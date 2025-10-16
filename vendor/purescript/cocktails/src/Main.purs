@@ -33,24 +33,28 @@ main = HA.runHalogenAff do
   let configTagId = "halogen-cocktail-flags"
   w <- window
   doc <- document w
-  container <- getElementById configTagId $ toNonElementParentNode doc
-  case container of
-    Nothing ->
-      throw "container element not found"
-    Just el ->
-      do
-        config <- buildConfig el
-        HA.runHalogenAff do
-          _ <- HA.awaitBody
-          element <- awaitElement
-          runUI Cocktails.component config element
-      where
-      awaitElement = do
-        element <- HA.selectElement (QuerySelector elementName)
-        maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
-      -- function that reads the data from the config tag attributes
-      buildConfig element =
-        ( { base_url: _, logname: _ }
-            <$> getAttribute "data-base_url" element
-            <*> getAttribute "data-logname" element
-        )
+  pure ""
+
+-- container <- getElementById configTagId $ toNonElementParentNode doc
+-- case container of
+--   Nothing ->
+--     throw "container element not found"
+--   Just el ->
+--     throw "just bbbbbbb"
+
+-- do
+--   config <- buildConfig el
+--   HA.runHalogenAff do
+--     _ <- HA.awaitBody
+--     element <- awaitElement
+--     runUI Cocktails.component config element
+-- where
+-- awaitElement = do
+--   element <- HA.selectElement (QuerySelector elementName)
+--   maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
+-- -- function that reads the data from the config tag attributes
+-- buildConfig element =
+--   ( { base_url: _, logname: _ }
+--       <$> getAttribute "data-base_url" element
+--       <*> getAttribute "data-logname" element
+--   )

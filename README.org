@@ -162,3 +162,8 @@ file:~/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs
 
 and built files
 file:~/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/dist/
+
+problem compiling the PS code
+
+and a very good description of solving such problems
+https://stackoverflow.com/a/79564703/1395810
