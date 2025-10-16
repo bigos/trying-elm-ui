@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+  get "cocktail/elm"
+  get "cocktail/halogen"
+
   get "elm_form/new"
   get "elm_form/index"
   post "elm_form/index"

@@ -90,6 +90,8 @@ https://www.thecocktaildb.com/
 [[https://github.com/nunntom/elm-ui-select/blob/9f80e5d943a51a034a11e76ba8a788ec2627a206/examples/src/RequestExample.elm#L71][el-request-example]]
 
 ** temporary notes
+
+*** ui experiment
 [[file:vendor/elm/ui-experiment/src/UiExperiment.elm::type alias Model =]]
 
  try
@@ -106,3 +108,13 @@ pwd = "/home/jacek", showHidden = True },
 
 and is decoded here
 [[file:vendor/elm/ui-experiment/src/UiExperiment.elm::Decode.succeed Files]]
+
+*** Cocktails
+views
+file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/
+
+vendor
+file:~/Programming/Ruby/trying-elm-ui/vendor/
+
+file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/
+file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/
