@@ -150,3 +150,6 @@ cd cocktails
 rm -rvf ./.github
 rm -rvf ./.git
 #+end_example
+
+and got the initial file
+file:~/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs::1
