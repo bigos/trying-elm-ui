@@ -4,15 +4,21 @@ import Prelude
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
+import Data.Maybe (Maybe(..))
 
 type State = { count :: Int }
 
+-- type TagInsertionConfig =
+--   { base_url :: Maybe String
+--   , logname :: Maybe String
+--   }
+
 data Action = Increment
 
-component :: forall q i o m. H.Component q i o m
+--component :: forall q i o m. H.Component q i o m
 component =
   H.mkComponent
-    { initialState: \_ -> { count: 0 }
+    { initialState: \config -> { count: 0 }
     , render
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
