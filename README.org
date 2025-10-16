@@ -149,7 +149,16 @@ cd cocktails
 
 rm -rvf ./.github
 rm -rvf ./.git
+
+npm install --save-exact --save-dev esbuild
+npm install
+npm run build
+npm run build-prod
+
 #+end_example
 
 and got the initial file
 file:~/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs::1
+
+and built files
+file:~/Programming/Rails/trying-elm-ui/vendor/purescript/cocktails/dist/
