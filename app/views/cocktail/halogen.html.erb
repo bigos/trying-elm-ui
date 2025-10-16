@@ -1,1 +1,18 @@
 <p>Halogen widget will go here</p>
+
+<div id="halogen-cocktail"></div>
+
+<%
+js_filename = 'halogen-cocktail.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+# prepare my own fingerprinting
+js_mtime =File.mtime(js_file).to_i
+
+html_attributes = {type: 'module', id: 'halogen-cocktail'}
+flag_data = {
+  base_url: request.base_url,
+  logname:  ENV['LOGNAME']
+}.each{ |k,v| html_attributes.merge! { :"data-#{k} => v" } }
+%>
+
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", html_attributes %>

@@ -1,2 +1,5 @@
 * Readme
 Elm cocktails
+
+elm-cocktail.js
+Elm.Cocktail.init

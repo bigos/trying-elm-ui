@@ -110,10 +110,16 @@ and is decoded here
 [[file:vendor/elm/ui-experiment/src/UiExperiment.elm::Decode.succeed Files]]
 
 *** Cocktails
-views
+
+**** views
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/
 
-vendor
+elm
+file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/elm.html.erb::1
+halogen
+file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/halogen.html.erb::1
+
+**** vendor
 file:~/Programming/Ruby/trying-elm-ui/vendor/
 
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/
