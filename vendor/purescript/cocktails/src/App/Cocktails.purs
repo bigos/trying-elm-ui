@@ -5,8 +5,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Data.Int (fromString)
--- import Data.String (<>)
-import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Maybe (Maybe, fromMaybe)
 
 type State =
   { count :: Int
@@ -24,17 +23,13 @@ data Action = Increment
 initialState :: Flags -> State
 initialState flags =
   { count:
-      ( case flags.start of
-          Nothing -> 0
-          Just a ->
-            ( case fromString a of
-                Nothing -> 0
-                Just av -> av
-            )
+      ( fromMaybe 0
+          ( fromString
+              ( fromMaybe "0" flags.logname
+              )
+          )
       )
   , flags: flags
-  -- , logname: fromMaybe "" flags.logname
-  -- , base_url: fromMaybe "" flags.base_url
   }
 
 component :: forall output m t. H.Component t Flags output m
@@ -56,9 +51,6 @@ render state =
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
-    -- , HH.p [] [ HH.text ("start: " <> state.logname) ]
-    -- , HH.p [] [ HH.text ("logname: " <> state.logname) ]
-    -- , HH.p [] [ HH.text ("base_url: " <> state.base_url) ]
     ]
 
 handleAction :: forall cs o m. Action → H.HalogenM State Action cs o m Unit
