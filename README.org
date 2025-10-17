@@ -180,7 +180,11 @@ file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/App/Cockta
 
 **** trying to copy the Elm example
 
-***** other POST
+***** Elm POST
+[[file:vendor/elm/cocktails/src/Cocktails.elm::type alias Cocktail =]]
+[[file:vendor/elm/cocktails/src/Cocktails.elm::fetchCocktails query tagger =]]
+
+***** other halogen POST
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data PostStatus = Empty | OkPosted Files | ErrorPosted String]]
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data Action]]
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::\[ HE.onClick \_ -> MakeRequestPost \]]]
