@@ -2,37 +2,35 @@ module App.Cocktails where
 
 import Prelude
 
-import Halogen as H
-import Halogen.HTML as HH
-import Halogen.HTML.Events as HE
-import Data.Int (fromString)
-import Data.Maybe (Maybe, fromMaybe)
-import Data.String (joinWith)
-import Affjax.RequestBody as AXRB
+-- import Affjax.RequestBody as AXRB
+-- import Data.Argonaut (decodeJson, encodeJson)
+-- import Data.Argonaut.Core (Json)
+-- import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
+-- import Data.Array (fromFoldable)
+-- import Data.Array as DA
+-- import Data.Generic.Rep (class Generic)
+-- import Data.List (List)
+-- import Data.Show.Generic (genericShow)
+-- import Data.String (joinWith)
+-- import Data.String as DS
+-- import Data.String.Utils (endsWith)
+-- import Effect.Aff.Class (class MonadAff)
+-- import Halogen.Component (Component)
+-- import Halogen.HTML.Core (HTML)
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
-import Data.Argonaut (decodeJson, encodeJson)
-import Data.Argonaut.Core (Json)
-import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
-import Data.Array (fromFoldable)
-import Data.Array as DA
-import Data.Either (Either(..), hush)
-import Data.Generic.Rep (class Generic)
+import Data.Either (hush)
 import Data.Int (fromString)
-import Data.List (List)
-import Data.Maybe (Maybe(..))
-import Data.Show.Generic (genericShow)
-import Data.String as DS
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith)
-import Data.String.Utils (endsWith)
-import Effect.Aff.Class (class MonadAff)
+import Effect.Console (logShow)
 import Halogen as H
-import Halogen.Component (Component)
 import Halogen.HTML as HH
-import Halogen.HTML.Core (HTML)
 import Halogen.HTML.Events as HE
-import Halogen.HTML.Properties (IProp)
-import Halogen.HTML.Properties as HP
+
+-- import Halogen.HTML.Properties (IProp)
+
+-- import Halogen.HTML.Properties as HP
 
 type State =
   { count :: Int
@@ -63,7 +61,6 @@ initialState flags =
   , result: Nothing
   }
 
-component :: forall output m t. H.Component t Flags output m
 component =
   H.mkComponent
     { initialState
@@ -87,18 +84,18 @@ render state =
             [ HE.onClick \_ -> MakeRequestGet ]
             [ HH.text "Get the data" ]
         ]
+    , HH.p []
+        [ HH.text (fromMaybe "" state.result) ]
     ]
 
-handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
+--handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   MakeRequestGet -> do
-    H.modify_ \st -> st { loading = true }
+    H.modify_ \st -> st
+      { loading = true }
     response <- H.liftAff $ AX.get AXRF.string
-      ( "https://thecocktaildb.com/api/json/v1/1/search.php?s="
-          <> "rum"
-      )
-    --url = "https://thecocktaildb.com/api/json/v1/1/search.php?s=" ++ String.replace " " "+" query
+      ("https://thecocktaildb.com/api/json/v1/1/search.php?s=" <> "rum")
     H.modify_ \st -> st
       { loading = false
       , result = map _.body (hush response)
