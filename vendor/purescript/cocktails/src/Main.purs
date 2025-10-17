@@ -3,36 +3,43 @@ module Main where
 import Prelude
 
 import App.Cocktails as Cocktails
+import Control.Monad.Error.Class (throwError)
+import Data.Maybe (Maybe(..), maybe)
 import Effect (Effect)
+import Effect.Exception (error, throw)
 import Halogen.Aff as HA
 import Halogen.VDom.Driver (runUI)
-
-import Data.Maybe (Maybe(..))
 import Web.DOM.Element (getAttribute)
-import Web.HTML.Window as Window
-import Web.HTML.Window (Window)
-import Web.HTML.HTMLScriptElement as HTMLScript
+import Web.DOM.NonElementParentNode (getElementById)
+import Web.DOM.ParentNode (QuerySelector(..))
 import Web.HTML (window)
+import Web.HTML.HTMLDocument (toNonElementParentNode)
+import Web.HTML.Window (document)
 
-type TagInsertionConfig =
-  { base_url :: Maybe String
-  , logname :: Maybe String
-  }
-
-readConfig :: Window -> Effect TagInsertionConfig
-readConfig win = do
-  script <- currentScript =<< Window.document win
-  traverse go script
-  where
-  go script = do
-    let elem = HTMLScript.toElement script
-    TagInsertionConfig
-      <$> getAttribute "data-base_url" elem
-      <*> getAttribute "data-logname" elem
-
-main :: Effect Unit
-main = HA.runHalogenAff do
+main = do
+  let elementName = "#halogen"
+  let configTagId = "script_with_flags"
   w <- window
-  config <- readConfig w
-  body <- HA.awaitBody
-  runUI Cocktails.component config body
+  doc <- document w
+  container <- getElementById configTagId $ toNonElementParentNode doc
+  case container of
+    Nothing ->
+      throw "container element not found"
+    Just el ->
+      do
+        config <- buildConfig el
+        HA.runHalogenAff do
+          _ <- HA.awaitBody
+          element <- awaitElement
+          runUI Cocktails.component config element
+      where
+      awaitElement = do
+        element <- HA.selectElement (QuerySelector elementName)
+        maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
+      -- function that reads the data from the config tag attributes
+      buildConfig element =
+        ( { api_endpoint: _, api_key: _, start: _ }
+            <$> getAttribute "data-my-app--api-endpoint" element
+            <*> getAttribute "data-my-app--api-key" element
+            <*> getAttribute "data-my-app--count-start" element
+        )
