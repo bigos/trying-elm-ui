@@ -37,7 +37,7 @@ main = do
       awaitElement = do
         element <- HA.selectElement (QuerySelector elementName)
         maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
-      -- function that reads the data from the config tag attributes
+      -- function that reads the data from the flag tag attributes
       buildConfig element =
         ( { base_url: _, logname: _, start: _ }
             <$> getAttribute "data-base_url" element
