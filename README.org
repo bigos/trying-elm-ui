@@ -177,3 +177,11 @@ file:~/Programming/Rails/trying-elm-ui/link_files::1
 ***** no progress
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs::1
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/App/Cocktails.purs::1
+
+**** trying to copy the Elm example
+
+***** other POST
+[[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data PostStatus = Empty | OkPosted Files | ErrorPosted String]]
+[[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data Action]]
+[[file:vendor/purescript/halogen/counter/src/App/Counter.purs::\[ HE.onClick \_ -> MakeRequestPost \]]]
+[[file:vendor/purescript/halogen/counter/src/App/Counter.purs::MakeRequestPost -> do]]

@@ -1,6 +1,8 @@
 { name = "halogen-project"
 , dependencies =
-  [ "console"
+  [ "affjax-web"
+  , "argonaut"
+  , "console"
   , "effect"
   , "exceptions"
   , "halogen"
@@ -8,6 +10,7 @@
   , "maybe"
   , "prelude"
   , "strings"
+  , "stringutils"
   , "transformers"
   , "web-dom"
   , "web-html"
