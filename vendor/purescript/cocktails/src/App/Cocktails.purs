@@ -4,15 +4,13 @@ import Prelude
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
-import Data.Maybe (Maybe(..))
 import Data.Int (fromString)
+-- import Data.String (<>)
 import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Maybe (Maybe, fromJust)
 
 type State =
   { count :: Int
-  , logname :: String
-  , base_url :: String
+  , flags :: Flags
   }
 
 type Flags =
@@ -34,11 +32,12 @@ initialState flags =
                 Just av -> av
             )
       )
-  , logname: fromMaybe "" flags.logname
-  , base_url: fromMaybe "" flags.base_url
+  , flags: flags
+  -- , logname: fromMaybe "" flags.logname
+  -- , base_url: fromMaybe "" flags.base_url
   }
 
---component :: forall q i o m. H.Component q i o m
+component :: forall output m t. H.Component t Flags output m
 component =
   H.mkComponent
     { initialState
@@ -54,8 +53,24 @@ render state =
     , HH.button
         [ HE.onClick \_ -> Increment ]
         [ HH.text "Click me" ]
+    , HH.hr_
+    , HH.h5_ [ HH.text "Flags" ]
+    , HH.p [] [ HH.text (displayFlags state.flags) ]
+    -- , HH.p [] [ HH.text ("start: " <> state.logname) ]
+    -- , HH.p [] [ HH.text ("logname: " <> state.logname) ]
+    -- , HH.p [] [ HH.text ("base_url: " <> state.base_url) ]
     ]
 
 handleAction :: forall cs o m. Action → H.HalogenM State Action cs o m Unit
+
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
+
+-- ===================================================
+displayFlags :: Flags -> String
+displayFlags flags =
+  "start: " <> (fromMaybe "" flags.start)
+    <> ", logname: "
+    <> (fromMaybe "" flags.logname)
+    <> ", base_url: "
+    <> (fromMaybe "" flags.base_url)

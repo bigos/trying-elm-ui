@@ -18,8 +18,8 @@ import Web.HTML.Window (document)
 
 main :: Effect Unit
 main = do
-  let elementName = "#halogen"
-  let configTagId = "script_with_flags"
+  let elementName = "#halogen-cocktail"
+  let configTagId = "halogen-cocktail-flags"
   w <- window
   doc <- document w
   container <- getElementById configTagId $ toNonElementParentNode doc
