@@ -6,6 +6,7 @@ import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Data.Int (fromString)
 import Data.Maybe (Maybe, fromMaybe)
+import Data.String (joinWith)
 
 type State =
   { count :: Int
@@ -60,8 +61,8 @@ handleAction = case _ of
 -- ===================================================
 displayFlags :: Flags -> String
 displayFlags flags =
-  "start: " <> (fromMaybe "" flags.start)
-    <> ", logname: "
-    <> (fromMaybe "" flags.logname)
-    <> ", base_url: "
-    <> (fromMaybe "" flags.base_url)
+  joinWith ", "
+    [ "start: " <> (fromMaybe "" flags.start)
+    , "logname: " <> (fromMaybe "" flags.logname)
+    , "base_url: " <> (fromMaybe "" flags.base_url)
+    ]
