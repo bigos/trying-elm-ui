@@ -16,6 +16,7 @@ import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
 
+main :: Effect Unit
 main = do
   let elementName = "#halogen"
   let configTagId = "script_with_flags"
@@ -38,8 +39,8 @@ main = do
         maybe (throwError (error ("could not find the expected element " <> elementName))) pure element
       -- function that reads the data from the config tag attributes
       buildConfig element =
-        ( { api_endpoint: _, api_key: _, start: _ }
-            <$> getAttribute "data-my-app--api-endpoint" element
-            <*> getAttribute "data-my-app--api-key" element
-            <*> getAttribute "data-my-app--count-start" element
+        ( { base_url: _, logname: _, start: _ }
+            <$> getAttribute "data-base_url" element
+            <*> getAttribute "data-logname" element
+            <*> getAttribute "data-start" element
         )

@@ -4,6 +4,7 @@
   , "effect"
   , "exceptions"
   , "halogen"
+  , "integers"
   , "maybe"
   , "prelude"
   , "transformers"

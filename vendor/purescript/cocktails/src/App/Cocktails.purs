@@ -5,20 +5,43 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Data.Maybe (Maybe(..))
+import Data.Int (fromString)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Maybe (Maybe, fromJust)
 
-type State = { count :: Int }
+type State =
+  { count :: Int
+  , logname :: String
+  , base_url :: String
+  }
 
--- type TagInsertionConfig =
---   { base_url :: Maybe String
---   , logname :: Maybe String
---   }
+type Flags =
+  { start :: Maybe String
+  , logname :: Maybe String
+  , base_url :: Maybe String
+  }
 
 data Action = Increment
+
+initialState :: Flags -> State
+initialState flags =
+  { count:
+      ( case flags.start of
+          Nothing -> 0
+          Just a ->
+            ( case fromString a of
+                Nothing -> 0
+                Just av -> av
+            )
+      )
+  , logname: fromMaybe "" flags.logname
+  , base_url: fromMaybe "" flags.base_url
+  }
 
 --component :: forall q i o m. H.Component q i o m
 component =
   H.mkComponent
-    { initialState: \config -> { count: 0 }
+    { initialState
     , render
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }

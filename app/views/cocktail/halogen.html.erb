@@ -20,7 +20,8 @@ js_mtime =File.mtime(js_file).to_i
 html_attributes = {type: 'module', id: 'halogen-cocktail-flags'}
 flag_data = {
   base_url: request.base_url,
-  logname:  ENV['LOGNAME']
+  logname:  ENV['LOGNAME'],
+  start: 7
 }.each{ |k,v| html_attributes[:"data-#{k}"] = v }
 %>
 
