@@ -180,7 +180,7 @@ file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/App/Cockta
 
 **** trying to copy the Elm example
 
-***** Elm POST
+***** Elm GET
 [[file:vendor/elm/cocktails/src/Cocktails.elm::type alias Cocktail =]]
 [[file:vendor/elm/cocktails/src/Cocktails.elm::fetchCocktails query tagger =]]
 

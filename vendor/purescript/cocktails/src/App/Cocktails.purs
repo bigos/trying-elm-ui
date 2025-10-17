@@ -37,6 +37,8 @@ import Halogen.HTML.Properties as HP
 type State =
   { count :: Int
   , flags :: Flags
+  , loading :: Boolean
+  , result :: Maybe String
   }
 
 type Flags =
@@ -45,7 +47,7 @@ type Flags =
   , base_url :: Maybe String
   }
 
-data Action = Increment
+data Action = Increment | MakeRequestGet
 
 initialState :: Flags -> State
 initialState flags =
@@ -57,6 +59,8 @@ initialState flags =
           )
       )
   , flags: flags
+  , loading: false
+  , result: Nothing
   }
 
 component :: forall output m t. H.Component t Flags output m
@@ -78,11 +82,27 @@ render state =
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
+    , HH.p []
+        [ HH.button
+            [ HE.onClick \_ -> MakeRequestGet ]
+            [ HH.text "Get the data" ]
+        ]
     ]
 
-handleAction :: forall cs o m. Action → H.HalogenM State Action cs o m Unit
+handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
+  MakeRequestGet -> do
+    H.modify_ \st -> st { loading = true }
+    response <- H.liftAff $ AX.get AXRF.string
+      ( "https://thecocktaildb.com/api/json/v1/1/search.php?s="
+          <> "rum"
+      )
+    --url = "https://thecocktaildb.com/api/json/v1/1/search.php?s=" ++ String.replace " " "+" query
+    H.modify_ \st -> st
+      { loading = false
+      , result = map _.body (hush response)
+      }
 
 -- ===================================================
 displayFlags :: Flags -> String
