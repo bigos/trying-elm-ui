@@ -27,10 +27,7 @@ import Effect.Console (logShow)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
-
--- import Halogen.HTML.Properties (IProp)
-
--- import Halogen.HTML.Properties as HP
+import Halogen.HTML.Properties as HP
 
 type State =
   { count :: Int
@@ -116,15 +113,25 @@ render state =
                   )
             )
         ]
-    , HH.ol []
+    , HH.div []
         ( case state.getStatus of
             GetOk d ->
               ( DA.fromFoldable
                   ( map
                       ( \i ->
-                          HH.li []
-                            [ HH.text
-                                (show i)
+                          HH.div []
+                            [ HH.h3 [] [ HH.text i.strDrink ]
+                            , HH.p []
+                                [ HH.img
+                                    [ HP.src i.strDrinkThumb
+                                    , HP.alt (i.strDrink)
+                                    ]
+
+                                , HH.br_
+                                , HH.text i.strInstructions
+                                ]
+
+                            --HH.text                                (show i)
                             ]
 
                       )
