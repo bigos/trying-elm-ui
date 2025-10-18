@@ -194,3 +194,23 @@ file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/App/Cockta
 https://github.com/citizennet/purescript-halogen-select/tree/master
 
 https://citizennet.github.io/purescript-halogen-select/tutorials/getting-started/
+
+install psc-package
+https://github.com/purescript/psc-package
+https://github.com/purescript/psc-package/releases
+
+use psc-package to install the selector
+https://citizennet.github.io/purescript-halogen-select/
+
+failed, giving up
+#+begin_example
+$  psc-package install halogen-select
+psc-package.json does not exist. Maybe you need to run psc-package init?
+
+$ psc-package init
+Initializing new project in current directory
+Using the default package set for PureScript compiler version 0.15.15
+(Use --source / --set to override this behavior)
+warning: Could not find remote branch psc-0.15.15 to clone.
+fatal: Remote branch psc-0.15.15 not found in upstream origin
+#+end_example
