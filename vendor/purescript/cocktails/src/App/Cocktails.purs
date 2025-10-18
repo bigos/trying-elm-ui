@@ -195,7 +195,7 @@ handleAction = case _ of
             Right f ->
               GetOk f
 
-displayFlags :: Flags -> Stringx
+displayFlags :: Flags -> String
 displayFlags flags =
   -- Just like Elm's Debug.toString
   show flags
