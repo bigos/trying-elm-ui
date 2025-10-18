@@ -2,28 +2,28 @@ module App.Cocktails where
 
 import Prelude
 
-import Affjax.RequestBody as AXRB
-import Data.Argonaut (decodeJson, encodeJson)
-import Data.Argonaut.Core (Json)
-import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
+-- import Affjax.RequestBody as AXRB
+import Data.Argonaut (decodeJson)
+-- import Data.Argonaut.Core (Json)
+import Data.Argonaut.Decode.Error (printJsonDecodeError)
 import Data.Array as DA
 import Data.Generic.Rep (class Generic)
 import Data.List (List, length)
-import Data.Show (show)
+-- import Data.Show (show)
 import Data.Show.Generic (genericShow)
-import Data.String (joinWith)
-import Data.String as DS
-import Data.String.Utils (endsWith)
+-- import Data.String (joinWith)
+-- import Data.String as DS
+-- import Data.String.Utils (endsWith)
 import Effect.Aff.Class (class MonadAff)
-import Halogen.Component (Component)
-import Halogen.HTML.Core (HTML)
+-- import Halogen.Component (Component)
+-- import Halogen.HTML.Core (HTML)
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
-import Data.Either (Either(..), hush)
+import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
-import Data.String.Common (joinWith)
-import Effect.Console (logShow)
+-- import Data.String.Common (joinWith)
+-- import Effect.Console (logShow)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
@@ -76,6 +76,16 @@ initialState flags =
   , getStatus: GetEmpty
   }
 
+component
+  :: forall output235 m236 t251
+   . MonadAff m236
+  => H.Component t251
+       { base_url :: Maybe String
+       , logname :: Maybe String
+       , start :: Maybe String
+       }
+       output235
+       m236
 component =
   H.mkComponent
     { initialState
@@ -83,7 +93,20 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
---render :: forall cs m. State -> H.ComponentHTML Action cs m
+render
+  :: forall w135 a145 t189
+   . Show a145
+  => { count :: a145
+     , flags ::
+         { base_url :: Maybe String
+         , logname :: Maybe String
+         , start :: Maybe String
+         }
+     , getStatus :: GetStatus
+     , result :: Maybe String
+     | t189
+     }
+  -> HH.HTML w135 Action
 render state =
   HH.div_
     [ HH.p_
@@ -131,7 +154,6 @@ render state =
                                 , HH.text i.strInstructions
                                 ]
 
-                            --HH.text                                (show i)
                             ]
 
                       )
@@ -145,7 +167,17 @@ render state =
 
     ]
 
---handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
+-- handleAction
+--   :: forall m35 t37
+--    . MonadState
+--        { count :: Int
+--        | t37
+--        }
+--        m35
+--   => MonadAff m35
+--   => Action
+--   -> m35 Unit
+
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   MakeRequestGet ->
