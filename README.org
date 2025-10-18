@@ -219,3 +219,8 @@ fatal: Remote branch psc-0.15.15 not found in upstream origin
 ***** psc-package second attempt
 installation
 https://psc-package.readthedocs.io/en/latest/installation.html#npm
+
+#+begin_example
+# for your project
+npm i -S psc-package
+#+end_example
