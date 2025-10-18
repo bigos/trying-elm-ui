@@ -224,3 +224,12 @@ https://psc-package.readthedocs.io/en/latest/installation.html#npm
 # for your project
 npm i -S psc-package
 #+end_example
+
+that gives us new entry in package.json
+
+but no luck
+
+#+begin_example
+$ psc-package install halogen-select
+psc-package: command not found
+#+end_example
