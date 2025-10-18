@@ -1,8 +1,0 @@
-{
-  "name": "cocktails",
-  "set": "psc-0.15.15",
-  "source": "https://github.com/purescript/package-sets.git",
-  "depends": [
-    "prelude"
-  ]
-}
