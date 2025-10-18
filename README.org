@@ -202,6 +202,7 @@ https://github.com/purescript/psc-package/releases
 use psc-package to install the selector
 https://citizennet.github.io/purescript-halogen-select/
 
+***** psc-package first attempt
 failed, giving up
 #+begin_example
 $  psc-package install halogen-select
@@ -214,3 +215,7 @@ Using the default package set for PureScript compiler version 0.15.15
 warning: Could not find remote branch psc-0.15.15 to clone.
 fatal: Remote branch psc-0.15.15 not found in upstream origin
 #+end_example
+
+***** psc-package second attempt
+installation
+https://psc-package.readthedocs.io/en/latest/installation.html#npm
