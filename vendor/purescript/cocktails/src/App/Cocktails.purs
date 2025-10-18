@@ -2,24 +2,24 @@ module App.Cocktails where
 
 import Prelude
 
--- import Affjax.RequestBody as AXRB
--- import Data.Argonaut (decodeJson, encodeJson)
--- import Data.Argonaut.Core (Json)
--- import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
--- import Data.Array (fromFoldable)
--- import Data.Array as DA
--- import Data.Generic.Rep (class Generic)
--- import Data.List (List)
--- import Data.Show.Generic (genericShow)
--- import Data.String (joinWith)
--- import Data.String as DS
--- import Data.String.Utils (endsWith)
--- import Effect.Aff.Class (class MonadAff)
--- import Halogen.Component (Component)
--- import Halogen.HTML.Core (HTML)
+import Affjax.RequestBody as AXRB
+import Data.Argonaut (decodeJson, encodeJson)
+import Data.Argonaut.Core (Json)
+import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
+import Data.Array (fromFoldable)
+import Data.Array as DA
+import Data.Generic.Rep (class Generic)
+import Data.List (List)
+import Data.Show.Generic (genericShow)
+import Data.String (joinWith)
+import Data.String as DS
+import Data.String.Utils (endsWith)
+import Effect.Aff.Class (class MonadAff)
+import Halogen.Component (Component)
+import Halogen.HTML.Core (HTML)
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
-import Data.Either (hush)
+import Data.Either (Either(..), hush)
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.Common (joinWith)
@@ -37,12 +37,29 @@ type State =
   , flags :: Flags
   , loading :: Boolean
   , result :: Maybe String
+  , getStatus :: GetStatus
   }
 
 type Flags =
   { start :: Maybe String
   , logname :: Maybe String
   , base_url :: Maybe String
+  }
+
+data GetStatus = GetEmpty | GetError String | GetOk Drinks
+
+derive instance genericGetStatus :: Generic GetStatus _
+
+instance showGetStatus :: Show GetStatus where
+  show = genericShow
+
+type Drinks =
+  { drinks :: List Drink }
+
+type Drink =
+  { strDrink :: String
+  , strInstructions :: String
+  , strDrinkThumb :: String
   }
 
 data Action = Increment | MakeRequestGet
@@ -59,6 +76,7 @@ initialState flags =
   , flags: flags
   , loading: false
   , result: Nothing
+  , getStatus: GetEmpty
   }
 
 component =
@@ -84,24 +102,51 @@ render state =
             [ HE.onClick \_ -> MakeRequestGet ]
             [ HH.text "Get the data" ]
         ]
+    , HH.p [] [ HH.text (fromMaybe "" state.result) ]
     , HH.p []
-        [ HH.text (fromMaybe "" state.result) ]
+        [ HH.text
+            ( case state.getStatus of
+                GetEmpty -> "empty get status"
+                GetError str -> str
+                GetOk drinks -> "got drinks"
+            )
+        ]
     ]
 
 --handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
-  MakeRequestGet -> do
-    H.modify_ \st -> st
-      { loading = true }
-    response <- H.liftAff $ AX.get AXRF.string
-      ("https://thecocktaildb.com/api/json/v1/1/search.php?s=" <> "rum")
-    H.modify_ \st -> st
-      { loading = false
-      , result = map _.body (hush response)
-      }
+  MakeRequestGet ->
+    do
+      H.modify_ \st -> st
+        { loading = true }
+      response <- H.liftAff $ AX.get
+        --AXRF.string
+        AXRF.json
+        ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
+            if true then
+              "rum"
+            else
+              "Rum Runner"
+        )
 
--- ===================================================
+      H.modify_ \st -> st
+        { loading = false
+        --  , result = map _.body (hush response)
+        , getStatus = handleResponse response
+        }
+    where
+    handleResponse resp =
+      case resp of
+        Left error ->
+          GetError (AX.printError error)
+        Right payload ->
+          case (decodeJson payload.body) of
+            Left e ->
+              GetError (printJsonDecodeError e)
+            Right f ->
+              GetOk f
+
 displayFlags :: Flags -> String
 displayFlags flags =
   joinWith ", "
