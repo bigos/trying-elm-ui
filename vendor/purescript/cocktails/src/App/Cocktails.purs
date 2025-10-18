@@ -24,6 +24,7 @@ import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
 -- import Data.String.Common (joinWith)
 -- import Effect.Console (logShow)
+
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
@@ -169,7 +170,7 @@ render state =
 
 -- handleAction
 --   :: forall m35 t37
---    . MonadState
+--    . H.HalogemM (State m35)
 --        { count :: Int
 --        | t37
 --        }
