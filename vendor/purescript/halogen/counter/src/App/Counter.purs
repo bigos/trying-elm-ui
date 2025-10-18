@@ -13,7 +13,7 @@ import Data.Array as DA
 import Data.Either (Either(..), hush)
 import Data.Generic.Rep (class Generic)
 import Data.Int (fromString)
-import Data.List (List)
+import Data.List (List, concatMap)
 import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Data.String as DS

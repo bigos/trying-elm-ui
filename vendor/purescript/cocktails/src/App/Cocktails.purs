@@ -6,7 +6,6 @@ import Affjax.RequestBody as AXRB
 import Data.Argonaut (decodeJson, encodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
-import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Generic.Rep (class Generic)
 import Data.List (List, length)
@@ -87,7 +86,7 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
-render :: forall cs m. State -> H.ComponentHTML Action cs m
+--render :: forall cs m. State -> H.ComponentHTML Action cs m
 render state =
   HH.div_
     [ HH.p_
@@ -109,13 +108,34 @@ render state =
             ( case state.getStatus of
                 GetEmpty -> "empty get status"
                 GetError str -> str
-                GetOk drinks ->
+                GetOk d ->
                   ( "got "
-                      <> show (length drinks.drinks)
+                      <> show (length d.drinks)
                       <> " drinks"
+
                   )
             )
         ]
+    , HH.ol []
+        ( case state.getStatus of
+            GetOk d ->
+              ( DA.fromFoldable
+                  ( map
+                      ( \i ->
+                          HH.li []
+                            [ HH.text
+                                (show i)
+                            ]
+
+                      )
+                      d.drinks
+                  )
+              )
+
+            _ ->
+              []
+        )
+
     ]
 
 --handleAction :: forall o m. Action → H.HalogenM State Action () o m Unit
