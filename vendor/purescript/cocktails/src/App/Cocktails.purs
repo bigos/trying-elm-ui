@@ -24,8 +24,8 @@ import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
 -- import Data.String.Common (joinWith)
 -- import Effect.Console (logShow)
-
 import Halogen as H
+import Halogen.HalogenM as HM
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
@@ -97,16 +97,7 @@ component =
 render
   :: forall w135 a145 t189
    . Show a145
-  => { count :: a145
-     , flags ::
-         { base_url :: Maybe String
-         , logname :: Maybe String
-         , start :: Maybe String
-         }
-     , getStatus :: GetStatus
-     , result :: Maybe String
-     | t189
-     }
+  => { count :: a145, flags :: Flags, getStatus :: GetStatus, result :: Maybe String | t189 }
   -> HH.HTML w135 Action
 render state =
   HH.div_
@@ -168,17 +159,10 @@ render state =
 
     ]
 
--- handleAction
---   :: forall m35 t37
---    . H.HalogemM (State m35)
---        { count :: Int
---        | t37
---        }
---        m35
---   => MonadAff m35
---   => Action
---   -> m35 Unit
-
+-- this does not work
+-- handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
+-- Module Halogen.HalogenM was not found.
+-- is it possible that this is wrong?  https://purescript-halogen.github.io/purescript-halogen/guide/03-Performing-Effects.html
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   MakeRequestGet ->
