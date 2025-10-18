@@ -9,7 +9,8 @@ import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
 import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Generic.Rep (class Generic)
-import Data.List (List)
+import Data.List (List, length)
+import Data.Show (show)
 import Data.Show.Generic (genericShow)
 import Data.String (joinWith)
 import Data.String as DS
@@ -108,7 +109,11 @@ render state =
             ( case state.getStatus of
                 GetEmpty -> "empty get status"
                 GetError str -> str
-                GetOk drinks -> "got drinks"
+                GetOk drinks ->
+                  ( "got "
+                      <> show (length drinks.drinks)
+                      <> " drinks"
+                  )
             )
         ]
     ]
@@ -149,8 +154,5 @@ handleAction = case _ of
 
 displayFlags :: Flags -> String
 displayFlags flags =
-  joinWith ", "
-    [ "start: " <> (fromMaybe "" flags.start)
-    , "logname: " <> (fromMaybe "" flags.logname)
-    , "base_url: " <> (fromMaybe "" flags.base_url)
-    ]
+  -- Just like Elm's Debug.toString
+  show flags
