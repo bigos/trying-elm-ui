@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   get "cocktail/elm"
   get "cocktail/halogen"
+  get "cocktail/flame"
 
   get "elm_form/new"
   get "elm_form/index"

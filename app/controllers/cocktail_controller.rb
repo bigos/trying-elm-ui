@@ -4,4 +4,7 @@ class CocktailController < ApplicationController
 
   def halogen
   end
+
+  def flame
+  end
 end

@@ -240,6 +240,9 @@ psc-package: command not found
 linking
 file:~/Programming/Ruby/trying-elm-ui/link_files::1
 
+new doc
+https://codehints.io/purescript/getting-started
+
 ***** views
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/flame.html.erb::1
 
