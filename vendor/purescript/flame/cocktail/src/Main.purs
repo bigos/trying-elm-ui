@@ -40,11 +40,9 @@ type Model =
   }
 
 type Flags =
-  { counter_start :: Maybe String
+  { start :: Maybe String
   , base_url :: Maybe String
   , logname :: Maybe String
-  , home :: Maybe String
-  , show_hidden :: Maybe String
   }
 
 type FileObject =
@@ -100,11 +98,9 @@ instance showResultFiles :: Show (ResultFiles) where
 init ∷ Model
 init =
   { flags:
-      { counter_start: Nothing
+      { start: Nothing
       , base_url: Nothing
       , logname: Nothing
-      , home: Nothing
-      , show_hidden: Nothing
       }
   , dirs: { leftDir: Nothing, rightDir: Nothing }
   , resultFiles: NotFetchedFile
@@ -243,7 +239,7 @@ update { display, model, message } =
 
 flagsCounter :: Flags -> Int
 flagsCounter flags =
-  fromMaybe (-5) (fromString (fromMaybe "" flags.counter_start))
+  fromMaybe (-5) (fromString (fromMaybe "" flags.start))
 
 -- *VIEW --
 
@@ -253,18 +249,10 @@ bgColor counter = if counter < 0 then "red" else "lime"
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div da_border_green
-      [ HE.div (da_border_red)
-          [ HE.div (da_border_green) "general toolbar"
-          , HE.div [ HA.styleAttr "display: inline-flex" ]
-              [ HE.div da_border_red (panel model.dirs.leftDir "left")
-              , HE.div da_border_green (panel model.dirs.rightDir "right")
-              ]
-          ]
-      , HE.h3_ "flags"
+      [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
       , HE.h3_ "model"
       , HE.p_ (show model)
-      , HE.button [ HA.onClick FetchFiles, HA.disabled $ model.resultFiles == FetchingFile ] "Fetch Files"
       ]
   ]
 
@@ -350,10 +338,8 @@ main = do
       where
       buildFlags :: Effect Flags
       buildFlags =
-        ( { counter_start: _, base_url: _, logname: _, home: _, show_hidden: _ }
-            <$> getAttribute "data-counter-start" element
+        ( { start: _, base_url: _, logname: _ }
+            <$> getAttribute "data-start" element
             <*> getAttribute "data-base-url" element
             <*> getAttribute "data-logname" element
-            <*> getAttribute "data-home" element
-            <*> getAttribute "data-show-hidden" element
         )
