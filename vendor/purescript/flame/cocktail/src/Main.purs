@@ -299,7 +299,7 @@ bgColor counter = if counter < 0 then "red" else "lime"
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
-      [ HE.label [ HA.for "nums" ] [ HE.text "what is your favourite number?" ]
+      [ HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.input
           [ HA.id "nums"
           , HA.type' "text"
@@ -311,14 +311,11 @@ view model = HE.main "main"
             OkDrinks dx ->
               ( HE.datalist
                   [ HA.id "numlist" ]
-                  [ HA.option "uno"
-                  , HA.option "due"
-                  ]
-              -- ( DA.fromFoldable
-              --     ( map (\i -> HE.option i.strDrink)
-              --         dx.drinks
-              --     )
-              -- )
+                  ( DA.fromFoldable
+                      ( map (\i -> HE.option_ i.strDrink)
+                          dx.drinks
+                      )
+                  )
               )
             _ -> HE.span_ ""
         )
