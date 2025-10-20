@@ -247,3 +247,14 @@ file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/flame.html.erb::1
 file:/home/jacek/Programming/Ruby/trying-elm-ui/vendor/purescript/flame/cocktail
 
 https://injuly.in/blog/purescript-setup/
+
+#+begin_example
+npm install pnpm
+mkdir ./cocktail
+cd ./cocktail/
+pnpm init
+# aaarh pnpm not found
+
+spago init
+npm install --save-exact --save-dev esbuild purescript purs-tidy
+#+end_example
