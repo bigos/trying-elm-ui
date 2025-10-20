@@ -243,6 +243,9 @@ file:~/Programming/Ruby/trying-elm-ui/link_files::1
 new doc
 https://codehints.io/purescript/getting-started
 
+interesting HTML autocomplete
+https://gomakethings.com/how-to-create-an-autocomplete-input-with-only-html/
+
 ***** views
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/flame.html.erb::1
 
