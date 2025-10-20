@@ -258,3 +258,5 @@ pnpm init
 spago init
 npm install --save-exact --save-dev esbuild purescript purs-tidy
 #+end_example
+
+https://github.com/easafe/purescript-flame/blob/master/docs/index.md
