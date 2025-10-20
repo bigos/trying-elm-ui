@@ -2,16 +2,16 @@
 
 SOURCE_FOLDER = __dir__
 
-def link_purescript(fname)
+def link_purescript(fname, dirf)
   puts "removing #{fname}"
   `rm -v ./#{fname}`
   puts "copying #{fname}"
-  `ln -sv #{SOURCE_FOLDER}/vendor/purescript/cocktails/prod/index.js  ./#{fname}`
+  `ln -sv #{SOURCE_FOLDER}/vendor/purescript/#{dirf}/prod/index.js  ./#{fname}`
 
   if File.exist? "./#{fname}"
     puts "success"
   else
-    puts "missing"
+    puts "MISSING"
   end
   puts "\n"
 end
@@ -22,16 +22,20 @@ puts ''
 
 
 fname = 'public/flame-cocktail.js'
-link_purescript fname
+dirf = 'flame/cocktail'
+link_purescript fname, dirf
 
 fname = 'public/halogen-cocktail.js'
-link_purescript fname
+dirf = 'cocktails'
+link_purescript fname, dirf
 
 fname = 'public/index_halogen.js'
-link_purescript fname
+dirf = 'halogen/counter'
+link_purescript fname, dirf
 
 fname = "public/index_flame.js"
-link_purescript fname
+dirf = 'flame/counter'
+link_purescript fname, dirf
 
 
 puts 'removing rescript'

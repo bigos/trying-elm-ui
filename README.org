@@ -237,3 +237,10 @@ psc-package: command not found
 #+end_example
 
 **** flame
+linking
+file:~/Programming/Ruby/trying-elm-ui/link_files::1
+
+***** views
+file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/flame.html.erb::1
+
+***** vendor
