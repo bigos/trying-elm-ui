@@ -294,9 +294,36 @@ flagsCounter flags =
 bgColor :: Int -> String
 bgColor counter = if counter < 0 then "red" else "lime"
 
+-- try this
+-- https://gomakethings.com/how-to-create-an-autocomplete-input-with-only-html/
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
+      [ HE.label [ HA.for "nums" ] [ HE.text "what is your favourite number?" ]
+      , HE.input
+          [ HA.id "nums"
+          , HA.type' "text"
+          , HA.name "nums"
+          , HA.list "numlist"
+          ]
+
+      , ( case model.resultDrinks of
+            OkDrinks dx ->
+              ( HE.datalist
+                  [ HA.id "numlist" ]
+                  [ HA.option "uno"
+                  , HA.option "due"
+                  ]
+              -- ( DA.fromFoldable
+              --     ( map (\i -> HE.option i.strDrink)
+              --         dx.drinks
+              --     )
+              -- )
+              )
+            _ -> HE.span_ ""
+        )
+      ]
+  , HE.div_
       ( case model.resultDrinks of
           OkDrinks dx ->
             [ HE.ol_
