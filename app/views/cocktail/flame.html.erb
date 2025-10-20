@@ -1,0 +1,22 @@
+<h1>Struggling with Purescript</h1>
+
+<p>After lack of progress with Halogen, I am trying Elm
+</p>
+
+<div id="flame-cocktail">Please wait ...</div>
+
+<%
+js_filename = 'flame-cocktail.js'
+js_file = File.join(Rails.root, 'public', js_filename)
+# prepare my own fingerprinting
+js_mtime =File.mtime(js_file).to_i
+
+html_attributes = {type: 'module', id: 'flame-cocktail-flags'}
+flag_data = {
+  base_url: request.base_url,
+  logname:  ENV['LOGNAME'],
+  start: 7
+}.each{ |k,v| html_attributes[:"data-#{k}"] = v }
+%>
+
+<%= javascript_include_tag "/#{js_filename}?#{js_mtime}", html_attributes %>

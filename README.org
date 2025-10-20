@@ -111,7 +111,9 @@ and is decoded here
 
 *** Cocktails
 
-**** views
+**** halogen
+
+***** views
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/
 
 elm
@@ -119,13 +121,13 @@ file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/elm.html.erb::1
 halogen
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/halogen.html.erb::1
 
-**** vendor
+***** vendor
 file:~/Programming/Ruby/trying-elm-ui/vendor/
 
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/cocktails/
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/
 
-***** example of compilation
+****** example of compilation
 elm
 https://github.com/nunntom/elm-ui-select/blob/4.0.0/examples/src/RequestExample.elm
 file:~/Programming/Ruby/trying-elm-ui/vendor/elm/ui-experiment/compile.sh::1
@@ -167,30 +169,30 @@ problem compiling the PS code
 and a very good description of solving such problems
 https://stackoverflow.com/a/79564703/1395810
 
-***** giving up on project with flags
+****** giving up on project with flags
 
 So I recreated the cocktails project from the template and built it
 
-***** linking of built files
+****** linking of built files
 file:~/Programming/Rails/trying-elm-ui/link_files::1
 
-***** no progress
+****** no progress
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/Main.purs::1
 file:~/Programming/Ruby/trying-elm-ui/vendor/purescript/cocktails/src/App/Cocktails.purs::1
 
-**** trying to copy the Elm example
+***** trying to copy the Elm example
 
-***** Elm GET
+****** Elm GET
 [[file:vendor/elm/cocktails/src/Cocktails.elm::type alias Cocktail =]]
 [[file:vendor/elm/cocktails/src/Cocktails.elm::fetchCocktails query tagger =]]
 
-***** other halogen POST
+****** other halogen POST
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data PostStatus = Empty | OkPosted Files | ErrorPosted String]]
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::data Action]]
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::\[ HE.onClick \_ -> MakeRequestPost \]]]
 [[file:vendor/purescript/halogen/counter/src/App/Counter.purs::MakeRequestPost -> do]]
 
-**** auto-completion
+***** halogen auto-completion
 https://github.com/citizennet/purescript-halogen-select/tree/master
 
 https://citizennet.github.io/purescript-halogen-select/tutorials/getting-started/
@@ -202,7 +204,7 @@ https://github.com/purescript/psc-package/releases
 use psc-package to install the selector
 https://citizennet.github.io/purescript-halogen-select/
 
-***** psc-package first attempt
+****** psc-package first attempt
 failed, giving up
 #+begin_example
 $  psc-package install halogen-select
@@ -216,7 +218,7 @@ warning: Could not find remote branch psc-0.15.15 to clone.
 fatal: Remote branch psc-0.15.15 not found in upstream origin
 #+end_example
 
-***** psc-package second attempt
+****** psc-package second attempt
 installation
 https://psc-package.readthedocs.io/en/latest/installation.html#npm
 
@@ -233,3 +235,5 @@ but no luck
 $ psc-package install halogen-select
 psc-package: command not found
 #+end_example
+
+**** flame

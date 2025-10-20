@@ -2,48 +2,37 @@
 
 SOURCE_FOLDER = __dir__
 
+def link_purescript(fname)
+  puts "removing #{fname}"
+  `rm -v ./#{fname}`
+  puts "copying #{fname}"
+  `ln -sv #{SOURCE_FOLDER}/vendor/purescript/cocktails/prod/index.js  ./#{fname}`
+
+  if File.exist? "./#{fname}"
+    puts "success"
+  else
+    puts "missing"
+  end
+  puts "\n"
+end
 
 puts "running script in #{SOURCE_FOLDER}"
 puts "to link the JS files to the destination folder: ./public/"
 puts ''
 
-puts "removing cocktails"
-`rm -v ./public/halogen-cocktail.js`
-puts "copying cocktails"
-`ln -sv #{SOURCE_FOLDER}/vendor/purescript/cocktails/prod/index.js  ./public/halogen-cocktail.js`
 
-if File.exist? "./public/halogen-cocktail.js"
-  puts "success"
-else
-  puts "missing"
-end
+fname = 'public/flame-cocktail.js'
+link_purescript fname
 
-puts "\n"
+fname = 'public/halogen-cocktail.js'
+link_purescript fname
 
+fname = 'public/index_halogen.js'
+link_purescript fname
 
-puts "removing halogen"
-`rm -v ./public/index_halogen.js`
-puts "copying halogen"
-`ln -sv #{SOURCE_FOLDER}/vendor/purescript/halogen/counter/prod/index.js  ./public/index_halogen.js`
+fname = "public/index_flame.js"
+link_purescript fname
 
-if File.exist? "./public/index_halogen.js"
-  puts "success"
-else
-  puts "missing"
-end
-
-puts "\n"
-
-puts "removing flame"
-`rm -v ./public/index_flame.js`
-puts "copying flame"
-`ln -sv #{SOURCE_FOLDER}/vendor/purescript/flame/counter/prod/index.js ./public/index_flame.js`
-
-if File.exist? "./public/index_flame.js"
-  puts "success"
-else
-  puts "missing"
-end
 
 puts 'removing rescript'
 
