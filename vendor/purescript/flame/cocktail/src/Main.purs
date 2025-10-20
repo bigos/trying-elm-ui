@@ -37,6 +37,7 @@ type Model =
   { flags :: Flags
   , dirs :: Dirs
   , resultFiles :: ResultFiles
+  , resultDrinks :: ResultDrinks
   }
 
 type Flags =
@@ -69,7 +70,16 @@ type FetchingFilePost =
   , show_hidden :: Boolean
   }
 
-data Message = Initialize Flags | FetchFiles | LoadParent | LoadChild String
+type Drinks =
+  { drinks :: List Drink }
+
+type Drink =
+  { strDrink :: String
+  , strInstructions :: String
+  , strDrinkThumb :: String
+  }
+
+data Message = Initialize Flags | FetchFiles | LoadParent | LoadChild String | FetchDrinks
 
 data Result = NotFetched | Fetching | Ok String | Error String
 
@@ -93,6 +103,16 @@ instance showResultFiles :: Show (ResultFiles) where
   show (OkFile a) = "OkFile " <> show a
   show (ErrorFile a) = "ErrorFile " <> show a
 
+data ResultDrinks = NotFetchedDrink | FetchingDrinks | OkDrinks Drinks | ErrorDrink String
+
+derive instance eqResultDrinks ∷ Eq ResultDrinks
+instance showResultDrinks :: Show (ResultDrinks) where
+  show :: ResultDrinks -> String
+  show (NotFetchedDrink) = "NotFetchedDrink"
+  show (FetchingDrinks) = "FetchingDrinks"
+  show (OkDrinks a) = "OkDrinks " <> show a
+  show (ErrorDrink a) = "ErrorDrink " <> show a
+
 -- *INIT --
 
 init ∷ Model
@@ -104,6 +124,7 @@ init =
       }
   , dirs: { leftDir: Nothing, rightDir: Nothing }
   , resultFiles: NotFetchedFile
+  , resultDrinks: NotFetchedDrink
   }
 
 -- *UPDATE --
@@ -114,11 +135,38 @@ fetchingFilePostToJson = encodeJson
 jsonToFiles :: Json -> Either JsonDecodeError Files
 jsonToFiles = decodeJson
 
+jsonToDrinks :: Json -> Either JsonDecodeError Drinks
+jsonToDrinks = decodeJson
+
 update ∷ AffUpdate Model Message
 update { display, model, message } =
   case message of
     Initialize flags -> FAE.diff
       { flags: flags }
+    FetchDrinks -> do
+      display $ FAE.diff'
+        { resultDrinks: FetchingDrinks }
+      response <-
+        -- TODO
+        ( A.get AR.json --((fromMaybe "" model.flags.base_url) <> "/api/list-files")
+            ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
+                if true then
+                  "rum"
+                else
+                  "Rum Runner"
+            )
+        )
+      case response of
+        Left error -> FAE.diff
+          { resultDrinks: (ErrorDrink (A.printError error)) }
+        Right payload ->
+          case (jsonToDrinks payload.body) of
+            Left e ->
+              FAE.diff
+                { resultDrinks: ErrorDrink (printJsonDecodeError e) }
+            Right f ->
+              FAE.diff
+                { resultDrinks: OkDrinks (f) }
     FetchFiles -> do
       display $ FAE.diff'
         { resultFiles: FetchingFile }
@@ -254,6 +302,7 @@ view model = HE.main "main"
       , HE.h3_ "model"
       , HE.p_ (show model)
       ]
+  , HE.button [ HA.onClick FetchDrinks, HA.disabled $ model.resultDrinks == FetchingDrinks ] "Fetch Cocktails"
   ]
 
 panel :: Maybe Files -> String -> Array (Html Message)
