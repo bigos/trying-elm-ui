@@ -296,13 +296,43 @@ bgColor counter = if counter < 0 then "red" else "lime"
 
 view ∷ Model → Html Message
 view model = HE.main "main"
-  [ HE.div da_border_green
+  [ HE.div_
+      ( case model.resultDrinks of
+          OkDrinks dx ->
+            [ HE.ol_
+                ( DA.fromFoldable
+                    ( map
+                        ( \i ->
+                            HE.li_
+                              [ HE.div_
+                                  [ HE.h3_ i.strDrink
+
+                                  , HE.img
+                                      [ HA.src i.strDrinkThumb
+                                      , HA.alt (i.strDrink)
+                                      ]
+                                  , HE.p_ i.strInstructions
+
+                                  ]
+                              ]
+                        )
+
+                        dx.drinks
+                    )
+                )
+            ]
+          _ ->
+            [ HE.p_ (show (model.resultDrinks)) ]
+      )
+  , HE.button
+      [ HA.onClick FetchDrinks, HA.disabled $ model.resultDrinks == FetchingDrinks ]
+      "Fetch Cocktails"
+  , HE.div da_border_green
       [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
       , HE.h3_ "model"
       , HE.p_ (show model)
       ]
-  , HE.button [ HA.onClick FetchDrinks, HA.disabled $ model.resultDrinks == FetchingDrinks ] "Fetch Cocktails"
   ]
 
 panel :: Maybe Files -> String -> Array (Html Message)
