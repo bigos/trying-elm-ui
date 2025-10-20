@@ -244,3 +244,5 @@ file:~/Programming/Ruby/trying-elm-ui/link_files::1
 file:~/Programming/Ruby/trying-elm-ui/app/views/cocktail/flame.html.erb::1
 
 ***** vendor
+file:~/Programming/Ruby/trying-elm-ui/vendor/purescript
+file:/home/jacek/Programming/Ruby/trying-elm-ui/vendor/purescript/flame/cocktail
