@@ -155,14 +155,20 @@ update { display, model, message } =
       container <- getElementById input_id $ toNonElementParentNode doc
       case container of
         Nothing ->
-          FAE.diff { selected: "container element not found" }
+          throw "container element not found"
         Just element ->
-          ( case fromElement element of
-              Nothing ->
-                FAE.diff { selected: "element is not input element" }
-              Just iel ->
-                FAE.diff { selected: (value iel) }
-          )
+          do
+            FAE.diff
+              { selected:
+                  --(value (fromElement element))
+                  "zzzzz"
+              -- ( case di of
+              --     Nothing ->
+              --       "element is not input element"
+              --     Just iel ->
+              --       (value iel)
+              -- )
+              }
 
     FetchDrinks -> do
       display $ FAE.diff'
