@@ -30,6 +30,7 @@ import Web.DOM.NonElementParentNode (getElementById)
 import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
+import Web.HTML.HTMLInputElement (value, fromElement)
 
 -- *TYPES --
 
@@ -154,9 +155,15 @@ update { display, model, message } =
       container <- getElementById input_id $ toNonElementParentNode doc
       case container of
         Nothing ->
-          throw "container element not found"
+          FAE.diff { selected: "container element not found" }
         Just element ->
-          FAE.diff { selected: (show (innerHTML element)) }
+          ( case fromElement element of
+              Nothing ->
+                FAE.diff { selected: "element is not input element" }
+              Just iel ->
+                FAE.diff { selected: (value iel) }
+          )
+
     FetchDrinks -> do
       display $ FAE.diff'
         { resultDrinks: FetchingDrinks }
