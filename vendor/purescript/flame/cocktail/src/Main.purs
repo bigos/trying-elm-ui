@@ -148,27 +148,7 @@ update { display, model, message } =
       { flags: flags
       , selected: ""
       }
-    DebugInput input_id -> do
-      -- https://pursuit.purescript.org/packages/purescript-web-html/4.1.0/docs/Web.HTML.HTMLInputElement
-      w <- window
-      doc <- document w
-      container <- getElementById input_id $ toNonElementParentNode doc
-      case container of
-        Nothing ->
-          throw "container element not found"
-        Just element ->
-          do
-            FAE.diff
-              { selected:
-                  --(value (fromElement element))
-                  "zzzzz"
-              -- ( case di of
-              --     Nothing ->
-              --       "element is not input element"
-              --     Just iel ->
-              --       (value iel)
-              -- )
-              }
+    DebugInput input_str -> FAE.diff { selected: input_str }
 
     FetchDrinks -> do
       display $ FAE.diff'
@@ -332,7 +312,7 @@ view model = HE.main "main"
           , HA.type' "text"
           , HA.name "nums"
           , HA.list "numlist"
-          , HA.onClick (DebugInput "nums")
+          , HA.onInput (DebugInput)
           ]
 
       , ( case model.resultDrinks of
