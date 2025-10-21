@@ -36,8 +36,6 @@ import Web.HTML.Window (document)
 
 type Model =
   { flags :: Flags
-  , dirs :: Dirs
-  , resultFiles :: ResultFiles
   , resultDrinks :: ResultDrinks
   , selected :: String
   , key :: String
@@ -47,30 +45,6 @@ type Flags =
   { start :: Maybe String
   , base_url :: Maybe String
   , logname :: Maybe String
-  }
-
-type FileObject =
-  { name :: String
-  , executable :: Boolean
-  , extname :: String
-  , ftype :: String
-  , size :: Int
-  , mtime :: String
-  , mode :: Int
-  , symlink :: Boolean
-  }
-
-type Files =
-  { pwd :: String
-  , show_hidden :: Boolean
-  , files :: List FileObject
-  }
-
-type Dirs = { leftDir :: Maybe Files, rightDir :: Maybe Files }
-
-type FetchingFilePost =
-  { pwd :: String
-  , show_hidden :: Boolean
   }
 
 type Drinks =
@@ -84,34 +58,9 @@ type Drink =
 
 data Message
   = Initialize Flags
-  | FetchFiles
-  | LoadParent
-  | LoadChild String
   | FetchDrinks
   | DebugKeydown (Tuple String String)
   | DebugInput String
-
-data Result = NotFetched | Fetching | Ok String | Error String
-
-data ResultFiles = NotFetchedFile | FetchingFile | OkFile Files | ErrorFile String
-
-derive instance eqResult ∷ Eq Result
-
-derive instance eqResultFiles ∷ Eq ResultFiles
-
-instance showResult :: Show (Result) where
-  show :: Result -> String
-  show (NotFetched) = "NotFetched"
-  show (Fetching) = "Fetching"
-  show (Ok a) = "Ok " <> show a
-  show (Error a) = "Error " <> show a
-
-instance showResultFiles :: Show (ResultFiles) where
-  show :: ResultFiles -> String
-  show (NotFetchedFile) = "NotFetchedFile"
-  show (FetchingFile) = "FetchingFile"
-  show (OkFile a) = "OkFile " <> show a
-  show (ErrorFile a) = "ErrorFile " <> show a
 
 data ResultDrinks = NotFetchedDrink | FetchingDrinks | OkDrinks Drinks | ErrorDrink String
 
@@ -132,20 +81,12 @@ init =
       , base_url: Nothing
       , logname: Nothing
       }
-  , dirs: { leftDir: Nothing, rightDir: Nothing }
-  , resultFiles: NotFetchedFile
   , resultDrinks: NotFetchedDrink
   , selected: ""
   , key: ""
   }
 
 -- *UPDATE --
-
-fetchingFilePostToJson :: FetchingFilePost -> Json
-fetchingFilePostToJson = encodeJson
-
-jsonToFiles :: Json -> Either JsonDecodeError Files
-jsonToFiles = decodeJson
 
 jsonToDrinks :: Json -> Either JsonDecodeError Drinks
 jsonToDrinks = decodeJson
@@ -193,123 +134,6 @@ update { display, model, message } =
             Right f ->
               FAE.diff
                 { resultDrinks: OkDrinks (f) }
-    FetchFiles -> do
-      display $ FAE.diff'
-        { resultFiles: FetchingFile }
-      response <-
-        ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
-            (Just $ json $ fetchingFilePostToJson $ { pwd: "/home/jacek/", show_hidden: false })
-        )
-      case response of
-        Left error -> FAE.diff
-          { resultFiles: (ErrorFile (A.printError error))
-          , dirs: { leftDir: Nothing, rightDir: Nothing }
-          }
-        Right payload ->
-          case (jsonToFiles payload.body) of
-            Left e ->
-              FAE.diff
-                { resultFiles: ErrorFile (printJsonDecodeError e)
-                , dirs: { leftDir: Nothing, rightDir: Nothing }
-                }
-            Right f ->
-              FAE.diff
-                { resultFiles: OkFile (f)
-                , dirs: { leftDir: Just f, rightDir: Nothing }
-                }
-    LoadParent -> do
-      display $ FAE.diff'
-        { resultFiles: FetchingFile }
-      response <-
-        ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
-            ( Just $ json $ fetchingFilePostToJson $
-                { pwd:
-                    ( case model.dirs.leftDir of
-                        Nothing ->
-                          "/home/jacek/"
-                        Just dir ->
-                          let
-                            dpwd = dir.pwd
-                            pwd2 =
-                              if dpwd == "/" then "/"
-                              else -- "/home/jacek/"
-                                ( if endsWith "/" dpwd then
-                                    DS.take ((DS.length dpwd) - 1) dpwd
-                                  else dpwd
-                                )
-                            splitPwd2 = (DS.split (DS.Pattern "/") pwd2)
-                            joined = (DS.joinWith "/" (DA.take (DA.length splitPwd2 - 1) splitPwd2))
-                          in
-                            if joined == "" then "/" else joined
-                    )
-                , show_hidden:
-                    ( case model.dirs.leftDir of
-                        Nothing ->
-                          false
-                        Just dir ->
-                          dir.show_hidden
-                    )
-                }
-            )
-        )
-      case response of
-        Left error -> FAE.diff
-          { resultFiles: (ErrorFile (A.printError error))
-          , dirs: { leftDir: Nothing, rightDir: Nothing }
-          }
-        Right payload ->
-          case (jsonToFiles payload.body) of
-            Left e ->
-              FAE.diff
-                { resultFiles: ErrorFile (printJsonDecodeError e)
-                , dirs: { leftDir: Nothing, rightDir: Nothing }
-                }
-            Right f ->
-              FAE.diff
-                { resultFiles: OkFile (f)
-                , dirs: { leftDir: Just f, rightDir: Nothing }
-                }
-    LoadChild child -> do
-      display $ FAE.diff'
-        { resultFiles: FetchingFile }
-      response <-
-        ( A.post AR.json ((fromMaybe "" model.flags.base_url) <> "/api/list-files")
-            ( Just $ json $ fetchingFilePostToJson $
-                { pwd:
-                    ( case model.dirs.leftDir of
-                        Nothing ->
-                          "/home/jacek/"
-                        Just dir ->
-                          dir.pwd <> "/" <> child
-
-                    )
-                , show_hidden:
-                    ( case model.dirs.leftDir of
-                        Nothing ->
-                          false
-                        Just dir ->
-                          dir.show_hidden
-                    )
-                }
-            )
-        )
-      case response of
-        Left error -> FAE.diff
-          { resultFiles: (ErrorFile (A.printError error))
-          , dirs: { leftDir: Nothing, rightDir: Nothing }
-          }
-        Right payload ->
-          case (jsonToFiles payload.body) of
-            Left e ->
-              FAE.diff
-                { resultFiles: ErrorFile (printJsonDecodeError e)
-                , dirs: { leftDir: Nothing, rightDir: Nothing }
-                }
-            Right f ->
-              FAE.diff
-                { resultFiles: OkFile (f)
-                , dirs: { leftDir: Just f, rightDir: Nothing }
-                }
 
 flagsCounter :: Flags -> Int
 flagsCounter flags =
@@ -378,9 +202,7 @@ view model = HE.main "main"
           _ ->
             [ HE.p_ (show (model.resultDrinks)) ]
       )
-  , HE.button
-      [ HA.onClick FetchDrinks, HA.disabled $ model.resultDrinks == FetchingDrinks ]
-      "Fetch Cocktails"
+
   , HE.div da_border_green
       [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
@@ -388,51 +210,6 @@ view model = HE.main "main"
       , HE.p_ (show model)
       ]
   ]
-
-panel :: Maybe Files -> String -> Array (Html Message)
-panel mFiles side =
-  [ HE.div da_border_green
-      [ HE.button [ HA.onClick LoadParent ] "Parent"
-      , HE.span_
-          ( case mFiles of
-              Nothing -> ""
-              Just f -> f.pwd
-          )
-      , HE.div da_border_blue (side <> " toolbar")
-      ]
-  ]
-    <>
-      panelInner mFiles
-
-    <>
-      [ HE.div
-          ( [ HA.styleAttr "background: yellow" ]
-
-          )
-          (side <> " status")
-      ]
-
-panelInner :: Maybe Files -> Array (Html Message)
-panelInner mFiles =
-  ( case mFiles of
-      Nothing -> []
-      Just f -> panelInnerJust f
-
-  )
-
-panelInnerJust :: Files -> Array (Html Message)
-panelInnerJust f =
-  map
-    ( \n ->
-        if n.ftype == "directory" then
-          HE.div_
-            [ (HE.button [ HA.onClick (LoadChild n.name) ] n.name)
-            ]
-        else
-          (HE.div_ n.name)
-
-    )
-    (fromFoldable f.files)
 
 da_border_red :: forall t. Array (NodeData t)
 da_border_red = da_border_color "red"
