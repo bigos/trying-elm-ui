@@ -38,6 +38,7 @@ type Model =
   , dirs :: Dirs
   , resultFiles :: ResultFiles
   , resultDrinks :: ResultDrinks
+  , selected :: String
   }
 
 type Flags =
@@ -79,7 +80,7 @@ type Drink =
   , strDrinkThumb :: String
   }
 
-data Message = Initialize Flags | FetchFiles | LoadParent | LoadChild String | FetchDrinks
+data Message = Initialize Flags | FetchFiles | LoadParent | LoadChild String | FetchDrinks | DebugInput String
 
 data Result = NotFetched | Fetching | Ok String | Error String
 
@@ -125,6 +126,7 @@ init =
   , dirs: { leftDir: Nothing, rightDir: Nothing }
   , resultFiles: NotFetchedFile
   , resultDrinks: NotFetchedDrink
+  , selected: ""
   }
 
 -- *UPDATE --
@@ -142,7 +144,19 @@ update ∷ AffUpdate Model Message
 update { display, model, message } =
   case message of
     Initialize flags -> FAE.diff
-      { flags: flags }
+      { flags: flags
+      , selected: ""
+      }
+    DebugInput input_id -> do
+      -- https://pursuit.purescript.org/packages/purescript-web-html/4.1.0/docs/Web.HTML.HTMLInputElement
+      w <- window
+      doc <- document w
+      container <- getElementById input_id $ toNonElementParentNode doc
+      case container of
+        Nothing ->
+          throw "container element not found"
+        Just element ->
+          FAE.diff { selected: (show (innerHTML element)) }
     FetchDrinks -> do
       display $ FAE.diff'
         { resultDrinks: FetchingDrinks }
@@ -305,6 +319,7 @@ view model = HE.main "main"
           , HA.type' "text"
           , HA.name "nums"
           , HA.list "numlist"
+          , HA.onClick (DebugInput "nums")
           ]
 
       , ( case model.resultDrinks of
