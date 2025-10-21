@@ -17,6 +17,7 @@
   , "prelude"
   , "strings"
   , "stringutils"
+  , "tuples"
   , "web-dom"
   , "web-html"
   ]

@@ -14,6 +14,7 @@ import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.List (List)
+import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
 import Data.String.Utils (endsWith)
@@ -30,7 +31,6 @@ import Web.DOM.NonElementParentNode (getElementById)
 import Web.HTML (window)
 import Web.HTML.HTMLDocument (toNonElementParentNode)
 import Web.HTML.Window (document)
-import Web.HTML.HTMLInputElement (value, fromElement)
 
 -- *TYPES --
 
@@ -40,6 +40,7 @@ type Model =
   , resultFiles :: ResultFiles
   , resultDrinks :: ResultDrinks
   , selected :: String
+  , key :: String
   }
 
 type Flags =
@@ -81,7 +82,14 @@ type Drink =
   , strDrinkThumb :: String
   }
 
-data Message = Initialize Flags | FetchFiles | LoadParent | LoadChild String | FetchDrinks | DebugInput String
+data Message
+  = Initialize Flags
+  | FetchFiles
+  | LoadParent
+  | LoadChild String
+  | FetchDrinks
+  | DebugKeydown (Tuple String String)
+  | DebugInput String
 
 data Result = NotFetched | Fetching | Ok String | Error String
 
@@ -128,6 +136,7 @@ init =
   , resultFiles: NotFetchedFile
   , resultDrinks: NotFetchedDrink
   , selected: ""
+  , key: ""
   }
 
 -- *UPDATE --
@@ -148,6 +157,16 @@ update { display, model, message } =
       { flags: flags
       , selected: ""
       }
+    DebugKeydown input_tuple ->
+      let
+        key = fst input_tuple
+        val = snd input_tuple
+      in
+        if key == "Enter" then
+          update { display: display, model: model, message: FetchDrinks }
+        else
+          FAE.diff { selected: (val), key: key }
+
     DebugInput input_str -> FAE.diff { selected: input_str }
 
     FetchDrinks -> do
@@ -157,8 +176,8 @@ update { display, model, message } =
         -- TODO
         ( A.get AR.json --((fromMaybe "" model.flags.base_url) <> "/api/list-files")
             ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
-                if true then
-                  "rum"
+                if DS.length (model.selected) >= 3 then
+                  model.selected
                 else
                   "Rum Runner"
             )
@@ -306,13 +325,16 @@ bgColor counter = if counter < 0 then "red" else "lime"
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
-      [ HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
+      [ HE.p_ model.selected
+      , HE.p_ model.key
+      , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.input
           [ HA.id "nums"
           , HA.type' "text"
           , HA.name "nums"
           , HA.list "numlist"
           , HA.onInput (DebugInput)
+          , HA.onKeydown (DebugKeydown)
           ]
 
       , ( case model.resultDrinks of
