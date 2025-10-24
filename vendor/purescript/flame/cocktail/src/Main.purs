@@ -105,6 +105,8 @@ update { display, model, message } =
       in
         if key == "Enter" then
           update { display: display, model: model, message: FetchDrinks }
+        else if key == "Escape" then
+          FAE.diff { selected: "", key: key }
         else
           FAE.diff { selected: (val), key: key }
 
