@@ -34,3 +34,13 @@ https://github.com/passy/awesome-purescript
 https://github.com/passy/awesome-purescript#learning-resources
 
 https://pursuit.purescript.org/
+
+** auto-complete links
+*** elm packages examples
+https://package.elm-lang.org/packages/nunntom/elm-ui-select/latest/
+https://package.elm-lang.org/packages/russelldavies/elm-ui-searchbox/latest/
+searching for: autocomplet
+https://package.elm-lang.org/packages/futureworkz/elm-autocomplete/latest/
+https://package.elm-lang.org/packages/kirchner/elm-selectize/latest/
+https://package.elm-lang.org/packages/gribouille/elm-select-tailwind/latest/
+https://package.elm-lang.org/packages/special-elektronik/elm-autocomplete/latest/
