@@ -66,8 +66,7 @@ initialState flags =
   { count:
       ( fromMaybe 0
           ( fromString
-              ( fromMaybe "0" flags.logname
-              )
+              (fromMaybe "0" flags.logname)
           )
       )
   , flags: flags
@@ -123,7 +122,6 @@ render state =
                   ( "got "
                       <> show (length d.drinks)
                       <> " drinks"
-
                   )
             )
         ]
@@ -144,18 +142,14 @@ render state =
                                 , HH.br_
                                 , HH.text i.strInstructions
                                 ]
-
                             ]
-
                       )
                       d.drinks
                   )
               )
-
             _ ->
               []
         )
-
     ]
 
 -- this does not work
