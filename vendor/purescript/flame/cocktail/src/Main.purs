@@ -13,7 +13,7 @@ import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List (List)
+import Data.List (List, length)
 import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
@@ -63,6 +63,13 @@ data Message
   | DebugKeydown (Tuple String String)
   | DebugInput String
 
+instance showMessage :: Show (Message) where
+  show :: Message -> String
+  show (Initialize a) = "Initialize " <> show a
+  show (FetchDrinks) = "FetchDrinks"
+  show (DebugKeydown a) = "DebugKeydown " <> show a
+  show (DebugInput a) = "DebugInput " <> show a
+
 data ResultDrinks = NotFetchedDrink | FetchingDrinks | OkDrinks Drinks | ErrorDrink String
 
 derive instance eqResultDrinks ∷ Eq ResultDrinks
@@ -95,7 +102,18 @@ jsonToDrinks = decodeJson
 update ∷ AffUpdate Model Message
 update { display, model, message } =
   let
-    updateMessage = show (show model)
+    updateMessage = show
+      { message: show message
+      , selected: model.selected
+      , key: model.key
+      , drinks:
+          ( case model.resultDrinks of
+              NotFetchedDrink -> "Notfetcheddrink"
+              FetchingDrinks -> "Fetchdrinks"
+              OkDrinks drinks -> show { length: length drinks.drinks }
+              ErrorDrink error -> error
+          )
+      }
   in
     trace updateMessage \_ ->
       ( case message of
