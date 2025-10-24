@@ -18,6 +18,7 @@ import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
 import Data.String.Utils (endsWith)
+import Debug (trace)
 import Effect (Effect)
 import Effect.Exception (throw)
 import Flame (QuerySelector(..))
@@ -93,49 +94,54 @@ jsonToDrinks = decodeJson
 
 update ∷ AffUpdate Model Message
 update { display, model, message } =
-  case message of
-    Initialize flags -> FAE.diff
-      { flags: flags
-      , selected: ""
-      }
-    DebugKeydown input_tuple ->
-      let
-        key = fst input_tuple
-        val = snd input_tuple
-      in
-        if key == "Enter" then
-          update { display: display, model: model, message: FetchDrinks }
-        else if key == "Escape" then
-          FAE.diff { selected: "", key: key }
-        else
-          FAE.diff { selected: (val), key: key }
+  let
+    updateMessage = show (show model)
+  in
+    trace updateMessage \_ ->
+      ( case message of
+          Initialize flags -> FAE.diff
+            { flags: flags
+            , selected: ""
+            }
+          DebugKeydown input_tuple ->
+            let
+              key = fst input_tuple
+              val = snd input_tuple
+            in
+              if key == "Enter" then
+                update { display: display, model: model, message: FetchDrinks }
+              else if key == "Escape" then
+                FAE.diff { selected: "", key: key }
+              else
+                FAE.diff { selected: (val), key: key }
 
-    DebugInput input_str -> FAE.diff { selected: input_str }
+          DebugInput input_str -> FAE.diff { selected: input_str }
 
-    FetchDrinks -> do
-      display $ FAE.diff'
-        { resultDrinks: FetchingDrinks }
-      response <-
-        -- TODO
-        ( A.get AR.json --((fromMaybe "" model.flags.base_url) <> "/api/list-files")
-            ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
-                if DS.length (model.selected) >= 3 then
-                  model.selected
-                else
-                  "Rum Runner"
-            )
-        )
-      case response of
-        Left error -> FAE.diff
-          { resultDrinks: (ErrorDrink (A.printError error)) }
-        Right payload ->
-          case (jsonToDrinks payload.body) of
-            Left e ->
-              FAE.diff
-                { resultDrinks: ErrorDrink (printJsonDecodeError e) }
-            Right f ->
-              FAE.diff
-                { resultDrinks: OkDrinks (f) }
+          FetchDrinks -> do
+            display $ FAE.diff'
+              { resultDrinks: FetchingDrinks }
+            response <-
+              -- TODO
+              ( A.get AR.json --((fromMaybe "" model.flags.base_url) <> "/api/list-files")
+                  ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
+                      if DS.length (model.selected) >= 3 then
+                        model.selected
+                      else
+                        "Rum Runner"
+                  )
+              )
+            case response of
+              Left error -> FAE.diff
+                { resultDrinks: (ErrorDrink (A.printError error)) }
+              Right payload ->
+                case (jsonToDrinks payload.body) of
+                  Left e ->
+                    FAE.diff
+                      { resultDrinks: ErrorDrink (printJsonDecodeError e) }
+                  Right f ->
+                    FAE.diff
+                      { resultDrinks: OkDrinks (f) }
+      )
 
 flagsCounter :: Flags -> Int
 flagsCounter flags =
