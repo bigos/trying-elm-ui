@@ -99,6 +99,14 @@ init =
 jsonToDrinks :: Json -> Either JsonDecodeError Drinks
 jsonToDrinks = decodeJson
 
+drinks_stats resultDrinks =
+  ( case resultDrinks of
+      NotFetchedDrink -> "Notfetcheddrink"
+      FetchingDrinks -> "Fetchdrinks"
+      OkDrinks drinks -> show { length: length drinks.drinks }
+      ErrorDrink error -> error
+  )
+
 update ∷ AffUpdate Model Message
 update { display, model, message } =
   let
@@ -106,13 +114,8 @@ update { display, model, message } =
       { message: show message
       , selected: model.selected
       , key: model.key
-      , drinks:
-          ( case model.resultDrinks of
-              NotFetchedDrink -> "Notfetcheddrink"
-              FetchingDrinks -> "Fetchdrinks"
-              OkDrinks drinks -> show { length: length drinks.drinks }
-              ErrorDrink error -> error
-          )
+      , drinks: drinks_stats model.resultDrinks
+
       }
   in
     trace updateMessage \_ ->
@@ -157,8 +160,9 @@ update { display, model, message } =
                     FAE.diff
                       { resultDrinks: ErrorDrink (printJsonDecodeError e) }
                   Right f ->
-                    FAE.diff
-                      { resultDrinks: OkDrinks (f) }
+                    trace (show { fetched_length: (length f.drinks) }) \_ ->
+                      FAE.diff
+                        { resultDrinks: OkDrinks (f) }
       )
 
 flagsCounter :: Flags -> Int
@@ -175,7 +179,8 @@ bgColor counter = if counter < 0 then "red" else "lime"
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
-      [ HE.p_ model.selected
+      [ HE.p_ (drinks_stats model.resultDrinks)
+      , HE.p_ model.selected
       , HE.p_ model.key
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.input
