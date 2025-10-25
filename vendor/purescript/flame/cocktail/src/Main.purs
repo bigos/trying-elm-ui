@@ -202,7 +202,7 @@ view model = HE.main "main"
                       )
                   )
               )
-            _ -> HE.span_ ""
+            _ -> HE.span_ "nothing loaded"
         )
       ]
   , HE.div_
