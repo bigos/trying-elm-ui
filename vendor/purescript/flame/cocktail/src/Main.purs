@@ -188,6 +188,7 @@ view model = HE.main "main"
           , HA.type' "text"
           , HA.name "nums"
           , HA.list "numlist"
+          , HA.value (model.selected)
           , HA.onInput (DebugInput)
           , HA.onKeydown (DebugKeydown)
           ]
@@ -218,6 +219,8 @@ view model = HE.main "main"
 
                                   , HE.img
                                       [ HA.src i.strDrinkThumb
+                                      , HA.width "100"
+                                      , HA.height "auto"
                                       , HA.alt (i.strDrink)
                                       ]
                                   , HE.p_ i.strInstructions
