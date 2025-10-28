@@ -216,7 +216,6 @@ view model = HE.main "main"
                             HE.li_
                               [ HE.div_
                                   [ HE.h3_ i.strDrink
-
                                   , HE.img
                                       [ HA.src i.strDrinkThumb
                                       , HA.width "100"
