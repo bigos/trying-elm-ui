@@ -168,7 +168,7 @@ update { display, model, message } =
                         { resultDrinks:
                             OkDrinks
                               { drinks:
-                                  (sortBy (\a b -> compare a.strDrink b.strDrink) f.drinks)
+                                  (sortBy (comparing _.strDrink) f.drinks)
                               }
                         }
       )
@@ -230,8 +230,14 @@ view_options_ok_drinks model dx =
 
                   ( filter
                       ( \d -> DS.contains
-                          (DS.Pattern model.selected)
-                          d.strDrink
+                          ( DS.Pattern
+                              ( DS.toUpper
+                                  model.selected
+                              )
+                          )
+                          ( DS.toUpper
+                              d.strDrink
+                          )
                       )
                       dx.drinks
                   )
