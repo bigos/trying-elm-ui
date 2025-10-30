@@ -236,22 +236,13 @@ view model = HE.main "main"
             [ HE.p_ (show (model.resultDrinks)) ]
       )
 
-  , HE.div da_border_green
+  , HE.div (da_border_color "green")
       [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
       , HE.h3_ "model"
       , HE.p_ (show model)
       ]
   ]
-
-da_border_red :: forall t. Array (NodeData t)
-da_border_red = da_border_color "red"
-
-da_border_green :: forall t. Array (NodeData t)
-da_border_green = da_border_color "green"
-
-da_border_blue :: forall t. Array (NodeData t)
-da_border_blue = da_border_color "blue"
 
 da_border_color :: forall t. String -> Array (NodeData t)
 da_border_color color = [ HA.styleAttr ("border: solid " <> color <> " 1px") ]

@@ -39,7 +39,7 @@ https://pursuit.purescript.org/
 *** elm packages examples
 https://package.elm-lang.org/packages/nunntom/elm-ui-select/latest/
 https://package.elm-lang.org/packages/russelldavies/elm-ui-searchbox/latest/
-searching for: autocomplet
+searching for: autocomplete
 https://package.elm-lang.org/packages/futureworkz/elm-autocomplete/latest/
 https://package.elm-lang.org/packages/kirchner/elm-selectize/latest/
 https://package.elm-lang.org/packages/gribouille/elm-select-tailwind/latest/
