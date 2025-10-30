@@ -183,59 +183,10 @@ view model = HE.main "main"
       , HE.p_ model.selected
       , HE.p_ model.key
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
-      , HE.input
-          [ HA.id "nums"
-          , HA.type' "text"
-          , HA.name "nums"
-          , HA.list "numlist"
-          , HA.value (model.selected)
-          , HA.onInput (DebugInput)
-          , HA.onKeydown (DebugKeydown)
-          ]
-
-      , ( case model.resultDrinks of
-            OkDrinks dx ->
-              ( HE.datalist
-                  [ HA.id "numlist" ]
-                  ( DA.fromFoldable
-                      ( map (\i -> HE.option_ i.strDrink)
-                          dx.drinks
-                      )
-                  )
-              )
-            _ -> HE.span_ "nothing loaded"
-        )
+      , view_input model
+      , view_options model
       ]
-  , HE.div_
-      ( case model.resultDrinks of
-          OkDrinks dx ->
-            [ HE.ol_
-                ( DA.fromFoldable
-                    ( map
-                        ( \i ->
-                            HE.li_
-                              [ HE.div_
-                                  [ HE.h3_ i.strDrink
-                                  , HE.img
-                                      [ HA.src i.strDrinkThumb
-                                      , HA.width "100"
-                                      , HA.height "auto"
-                                      , HA.alt (i.strDrink)
-                                      ]
-                                  , HE.p_ i.strInstructions
-
-                                  ]
-                              ]
-                        )
-
-                        dx.drinks
-                    )
-                )
-            ]
-          _ ->
-            [ HE.p_ (show (model.resultDrinks)) ]
-      )
-
+  , view_drinks model
   , HE.div (da_border_color "green")
       [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
@@ -243,6 +194,61 @@ view model = HE.main "main"
       , HE.p_ (show model)
       ]
   ]
+
+view_drinks model =
+  HE.div_
+    ( case model.resultDrinks of
+        OkDrinks dx ->
+          [ HE.ol_
+              ( DA.fromFoldable
+                  ( map
+                      ( \i ->
+                          HE.li_
+                            [ HE.div_
+                                [ HE.h3_ i.strDrink
+                                , HE.img
+                                    [ HA.src i.strDrinkThumb
+                                    , HA.width "100"
+                                    , HA.height "auto"
+                                    , HA.alt (i.strDrink)
+                                    ]
+                                , HE.p_ i.strInstructions
+
+                                ]
+                            ]
+                      )
+
+                      dx.drinks
+                  )
+              )
+          ]
+        _ -> [ HE.p_ (show (model.resultDrinks)) ]
+    )
+
+view_input model =
+  HE.input
+    [ HA.id "nums"
+    , HA.type' "text"
+    , HA.name "nums"
+    , HA.list "numlist"
+    , HA.value (model.selected)
+    , HA.onInput (DebugInput)
+    , HA.onKeydown (DebugKeydown)
+    ]
+
+view_options model =
+  ( case model.resultDrinks of
+      OkDrinks dx ->
+        ( HE.datalist
+            [ HA.id "numlist" ]
+            ( DA.fromFoldable
+                ( map (\i -> HE.option_ i.strDrink)
+                    dx.drinks
+                )
+            )
+        )
+      _ -> HE.span_ "nothing loaded"
+  )
 
 da_border_color :: forall t. String -> Array (NodeData t)
 da_border_color color = [ HA.styleAttr ("border: solid " <> color <> " 1px") ]
