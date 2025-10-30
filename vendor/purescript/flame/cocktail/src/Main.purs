@@ -13,7 +13,7 @@ import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List (List, length)
+import Data.List (List, length, sort, sortBy)
 import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
@@ -165,7 +165,12 @@ update { display, model, message } =
                   Right f ->
                     trace (show { fetched_length: (length f.drinks) }) \_ ->
                       FAE.diff
-                        { resultDrinks: OkDrinks (f) }
+                        { resultDrinks:
+                            OkDrinks
+                              { drinks:
+                                  (sortBy (\s -> s.strDrink) f.drinks)
+                              }
+                        }
       )
 
 flagsCounter :: Flags -> Int
@@ -213,17 +218,26 @@ view_input model =
     ]
 
 view_options model =
-  ( case model.resultDrinks of
-      OkDrinks dx ->
-        ( HE.datalist
-            [ HA.id "numlist" ]
-            ( DA.fromFoldable
-                ( map (\i -> HE.option_ i.strDrink)
-                    dx.drinks
-                )
-            )
-        )
-      _ -> HE.span_ "nothing loaded"
+  case model.resultDrinks of
+    OkDrinks dx -> view_options_ok_drinks model dx
+    _ -> HE.span_ "nothing loaded"
+
+view_options_ok_drinks model dx =
+  ( HE.div_
+      [ HE.ul_
+          ( DA.fromFoldable
+              ( map (\i -> HE.li_ i.strDrink)
+                  dx.drinks
+              )
+          )
+      ]
+  -- HE.datalist
+  --   [ HA.id "numlist" ]
+  --   ( DA.fromFoldable
+  --       ( map (\i -> HE.option_ i.strDrink)
+  --           dx.drinks
+  --       )
+  --   )
   )
 
 view_drinks model =
