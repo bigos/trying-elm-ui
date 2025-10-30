@@ -187,7 +187,14 @@ bgColor counter = if counter < 0 then "red" else "lime"
 view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
-      [ HE.p_ (drinks_stats model.resultDrinks)
+      [ HE.p_
+          [ HE.a
+              [ HA.href "https://www.thecocktaildb.com"
+              , HA.target "_blank"
+              ]
+              [ HE.text "link to CocktailDB" ]
+          ]
+      , HE.p_ (drinks_stats model.resultDrinks)
       , HE.p_ ("sel " <> model.selected)
       , HE.p_ ("key " <> model.key)
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
