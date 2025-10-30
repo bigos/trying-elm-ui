@@ -222,25 +222,27 @@ view_options model =
     OkDrinks dx -> view_options_ok_drinks model dx
     _ -> HE.span_ "nothing loaded"
 
+filter_items model dx =
+  ( filter
+      ( \d -> DS.contains
+          ( DS.Pattern
+              ( DS.toUpper
+                  model.selected
+              )
+          )
+          ( DS.toUpper
+              d.strDrink
+          )
+      )
+      dx.drinks
+  )
+
 view_options_ok_drinks model dx =
   ( HE.div_
       [ HE.ul_
           ( DA.fromFoldable
               ( map (\i -> HE.li_ i.strDrink)
-
-                  ( filter
-                      ( \d -> DS.contains
-                          ( DS.Pattern
-                              ( DS.toUpper
-                                  model.selected
-                              )
-                          )
-                          ( DS.toUpper
-                              d.strDrink
-                          )
-                      )
-                      dx.drinks
-                  )
+                  (filter_items model dx)
               )
           )
       ]
@@ -267,7 +269,7 @@ view_drinks model =
                                 ]
                             ]
                       )
-                      dx.drinks
+                      (filter_items model dx)
                   )
               )
           ]
