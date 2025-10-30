@@ -168,7 +168,7 @@ update { display, model, message } =
                         { resultDrinks:
                             OkDrinks
                               { drinks:
-                                  (sortBy (\s -> s.strDrink) f.drinks)
+                                  (sortBy (\a b -> compare a.strDrink b.strDrink) f.drinks)
                               }
                         }
       )
