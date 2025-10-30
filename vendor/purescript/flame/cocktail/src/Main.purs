@@ -62,6 +62,7 @@ data Message
   | FetchDrinks
   | DebugKeydown (Tuple String String)
   | DebugInput String
+  | DebugFocus String
 
 instance showMessage :: Show (Message) where
   show :: Message -> String
@@ -69,6 +70,7 @@ instance showMessage :: Show (Message) where
   show (FetchDrinks) = "FetchDrinks"
   show (DebugKeydown a) = "DebugKeydown " <> show a
   show (DebugInput a) = "DebugInput " <> show a
+  show (DebugFocus a) = "DebugFocus " <> show a
 
 data ResultDrinks = NotFetchedDrink | FetchingDrinks | OkDrinks Drinks | ErrorDrink String
 
@@ -137,6 +139,7 @@ update { display, model, message } =
                 FAE.diff { selected: (val), key: key }
 
           DebugInput input_str -> FAE.diff { selected: input_str }
+          DebugFocus input_str -> FAE.diff { selected: input_str }
 
           FetchDrinks -> do
             display $ FAE.diff'
@@ -183,8 +186,10 @@ view model = HE.main "main"
       , HE.p_ model.selected
       , HE.p_ model.key
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
-      , view_input model
-      , view_options model
+      , HE.div_
+          [ view_input model
+          , view_options model
+          ]
       ]
   , view_drinks model
   , HE.div (da_border_color "green")
@@ -194,6 +199,32 @@ view model = HE.main "main"
       , HE.p_ (show model)
       ]
   ]
+
+view_input model =
+  HE.input
+    [ HA.id "nums"
+    , HA.type' "text"
+    , HA.name "nums"
+    , HA.list "numlist"
+    , HA.value (model.selected)
+    , HA.onInput (DebugInput)
+    , HA.onFocus (DebugFocus model.selected)
+    , HA.onKeydown (DebugKeydown)
+    ]
+
+view_options model =
+  ( case model.resultDrinks of
+      OkDrinks dx ->
+        ( HE.datalist
+            [ HA.id "numlist" ]
+            ( DA.fromFoldable
+                ( map (\i -> HE.option_ i.strDrink)
+                    dx.drinks
+                )
+            )
+        )
+      _ -> HE.span_ "nothing loaded"
+  )
 
 view_drinks model =
   HE.div_
@@ -213,42 +244,15 @@ view_drinks model =
                                     , HA.alt (i.strDrink)
                                     ]
                                 , HE.p_ i.strInstructions
-
                                 ]
                             ]
                       )
-
                       dx.drinks
                   )
               )
           ]
         _ -> [ HE.p_ (show (model.resultDrinks)) ]
     )
-
-view_input model =
-  HE.input
-    [ HA.id "nums"
-    , HA.type' "text"
-    , HA.name "nums"
-    , HA.list "numlist"
-    , HA.value (model.selected)
-    , HA.onInput (DebugInput)
-    , HA.onKeydown (DebugKeydown)
-    ]
-
-view_options model =
-  ( case model.resultDrinks of
-      OkDrinks dx ->
-        ( HE.datalist
-            [ HA.id "numlist" ]
-            ( DA.fromFoldable
-                ( map (\i -> HE.option_ i.strDrink)
-                    dx.drinks
-                )
-            )
-        )
-      _ -> HE.span_ "nothing loaded"
-  )
 
 da_border_color :: forall t. String -> Array (NodeData t)
 da_border_color color = [ HA.styleAttr ("border: solid " <> color <> " 1px") ]
