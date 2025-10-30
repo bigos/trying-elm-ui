@@ -13,7 +13,7 @@ import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List (List, length, sort, sortBy)
+import Data.List (List, length, sort, sortBy, filter)
 import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
@@ -188,8 +188,8 @@ view ∷ Model → Html Message
 view model = HE.main "main"
   [ HE.div_
       [ HE.p_ (drinks_stats model.resultDrinks)
-      , HE.p_ model.selected
-      , HE.p_ model.key
+      , HE.p_ ("sel " <> model.selected)
+      , HE.p_ ("key " <> model.key)
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.div_
           [ view_input model
@@ -227,17 +227,17 @@ view_options_ok_drinks model dx =
       [ HE.ul_
           ( DA.fromFoldable
               ( map (\i -> HE.li_ i.strDrink)
-                  dx.drinks
+
+                  ( filter
+                      ( \d -> DS.contains
+                          (DS.Pattern model.selected)
+                          d.strDrink
+                      )
+                      dx.drinks
+                  )
               )
           )
       ]
-  -- HE.datalist
-  --   [ HA.id "numlist" ]
-  --   ( DA.fromFoldable
-  --       ( map (\i -> HE.option_ i.strDrink)
-  --           dx.drinks
-  --       )
-  --   )
   )
 
 view_drinks model =
