@@ -7,6 +7,7 @@
   , "argonaut-codecs" 
   , "arrays"
   , "console"
+  , "debug"
   , "effect"
   , "either"
   , "exceptions"

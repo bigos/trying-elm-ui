@@ -14,6 +14,7 @@ import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
 -- import Data.String as DS
 -- import Data.String.Utils (endsWith)
+import Debug (trace)
 import Effect.Aff.Class (class MonadAff)
 -- import Halogen.Component (Component)
 -- import Halogen.HTML.Core (HTML)
@@ -35,6 +36,7 @@ type State =
   , loading :: Boolean
   , result :: Maybe String
   , getStatus :: GetStatus
+  , selected :: String
   }
 
 type Flags =
@@ -59,7 +61,7 @@ type Drink =
   , strDrinkThumb :: String
   }
 
-data Action = Increment | MakeRequestGet
+data Action = Increment | MakeRequestGet | DebugInput String
 
 initialState :: Flags -> State
 initialState flags =
@@ -73,6 +75,7 @@ initialState flags =
   , loading: false
   , result: Nothing
   , getStatus: GetEmpty
+  , selected: ""
   }
 
 component
@@ -104,6 +107,10 @@ render state =
     , HH.button
         [ HE.onClick \_ -> Increment ]
         [ HH.text "Click me" ]
+    , HH.hr_
+    , HH.h5_ [ HH.text "Input search" ]
+    , HH.p []
+        [ HH.input [ HE.onValueInput \str -> (DebugInput str) ] ]
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
@@ -158,6 +165,7 @@ render state =
 -- is it possible that this is wrong?  https://purescript-halogen.github.io/purescript-halogen/guide/03-Performing-Effects.html
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
+  DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
       H.modify_ \st -> st
