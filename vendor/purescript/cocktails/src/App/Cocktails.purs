@@ -12,7 +12,7 @@ import Data.List (List, length)
 -- import Data.Show (show)
 import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
--- import Data.String as DS
+import Data.String as DS
 -- import Data.String.Utils (endsWith)
 import Debug (trace)
 import Effect.Aff.Class (class MonadAff)
@@ -95,11 +95,6 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
-render
-  :: forall w135 a145 t189
-   . Show a145
-  => { count :: a145, flags :: Flags, getStatus :: GetStatus, result :: Maybe String | t189 }
-  -> HH.HTML w135 Action
 render state =
   HH.div_
     [ HH.p_
@@ -114,6 +109,7 @@ render state =
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
+    , HH.p [] [ HH.text (show state.selected) ]
     , HH.p []
         [ HH.button
             [ HE.onClick \_ -> MakeRequestGet ]
@@ -174,8 +170,9 @@ handleAction = case _ of
         --AXRF.string
         AXRF.json
         ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
-            if true then
-              "rum"
+            -- how do i read State here?
+            if ((DS.length st.selected) >= 3) then
+              st.selected
             else
               "Rum Runner"
         )
