@@ -14,7 +14,7 @@ import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
-import Debug (trace)
+import Debug (trace, spy)
 import Effect.Aff.Class (class MonadAff)
 -- import Halogen.Component (Component)
 -- import Halogen.HTML.Core (HTML)
@@ -164,18 +164,19 @@ handleAction = case _ of
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
-      newState <- --H.modify \st -> st { loading = true }
-        H.get
+      newState <- H.modify \st -> spy "state" st { loading = true }
 
       response <- H.liftAff $ AX.get
         --AXRF.string
         AXRF.json
         ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
             -- how do i read State here?
-            if ((DS.length newState.selected) >= 3) then
-              newState.selected
-            else
-              "Rum Runner"
+            ( if ((DS.length newState.selected) >= 3) then
+                newState.selected
+              else
+                "Rum Runner"
+            )
+
         )
 
       H.modify_ \st -> st
