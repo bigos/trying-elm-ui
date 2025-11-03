@@ -181,13 +181,11 @@ handleAction = case _ of
     in
       if (key == "Enter") then
         handleAction MakeRequestGet
-
       else if key == "Escape" then
         H.modify_ \st -> st { selected = "" }
       else
         -- do nothing
         H.modify_ \st -> st { count = st.count }
-
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
@@ -205,7 +203,6 @@ handleAction = case _ of
             )
 
         )
-
       H.modify_ \st -> st
         { loading = false
         --  , result = map _.body (hush response)
