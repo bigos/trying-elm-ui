@@ -164,7 +164,7 @@ handleAction = case _ of
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
-      newState <- H.modify \st -> spy "state" st { loading = true }
+      newState <- H.modify \st -> spy "state" (st { loading = true })
 
       response <- H.liftAff $ AX.get
         --AXRF.string
