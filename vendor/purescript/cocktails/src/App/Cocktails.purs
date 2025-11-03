@@ -164,15 +164,14 @@ handleAction = case _ of
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
-      H.modify_ \st -> st
-        { loading = true }
+      newState <- H.modify \st -> st { loading = true }
       response <- H.liftAff $ AX.get
         --AXRF.string
         AXRF.json
         ( "https://thecocktaildb.com/api/json/v1/1/search.php?s=" <>
             -- how do i read State here?
-            if ((DS.length st.selected) >= 3) then
-              st.selected
+            if ((DS.length newState.selected) >= 3) then
+              newState.selected
             else
               "Rum Runner"
         )
