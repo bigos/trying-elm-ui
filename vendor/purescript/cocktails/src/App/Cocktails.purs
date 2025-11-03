@@ -173,11 +173,11 @@ render state =
 -- handleAction :: Action -> H.HalogenM State _ () _ _ Unit
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
-  Increment -> H.modify_ \st -> st { count = st.count + 1, key = "a" }
-  DebugKeydown input_kd ->
+  Increment -> H.modify_ \st -> st { count = st.count + 1 }
+  DebugKeydown input_key ->
     let
-      key = spy "key" (KE.key input_kd)
-      val = spy "val" (KE.code input_kd)
+      key = spy "key" (KE.key input_key)
+      val = spy "val" (KE.code input_key)
     in
       if (key == "Enter") then
         handleAction MakeRequestGet
