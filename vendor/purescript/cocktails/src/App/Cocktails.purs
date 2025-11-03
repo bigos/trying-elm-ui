@@ -174,6 +174,8 @@ render state =
 -- handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 -- Module Halogen.HalogenM was not found.
 -- is it possible that this is wrong?  https://purescript-halogen.github.io/purescript-halogen/guide/03-Performing-Effects.html
+handleAction
+  :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1, key = "a" }
   DebugKeydown input_kd ->
