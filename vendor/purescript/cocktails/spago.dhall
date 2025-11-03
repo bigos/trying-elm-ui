@@ -18,8 +18,10 @@
   , "prelude"
   , "strings"
   , "transformers"
+  , "tuples"
   , "web-dom"
   , "web-html"
+  , "web-uievents"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

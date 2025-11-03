@@ -14,7 +14,8 @@ import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
-import Debug (trace, spy)
+import Data.Tuple (Tuple, fst, snd)
+import Debug (trace, spy, traceM)
 import Effect.Aff.Class (class MonadAff)
 -- import Halogen.Component (Component)
 -- import Halogen.HTML.Core (HTML)
@@ -29,6 +30,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
+import Web.UIEvent.KeyboardEvent as KE
 
 type State =
   { count :: Int
@@ -37,6 +39,7 @@ type State =
   , result :: Maybe String
   , getStatus :: GetStatus
   , selected :: String
+  , key :: String
   }
 
 type Flags =
@@ -61,7 +64,11 @@ type Drink =
   , strDrinkThumb :: String
   }
 
-data Action = Increment | MakeRequestGet | DebugInput String
+data Action
+  = Increment
+  | MakeRequestGet
+  | DebugInput String
+  | DebugKeydown KE.KeyboardEvent
 
 initialState :: Flags -> State
 initialState flags =
@@ -76,6 +83,7 @@ initialState flags =
   , result: Nothing
   , getStatus: GetEmpty
   , selected: ""
+  , key: ""
   }
 
 component
@@ -105,14 +113,21 @@ render state =
     , HH.hr_
     , HH.h5_ [ HH.text "Input search" ]
     , HH.p []
-        [ HH.input [ HE.onValueInput \str -> (DebugInput str) ] ]
+        [ HH.input
+            [ HE.onValueInput \str -> (DebugInput str)
+            , HE.onKeyDown (DebugKeydown)
+            ]
+        ]
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
+    , HH.p [] [ HH.text (show state.key) ]
     , HH.p [] [ HH.text (show state.selected) ]
     , HH.p []
         [ HH.button
-            [ HE.onClick \_ -> MakeRequestGet ]
+            [ HE.onClick \_ -> MakeRequestGet
+
+            ]
             [ HH.text "Get the data" ]
         ]
     , HH.p [] [ HH.text (fromMaybe "" state.result) ]
@@ -160,7 +175,27 @@ render state =
 -- Module Halogen.HalogenM was not found.
 -- is it possible that this is wrong?  https://purescript-halogen.github.io/purescript-halogen/guide/03-Performing-Effects.html
 handleAction = case _ of
-  Increment -> H.modify_ \st -> st { count = st.count + 1 }
+  Increment -> H.modify_ \st -> st { count = st.count + 1, key = "a" }
+  DebugKeydown input_kd ->
+    let
+      key = spy "key" (KE.key input_kd)
+      val = spy "val" (KE.code input_kd)
+    in
+      ( if (spy "is enter" (key == "Enter")) then
+          -- taken from flame
+          -- update { display: display, model: model, message: FetchDrinks }
+
+          -- how do I call another handleAction
+          handleAction MakeRequestGet
+
+        else if key == "Escape" then
+          -- FAE.diff { selected: "", key: key }
+          H.modify_ \st -> st { selected = "" }
+        else
+          -- do nothing
+          H.modify_ \st -> st { count = st.count }
+      )
+
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
