@@ -179,20 +179,14 @@ handleAction = case _ of
       key = spy "key" (KE.key input_kd)
       val = spy "val" (KE.code input_kd)
     in
-      ( if (spy "is enter" (key == "Enter")) then
-          -- taken from flame
-          -- update { display: display, model: model, message: FetchDrinks }
+      if (key == "Enter") then
+        handleAction MakeRequestGet
 
-          -- how do I call another handleAction
-          handleAction MakeRequestGet
-
-        else if key == "Escape" then
-          -- FAE.diff { selected: "", key: key }
-          H.modify_ \st -> st { selected = "" }
-        else
-          -- do nothing
-          H.modify_ \st -> st { count = st.count }
-      )
+      else if key == "Escape" then
+        H.modify_ \st -> st { selected = "" }
+      else
+        -- do nothing
+        H.modify_ \st -> st { count = st.count }
 
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
