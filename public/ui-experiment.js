@@ -6027,18 +6027,14 @@ var $author$project$UiExperiment$CorrectedString = F2(
 	function (original, corrected) {
 		return {corrected: corrected, original: original};
 	});
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
-var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded = A2($elm$core$Basics$composeR, $elm$json$Json$Decode$succeed, $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom);
 var $author$project$UiExperiment$correctedStringDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (cstr) {
-		return A2(
-			$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
-			$elm$core$Maybe$Nothing,
-			A2(
-				$NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded,
-				cstr,
-				$elm$json$Json$Decode$succeed($author$project$UiExperiment$CorrectedString)));
+		return A3(
+			$elm$json$Json$Decode$map2,
+			$author$project$UiExperiment$CorrectedString,
+			$elm$json$Json$Decode$succeed(cstr),
+			$elm$json$Json$Decode$succeed($elm$core$Maybe$Nothing));
 	},
 	$elm$json$Json$Decode$string);
 var $author$project$UiExperiment$FileObject = F8(
@@ -6046,6 +6042,7 @@ var $author$project$UiExperiment$FileObject = F8(
 		return {executable: executable, extname: extname, ftype: ftype, mode: mode, mtime: mtime, name: name, size: size, symlink: symlink};
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 	function (key, valDecoder, decoder) {
 		return A2(
@@ -6293,6 +6290,8 @@ var $elm$http$Http$post = function (r) {
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$UiExperiment$httpLoadFiles = function (model) {
+	var path = '/api/list-files';
+	var domain = 'http://localhost:3000';
 	return $elm$http$Http$post(
 		{
 			body: $elm$http$Http$jsonBody(
@@ -6315,7 +6314,7 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 							$elm$json$Json$Encode$bool(model.toggle))
 						]))),
 			expect: A2($elm$http$Http$expectJson, $author$project$UiExperiment$LoadedFiles, $author$project$UiExperiment$fileListDecoder),
-			url: 'http://localhost:3000/api/list-files'
+			url: _Utils_ap(domain, path)
 		});
 };
 var $elm$core$Debug$log = _Debug_log;

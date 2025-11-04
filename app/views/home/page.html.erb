@@ -5,6 +5,17 @@
   <a href="https://korban.net/elm/elm-ui-patterns/" target="_blank">Elm-UI patterns </a>
 </p>
 
+<h1>Request headers</h1>
+<pre style="background: lightblue; padding:1em">
+  <% kx = request.env.keys %>
+  <% kx.each do |k| %>
+    <br>
+    <%= "#{k}: #{request.env[k].inspect}" %>
+  <% end %>
+
+
+</pre>
+
 <div id="elm"></div>
 <%
 js_filename = 'ui-experiment.js'

@@ -490,8 +490,17 @@ white =
 
 httpLoadFiles : Model -> Cmd Msg
 httpLoadFiles model =
+    let
+        domain =
+            -- "http://localhost:3000"
+            "http://127.0.0.1:3000"
+
+        -- "http://localhost:3000"
+        path =
+            "/api/list-files"
+    in
     Http.post
-        { url = "http://localhost:3000/api/list-files"
+        { url = domain ++ path
         , body =
             Http.jsonBody
                 (Encode.object
