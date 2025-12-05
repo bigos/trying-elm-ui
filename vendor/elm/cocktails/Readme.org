@@ -1,4 +1,6 @@
 * Readme
+https://sporto.github.io/elm-patterns/advanced/phantom-types.html
+
 Elm cocktails
 
 elm-cocktails.js
