@@ -491,11 +491,13 @@ white =
 httpLoadFiles : Model -> Cmd Msg
 httpLoadFiles model =
     let
+        domain : String
         domain =
             -- "http://localhost:3000"
             "http://127.0.0.1:3000"
 
         -- "http://localhost:3000"
+        path : String
         path =
             "/api/list-files"
     in
@@ -524,12 +526,9 @@ correctedStringDecoder =
     string
         |> andThen
             (\cstr ->
-                map2 CorrectedString
-                    (succeed cstr)
-                    (succeed Nothing)
-             -- Decode.succeed CorrectedString
-             --     |> hardcoded cstr
-             --     |> hardcoded Nothing
+                Decode.succeed CorrectedString
+                    |> hardcoded cstr
+                    |> hardcoded Nothing
             )
 
 
