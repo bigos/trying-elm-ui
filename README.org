@@ -39,6 +39,9 @@ https://korban.net/elm/elm-ui-patterns/
 decoder example
 file:~/Programming/Pyrulis/Elm/readingElmInAction/PhotoGroove/src/PhotoFolders.elm::248
 
+phantom types
+https://github.com/bigos/Pyrulis/blob/master/Elm/phantom-types.org
+
 ** restclient
 
 #+begin_src restclient
