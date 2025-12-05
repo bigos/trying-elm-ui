@@ -6320,7 +6320,6 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 			url: _Utils_ap(domain, path)
 		});
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -6448,7 +6447,6 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
-var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
 		update:
@@ -6471,23 +6469,16 @@ var $author$project$UiExperiment$update = F2(
 					var result = msg.a;
 					if (result.$ === 'Ok') {
 						var fullText = result.a;
-						return A2(
-							$elm$core$Debug$log,
-							$elm$core$Debug$toString(fullText),
-							_Utils_Tuple2(
-								_Utils_update(
-									model,
-									{
-										dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-											{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden})
-									}),
-								$elm$core$Platform$Cmd$none));
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+										{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden})
+								}),
+							$elm$core$Platform$Cmd$none);
 					} else {
-						var errMsg = result.a;
-						return A2(
-							$elm$core$Debug$log,
-							$elm$core$Debug$toString(errMsg),
-							_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					}
 				case 'LoadParent':
 					var m1fx = model.dirs.leftDir;
@@ -6522,30 +6513,25 @@ var $author$project$UiExperiment$update = F2(
 					}
 				case 'LoadChild':
 					var child = msg.a;
-					return A2(
-						$elm$core$Debug$log,
-						$elm$core$Debug$toString('loading child ' + child),
-						function () {
-							var _v3 = model.dirs.leftDir;
-							if (_v3.$ === 'Nothing') {
-								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-							} else {
-								var files = _v3.a;
-								var m2 = _Utils_update(
-									model,
+					var _v3 = model.dirs.leftDir;
+					if (_v3.$ === 'Nothing') {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var files = _v3.a;
+						var m2 = _Utils_update(
+							model,
+							{
+								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
 									{
-										dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-											{
-												files: _List_Nil,
-												pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
-												showHidden: model.toggle
-											})
-									});
-								return _Utils_Tuple2(
-									m2,
-									$author$project$UiExperiment$httpLoadFiles(m2));
-							}
-						}());
+										files: _List_Nil,
+										pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
+										showHidden: model.toggle
+									})
+							});
+						return _Utils_Tuple2(
+							m2,
+							$author$project$UiExperiment$httpLoadFiles(m2));
+					}
 				default:
 					var _v4 = model.dirs.leftDir;
 					if (_v4.$ === 'Nothing') {
@@ -13128,6 +13114,7 @@ var $mdgriffith$elm_ui$Element$row = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
+var $elm$core$Debug$toString = _Debug_toString;
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(

@@ -1,7 +1,7 @@
-module UiExperiment exposing (Dirs, Files, Flags, Model)
+module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, Model)
 
 import Browser
-import Element exposing (Color, Element, alignRight, alignTop, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, spacing, text, width)
+import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -9,7 +9,7 @@ import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes as HA
 import Http
-import Json.Decode as Decode exposing (Decoder, andThen, bool, decodeString, field, float, int, list, map2, map4, nullable, string, succeed)
+import Json.Decode as Decode exposing (Decoder, andThen, bool, int, list, string)
 import Json.Decode.Pipeline exposing (hardcoded, required)
 import Json.Encode as Encode
 
@@ -112,17 +112,15 @@ update msg model =
         LoadedFiles result ->
             case result of
                 Ok fullText ->
-                    Debug.log (Debug.toString fullText)
-                        ( { model
-                            | dirs =
-                                buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
-                          }
-                        , Cmd.none
-                        )
+                    ( { model
+                        | dirs =
+                            buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
+                      }
+                    , Cmd.none
+                    )
 
-                Err errMsg ->
-                    Debug.log (Debug.toString errMsg)
-                        ( model, Cmd.none )
+                Err _ ->
+                    ( model, Cmd.none )
 
         LoadParent ->
             let
@@ -174,32 +172,27 @@ update msg model =
                     ( m2, httpLoadFiles m2 )
 
         LoadChild child ->
-            Debug.log
-                (Debug.toString
-                    ("loading child " ++ child)
-                )
-                (case model.dirs.leftDir of
-                    Nothing ->
-                        ( model, Cmd.none )
+            case model.dirs.leftDir of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just files ->
-                        let
-                            m2 =
-                                { model
-                                    | dirs =
-                                        buildOnlyLeftDir
-                                            { pwd =
-                                                { original =
-                                                    files.pwd.original ++ "/" ++ child
-                                                , corrected = Nothing
-                                                }
-                                            , showHidden = model.toggle
-                                            , files = []
+                Just files ->
+                    let
+                        m2 =
+                            { model
+                                | dirs =
+                                    buildOnlyLeftDir
+                                        { pwd =
+                                            { original =
+                                                files.pwd.original ++ "/" ++ child
+                                            , corrected = Nothing
                                             }
-                                }
-                        in
-                        ( m2, httpLoadFiles m2 )
-                )
+                                        , showHidden = model.toggle
+                                        , files = []
+                                        }
+                            }
+                    in
+                    ( m2, httpLoadFiles m2 )
 
         Reload ->
             case model.dirs.leftDir of
@@ -225,20 +218,6 @@ buildOnlyLeftDir : Files -> Dirs
 buildOnlyLeftDir dir =
     { leftDir = Just dir
     , rightDir = Nothing
-    }
-
-
-buildOnlyRightDir : Files -> Dirs
-buildOnlyRightDir dir =
-    { leftDir = Nothing
-    , rightDir = Just dir
-    }
-
-
-buildBothDirs : Files -> Files -> Dirs
-buildBothDirs dirLeft dirRight =
-    { leftDir = Just dirLeft
-    , rightDir = Just dirRight
     }
 
 
