@@ -140,7 +140,13 @@ drinkView cocktail =
             , Element.paddingXY 20 0
             , Font.size 16
             ]
-            (List.map ((++) "• " >> Element.text) cocktail.ingredients)
+            [ Element.html
+                (Html.ul []
+                    (List.map (\a -> Html.li [] [ Html.text a ])
+                        cocktail.ingredients
+                    )
+                )
+            ]
         , Element.el [ Font.bold ] (Element.text "Instructions")
         , Element.paragraph [] [ Element.text cocktail.instructions ]
         ]
