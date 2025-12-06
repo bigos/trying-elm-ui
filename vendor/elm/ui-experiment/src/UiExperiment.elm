@@ -36,6 +36,11 @@ type alias Model =
     }
 
 
+
+-- good candidate for trying phantom types
+-- https://github.com/bigos/Pyrulis/blob/master/Elm/phantom-types.org
+
+
 type LoadState
     = NotLoadingYet
     | Loading
