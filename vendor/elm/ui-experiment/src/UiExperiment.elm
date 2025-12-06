@@ -29,7 +29,7 @@ main =
 
 
 type alias Model =
-    { toggle : Bool
+    { toggle_hidden : Bool
     , flags : Flags
     , dirs : Dirs
     , loading : LoadState
@@ -80,7 +80,7 @@ type alias Dirs =
 
 new_model : Flags -> Model
 new_model flags =
-    { toggle = True
+    { toggle_hidden = True
     , dirs = { leftDir = Nothing, rightDir = Nothing }
     , flags = flags
     , loading = NotLoadingYet
@@ -115,7 +115,7 @@ update msg model =
         Toggle ->
             let
                 model2 =
-                    { model | toggle = not model.toggle }
+                    { model | toggle_hidden = not model.toggle_hidden }
             in
             update Reload model2
 
@@ -205,7 +205,7 @@ update msg model =
                                                 files.pwd.original ++ "/" ++ child
                                             , corrected = Nothing
                                             }
-                                        , showHidden = model.toggle
+                                        , showHidden = model.toggle_hidden
                                         , files = []
                                         }
                             }
@@ -225,7 +225,7 @@ update msg model =
                                 , dirs =
                                     buildOnlyLeftDir
                                         { pwd = files.pwd
-                                        , showHidden = model.toggle
+                                        , showHidden = model.toggle_hidden
                                         , files = []
                                         }
                             }
@@ -261,7 +261,7 @@ httpLoadFiles model =
                             Just files ->
                                 Encode.string files.pwd.original
                       )
-                    , ( "show_hidden", Encode.bool model.toggle )
+                    , ( "show_hidden", Encode.bool model.toggle_hidden )
                     ]
                 )
         , expect = Http.expectJson LoadedFiles fileListDecoder
@@ -389,7 +389,7 @@ view model =
             , Input.checkbox [ padding 10 ] <|
                 { onChange = always Toggle
                 , label = Input.labelRight [] (text "Show Hidden")
-                , checked = model.toggle
+                , checked = model.toggle_hidden
                 , icon =
                     toggleCheckboxWidget
                         { offColor = lightGrey

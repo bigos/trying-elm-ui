@@ -5380,7 +5380,7 @@ var $author$project$UiExperiment$new_model = function (flags) {
 		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
 		flags: flags,
 		loading: $author$project$UiExperiment$NotLoadingYet,
-		toggle: true
+		toggle_hidden: true
 	};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -6318,7 +6318,7 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 							}()),
 							_Utils_Tuple2(
 							'show_hidden',
-							$elm$json$Json$Encode$bool(model.toggle))
+							$elm$json$Json$Encode$bool(model.toggle_hidden))
 						]))),
 			expect: A2($elm$http$Http$expectJson, $author$project$UiExperiment$LoadedFiles, $author$project$UiExperiment$fileListDecoder),
 			url: _Utils_ap(domain, path)
@@ -6459,7 +6459,7 @@ var $author$project$UiExperiment$update = F2(
 				case 'Toggle':
 					var model2 = _Utils_update(
 						model,
-						{toggle: !model.toggle});
+						{toggle_hidden: !model.toggle_hidden});
 					var $temp$msg = $author$project$UiExperiment$Reload,
 						$temp$model = model2;
 					msg = $temp$msg;
@@ -6533,7 +6533,7 @@ var $author$project$UiExperiment$update = F2(
 									{
 										files: _List_Nil,
 										pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
-										showHidden: model.toggle
+										showHidden: model.toggle_hidden
 									}),
 								loading: $author$project$UiExperiment$Loading
 							});
@@ -6551,7 +6551,7 @@ var $author$project$UiExperiment$update = F2(
 							model,
 							{
 								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle}),
+									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
 								loading: $author$project$UiExperiment$Loading
 							});
 						return _Utils_Tuple2(
@@ -13229,7 +13229,7 @@ var $author$project$UiExperiment$view = function (model) {
 							$mdgriffith$elm_ui$Element$padding(10)
 						]),
 					{
-						checked: model.toggle,
+						checked: model.toggle_hidden,
 						icon: $author$project$UiExperiment$toggleCheckboxWidget(
 							{offColor: $author$project$UiExperiment$lightGrey, onColor: $author$project$UiExperiment$green, sliderColor: $author$project$UiExperiment$white, toggleHeight: 28, toggleWidth: 60}),
 						label: A2(
