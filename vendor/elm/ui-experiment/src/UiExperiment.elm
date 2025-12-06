@@ -101,10 +101,10 @@ update msg model =
     case msg of
         Toggle ->
             let
-                m2 =
+                model2 =
                     { model | toggle = not model.toggle }
             in
-            update Reload m2
+            update Reload model2
 
         LoadFiles ->
             ( model, httpLoadFiles model )
@@ -156,7 +156,7 @@ update msg model =
                             else
                                 pwdxStr
 
-                        m2 =
+                        model2 =
                             { model
                                 | dirs =
                                     buildOnlyLeftDir
@@ -169,7 +169,7 @@ update msg model =
                                         }
                             }
                     in
-                    ( m2, httpLoadFiles m2 )
+                    ( model2, httpLoadFiles model2 )
 
         LoadChild child ->
             case model.dirs.leftDir of
@@ -178,7 +178,7 @@ update msg model =
 
                 Just files ->
                     let
-                        m2 =
+                        model2 =
                             { model
                                 | dirs =
                                     buildOnlyLeftDir
@@ -192,7 +192,7 @@ update msg model =
                                         }
                             }
                     in
-                    ( m2, httpLoadFiles m2 )
+                    ( model2, httpLoadFiles model2 )
 
         Reload ->
             case model.dirs.leftDir of
@@ -201,7 +201,7 @@ update msg model =
 
                 Just files ->
                     let
-                        m2 =
+                        model2 =
                             { model
                                 | dirs =
                                     buildOnlyLeftDir
@@ -211,7 +211,42 @@ update msg model =
                                         }
                             }
                     in
-                    ( m2, httpLoadFiles m2 )
+                    ( model2, httpLoadFiles model2 )
+
+
+
+-- ACTIONS
+
+
+httpLoadFiles : Model -> Cmd Msg
+httpLoadFiles model =
+    let
+        domain : String
+        domain =
+            "http://127.0.0.1:3000"
+
+        path : String
+        path =
+            "/api/list-files"
+    in
+    Http.post
+        { url = domain ++ path
+        , body =
+            Http.jsonBody
+                (Encode.object
+                    [ ( "pwd"
+                      , case model.dirs.leftDir of
+                            Nothing ->
+                                Encode.string "/home/jacek"
+
+                            Just files ->
+                                Encode.string files.pwd.original
+                      )
+                    , ( "show_hidden", Encode.bool model.toggle )
+                    ]
+                )
+        , expect = Http.expectJson LoadedFiles fileListDecoder
+        }
 
 
 buildOnlyLeftDir : Files -> Dirs
@@ -464,40 +499,7 @@ white =
 
 
 
--- ACTIONS
-
-
-httpLoadFiles : Model -> Cmd Msg
-httpLoadFiles model =
-    let
-        domain : String
-        domain =
-            -- "http://localhost:3000"
-            "http://127.0.0.1:3000"
-
-        -- "http://localhost:3000"
-        path : String
-        path =
-            "/api/list-files"
-    in
-    Http.post
-        { url = domain ++ path
-        , body =
-            Http.jsonBody
-                (Encode.object
-                    [ ( "pwd"
-                      , case model.dirs.leftDir of
-                            Nothing ->
-                                Encode.string "/home/jacek"
-
-                            Just files ->
-                                Encode.string files.pwd.original
-                      )
-                    , ( "show_hidden", Encode.bool model.toggle )
-                    ]
-                )
-        , expect = Http.expectJson LoadedFiles fileListDecoder
-        }
+-- DECODERS
 
 
 correctedStringDecoder : Decoder CorrectedString
