@@ -5374,10 +5374,12 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
+var $author$project$UiExperiment$NotLoadingYet = {$: 'NotLoadingYet'};
 var $author$project$UiExperiment$new_model = function (flags) {
 	return {
 		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
 		flags: flags,
+		loading: $author$project$UiExperiment$NotLoadingYet,
 		toggle: true
 	};
 };
@@ -5393,6 +5395,8 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$UiExperiment$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$UiExperiment$Loaded = {$: 'Loaded'};
+var $author$project$UiExperiment$Loading = {$: 'Loading'};
 var $author$project$UiExperiment$Reload = {$: 'Reload'};
 var $elm$core$String$append = _String_append;
 var $author$project$UiExperiment$buildOnlyLeftDir = function (dir) {
@@ -6453,17 +6457,19 @@ var $author$project$UiExperiment$update = F2(
 		while (true) {
 			switch (msg.$) {
 				case 'Toggle':
-					var m2 = _Utils_update(
+					var model2 = _Utils_update(
 						model,
 						{toggle: !model.toggle});
 					var $temp$msg = $author$project$UiExperiment$Reload,
-						$temp$model = m2;
+						$temp$model = model2;
 					msg = $temp$msg;
 					model = $temp$model;
 					continue update;
 				case 'LoadFiles':
 					return _Utils_Tuple2(
-						model,
+						_Utils_update(
+							model,
+							{loading: $author$project$UiExperiment$Loading}),
 						$author$project$UiExperiment$httpLoadFiles(model));
 				case 'LoadedFiles':
 					var result = msg.a;
@@ -6474,7 +6480,8 @@ var $author$project$UiExperiment$update = F2(
 								model,
 								{
 									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-										{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden})
+										{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden}),
+									loading: $author$project$UiExperiment$Loaded
 								}),
 							$elm$core$Platform$Cmd$none);
 					} else {
@@ -6497,7 +6504,7 @@ var $author$project$UiExperiment$update = F2(
 								'/',
 								A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
 						var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
-						var m2 = _Utils_update(
+						var model2 = _Utils_update(
 							model,
 							{
 								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
@@ -6505,11 +6512,12 @@ var $author$project$UiExperiment$update = F2(
 										files: _List_Nil,
 										pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
 										showHidden: false
-									})
+									}),
+								loading: $author$project$UiExperiment$Loading
 							});
 						return _Utils_Tuple2(
-							m2,
-							$author$project$UiExperiment$httpLoadFiles(m2));
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
 					}
 				case 'LoadChild':
 					var child = msg.a;
@@ -6518,7 +6526,7 @@ var $author$project$UiExperiment$update = F2(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
 						var files = _v3.a;
-						var m2 = _Utils_update(
+						var model2 = _Utils_update(
 							model,
 							{
 								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
@@ -6526,11 +6534,12 @@ var $author$project$UiExperiment$update = F2(
 										files: _List_Nil,
 										pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
 										showHidden: model.toggle
-									})
+									}),
+								loading: $author$project$UiExperiment$Loading
 							});
 						return _Utils_Tuple2(
-							m2,
-							$author$project$UiExperiment$httpLoadFiles(m2));
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
 					}
 				default:
 					var _v4 = model.dirs.leftDir;
@@ -6538,15 +6547,16 @@ var $author$project$UiExperiment$update = F2(
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
 						var files = _v4.a;
-						var m2 = _Utils_update(
+						var model2 = _Utils_update(
 							model,
 							{
 								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle})
+									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle}),
+								loading: $author$project$UiExperiment$Loading
 							});
 						return _Utils_Tuple2(
-							m2,
-							$author$project$UiExperiment$httpLoadFiles(m2));
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
 					}
 			}
 		}
@@ -13242,7 +13252,21 @@ var $author$project$UiExperiment$view = function (model) {
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_Nil,
-								$mdgriffith$elm_ui$Element$text('general toolbar')),
+								function () {
+									var _v0 = model.loading;
+									if (_v0.$ === 'Loading') {
+										return A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_fromArray(
+												[
+													$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.blue),
+													$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.lightBlue)
+												]),
+											$mdgriffith$elm_ui$Element$text('general toolbar - loading'));
+									} else {
+										return $mdgriffith$elm_ui$Element$text('general toolbar');
+									}
+								}()),
 								A2(
 								$mdgriffith$elm_ui$Element$row,
 								$author$project$UiExperiment$my_border,

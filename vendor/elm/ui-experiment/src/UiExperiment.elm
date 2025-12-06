@@ -32,7 +32,14 @@ type alias Model =
     { toggle : Bool
     , flags : Flags
     , dirs : Dirs
+    , loading : LoadState
     }
+
+
+type LoadState
+    = NotLoadingYet
+    | Loading
+    | Loaded
 
 
 type alias Flags =
@@ -71,6 +78,7 @@ new_model flags =
     { toggle = True
     , dirs = { leftDir = Nothing, rightDir = Nothing }
     , flags = flags
+    , loading = NotLoadingYet
     }
 
 
@@ -107,13 +115,16 @@ update msg model =
             update Reload model2
 
         LoadFiles ->
-            ( model, httpLoadFiles model )
+            ( { model | loading = Loading }
+            , httpLoadFiles model
+            )
 
         LoadedFiles result ->
             case result of
                 Ok fullText ->
                     ( { model
-                        | dirs =
+                        | loading = Loaded
+                        , dirs =
                             buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
                       }
                     , Cmd.none
@@ -158,7 +169,8 @@ update msg model =
 
                         model2 =
                             { model
-                                | dirs =
+                                | loading = Loading
+                                , dirs =
                                     buildOnlyLeftDir
                                         { pwd =
                                             { original = pwdxStrOk
@@ -180,7 +192,8 @@ update msg model =
                     let
                         model2 =
                             { model
-                                | dirs =
+                                | loading = Loading
+                                , dirs =
                                     buildOnlyLeftDir
                                         { pwd =
                                             { original =
@@ -203,7 +216,8 @@ update msg model =
                     let
                         model2 =
                             { model
-                                | dirs =
+                                | loading = Loading
+                                , dirs =
                                     buildOnlyLeftDir
                                         { pwd = files.pwd
                                         , showHidden = model.toggle
@@ -383,7 +397,20 @@ view model =
             , el [ padding 20 ]
                 (column
                     (alignTop :: my_border)
-                    [ el [] (text "general toolbar")
+                    [ el []
+                        (case model.loading of
+                            Loading ->
+                                el
+                                    [ Border.color color.blue
+                                    , Background.color color.lightBlue
+                                    ]
+                                    (text
+                                        "general toolbar - loading"
+                                    )
+
+                            _ ->
+                                text "general toolbar"
+                        )
                     , row my_border
                         [ file_panel_left model
                         , file_panel_right model
