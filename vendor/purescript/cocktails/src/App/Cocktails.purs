@@ -196,18 +196,13 @@ render state =
                   ( map
                       ( \i ->
                           HH.div []
-                            [ HH.h3 [] [ HH.text i.strDrink ]
-                            , HH.div []
-                                [ HH.img
-                                    [ HP.src i.strDrinkThumb
-                                    , HP.alt (i.strDrink)
-                                    ]
-
-                                , HH.p []
-                                    [ HH.text i.strInstructions
-                                    ]
-
+                            [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
+                                [ HH.h2 [] [ HH.text i.strDrink ]
+                                , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                , HH.h3 [] [ HH.text "Ingredients" ]
                                 , HH.ul [] (showIngredients i)
+                                , HH.h3 [] [ HH.text "Instructions" ]
+                                , HH.p [] [ HH.text i.strInstructions ]
                                 ]
 
                             ]
