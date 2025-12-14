@@ -16,6 +16,7 @@
   , "lists"
   , "maybe"
   , "prelude"
+  , "psci-support"
   , "strings"
   , "transformers"
   , "tuples"
