@@ -14,8 +14,8 @@ import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
-import Data.Tuple (Tuple, fst, snd)
-import Debug (trace, spy, traceM)
+-- import Data.Tuple (Tuple, fst, snd)
+-- import Debug (trace, spy, traceM)
 import Effect.Aff.Class (class MonadAff)
 -- import Halogen.Component (Component)
 -- import Halogen.HTML.Core (HTML)
@@ -119,34 +119,43 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
+ingredientsList1 :: Drink -> Array (Maybe String)
+ingredientsList1 i =
+  [ i.strIngredient1
+  , i.strIngredient2
+  , i.strIngredient3
+  , i.strIngredient4
+  , i.strIngredient5
+  , i.strIngredient6
+  , i.strIngredient7
+  , i.strIngredient8
+  , i.strIngredient9
+  , i.strIngredient10
+  , i.strIngredient11
+  , i.strIngredient12
+  , i.strIngredient13
+  , i.strIngredient14
+  , i.strIngredient15
+  ]
+
+ingredientsList2 :: Drink -> Array (String)
+ingredientsList2 i =
+  ( DA.filter (\f -> f /= "")
+      ( map
+          ( \e -> case e of
+              Nothing -> ""
+              Just f -> f
+          )
+          ( ingredientsList1 i
+          )
+
+      )
+  )
+
 showIngredients i =
   ( map
       (\a -> HH.li [] [ HH.text a ])
-
-      ( DA.filter (\f -> f /= "")
-          ( map
-              ( \e -> case e of
-                  Nothing -> ""
-                  Just e -> e
-              )
-              [ i.strIngredient1
-              , i.strIngredient2
-              , i.strIngredient3
-              , i.strIngredient4
-              , i.strIngredient5
-              , i.strIngredient6
-              , i.strIngredient7
-              , i.strIngredient8
-              , i.strIngredient9
-              , i.strIngredient10
-              , i.strIngredient11
-              , i.strIngredient12
-              , i.strIngredient13
-              , i.strIngredient14
-              , i.strIngredient15
-              ]
-          )
-      )
+      (ingredientsList2 i)
   )
 
 render state =
@@ -221,8 +230,8 @@ handleAction = case _ of
   Increment -> H.modify_ \st -> st { count = st.count + 1 }
   DebugKeydown input_key ->
     let
-      key = spy "key" (KE.key input_key)
-      val = spy "val" (KE.code input_key)
+      key = (KE.key input_key)
+    -- val = spy "val" (KE.code input_key)
     in
       if (key == "Enter") then
         handleAction MakeRequestGet
@@ -234,7 +243,7 @@ handleAction = case _ of
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
   MakeRequestGet ->
     do
-      newState <- H.modify \st -> spy "state" (st { loading = true })
+      newState <- H.modify \st -> (st { loading = true })
 
       response <- H.liftAff $ AX.get
         --AXRF.string
