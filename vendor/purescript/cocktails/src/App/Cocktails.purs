@@ -62,6 +62,22 @@ type Drink =
   { strDrink :: String
   , strInstructions :: String
   , strDrinkThumb :: String
+  , strIngredient1 :: Maybe String
+  , strIngredient2 :: Maybe String
+  , strIngredient3 :: Maybe String
+  , strIngredient4 :: Maybe String
+  , strIngredient5 :: Maybe String
+  , strIngredient6 :: Maybe String
+  , strIngredient7 :: Maybe String
+  , strIngredient8 :: Maybe String
+  , strIngredient9 :: Maybe String
+  , strIngredient10 :: Maybe String
+  , strIngredient11 :: Maybe String
+  , strIngredient12 :: Maybe String
+  , strIngredient13 :: Maybe String
+  , strIngredient14 :: Maybe String
+  , strIngredient15 :: Maybe String
+
   }
 
 data Action
@@ -151,15 +167,53 @@ render state =
                       ( \i ->
                           HH.div []
                             [ HH.h3 [] [ HH.text i.strDrink ]
-                            , HH.p []
-                                [ HH.img
-                                    [ HP.src i.strDrinkThumb
-                                    , HP.alt (i.strDrink)
-                                    ]
+                            , HH.div []
+                                ( DA.concat
+                                    [ [ HH.img
+                                          [ HP.src i.strDrinkThumb
+                                          , HP.alt (i.strDrink)
+                                          ]
 
-                                , HH.br_
-                                , HH.text i.strInstructions
-                                ]
+                                      , HH.p []
+                                          [ HH.text i.strInstructions
+                                          ]
+                                      ]
+                                    , ( map
+                                          ( \a ->
+                                              HH.p []
+                                                [ HH.text
+                                                    ( show a
+                                                    )
+                                                ]
+                                          )
+                                          -- dddddddddddddd
+                                          ( DA.filter
+                                              ( \e -> case e of
+                                                  Nothing -> false
+                                                  Just e -> true
+                                              )
+                                              [ i.strIngredient1
+                                              , i.strIngredient2
+                                              , i.strIngredient3
+                                              , i.strIngredient4
+                                              , i.strIngredient5
+                                              , i.strIngredient6
+                                              , i.strIngredient7
+                                              , i.strIngredient8
+                                              , i.strIngredient9
+                                              , i.strIngredient10
+                                              , i.strIngredient11
+                                              , i.strIngredient12
+                                              , i.strIngredient13
+                                              , i.strIngredient14
+                                              , i.strIngredient15
+
+                                              ]
+                                          )
+                                      -- dddddddddddd
+                                      )
+                                    ]
+                                )
                             ]
                       )
                       d.drinks
