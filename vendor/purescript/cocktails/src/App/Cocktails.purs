@@ -121,7 +121,7 @@ component =
 
 showIngredients i =
   ( map
-      (\a -> HH.p [] [ HH.text (show a) ])
+      (\a -> HH.li [] [ HH.text a ])
 
       ( DA.filter (\f -> f /= "")
           ( map
@@ -198,19 +198,18 @@ render state =
                           HH.div []
                             [ HH.h3 [] [ HH.text i.strDrink ]
                             , HH.div []
-                                ( DA.concat
-                                    [ [ HH.img
-                                          [ HP.src i.strDrinkThumb
-                                          , HP.alt (i.strDrink)
-                                          ]
-
-                                      , HH.p []
-                                          [ HH.text i.strInstructions
-                                          ]
-                                      ]
-                                    , showIngredients i
+                                [ HH.img
+                                    [ HP.src i.strDrinkThumb
+                                    , HP.alt (i.strDrink)
                                     ]
-                                )
+
+                                , HH.p []
+                                    [ HH.text i.strInstructions
+                                    ]
+
+                                , HH.ul [] (showIngredients i)
+                                ]
+
                             ]
                       )
                       d.drinks
