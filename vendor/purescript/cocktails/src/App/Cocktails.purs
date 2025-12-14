@@ -119,6 +119,36 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
+showIngredients i =
+  ( map
+      (\a -> HH.p [] [ HH.text (show a) ])
+
+      ( DA.filter (\f -> f /= "")
+          ( map
+              ( \e -> case e of
+                  Nothing -> ""
+                  Just e -> e
+              )
+              [ i.strIngredient1
+              , i.strIngredient2
+              , i.strIngredient3
+              , i.strIngredient4
+              , i.strIngredient5
+              , i.strIngredient6
+              , i.strIngredient7
+              , i.strIngredient8
+              , i.strIngredient9
+              , i.strIngredient10
+              , i.strIngredient11
+              , i.strIngredient12
+              , i.strIngredient13
+              , i.strIngredient14
+              , i.strIngredient15
+              ]
+          )
+      )
+  )
+
 render state =
   HH.div_
     [ HH.p_
@@ -178,40 +208,7 @@ render state =
                                           [ HH.text i.strInstructions
                                           ]
                                       ]
-                                    , ( map
-                                          ( \a ->
-                                              HH.p []
-                                                [ HH.text
-                                                    ( show a
-                                                    )
-                                                ]
-                                          )
-                                          -- dddddddddddddd
-                                          ( DA.filter
-                                              ( \e -> case e of
-                                                  Nothing -> false
-                                                  Just e -> true
-                                              )
-                                              [ i.strIngredient1
-                                              , i.strIngredient2
-                                              , i.strIngredient3
-                                              , i.strIngredient4
-                                              , i.strIngredient5
-                                              , i.strIngredient6
-                                              , i.strIngredient7
-                                              , i.strIngredient8
-                                              , i.strIngredient9
-                                              , i.strIngredient10
-                                              , i.strIngredient11
-                                              , i.strIngredient12
-                                              , i.strIngredient13
-                                              , i.strIngredient14
-                                              , i.strIngredient15
-
-                                              ]
-                                          )
-                                      -- dddddddddddd
-                                      )
+                                    , showIngredients i
                                     ]
                                 )
                             ]
