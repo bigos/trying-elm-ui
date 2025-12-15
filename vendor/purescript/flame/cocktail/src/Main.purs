@@ -3,21 +3,21 @@ module Main where
 
 import Prelude
 
-import Affjax.RequestBody (json)
+-- import Affjax.RequestBody (json)
 import Affjax.ResponseFormat as AR
 import Affjax.Web as A
-import Data.Argonaut (decodeJson, encodeJson)
+import Data.Argonaut (decodeJson)
 import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (JsonDecodeError, printJsonDecodeError)
-import Data.Array (fromFoldable)
+-- import Data.Array (fromFoldable)
 import Data.Array as DA
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.List (List, length, sort, sortBy, filter)
+import Data.List (List, length, sortBy, filter)
 import Data.Tuple (Tuple, fst, snd)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String as DS
-import Data.String.Utils (endsWith)
+-- import Data.String.Utils (endsWith)
 import Debug (trace)
 import Effect (Effect)
 import Effect.Exception (throw)
@@ -55,6 +55,22 @@ type Drink =
   { strDrink :: String
   , strInstructions :: String
   , strDrinkThumb :: String
+  , strIngredient1 :: Maybe String
+  , strIngredient2 :: Maybe String
+  , strIngredient3 :: Maybe String
+  , strIngredient4 :: Maybe String
+  , strIngredient5 :: Maybe String
+  , strIngredient6 :: Maybe String
+  , strIngredient7 :: Maybe String
+  , strIngredient8 :: Maybe String
+  , strIngredient9 :: Maybe String
+  , strIngredient10 :: Maybe String
+  , strIngredient11 :: Maybe String
+  , strIngredient12 :: Maybe String
+  , strIngredient13 :: Maybe String
+  , strIngredient14 :: Maybe String
+  , strIngredient15 :: Maybe String
+
   }
 
 data Message
@@ -101,6 +117,7 @@ init =
 jsonToDrinks :: Json -> Either JsonDecodeError Drinks
 jsonToDrinks = decodeJson
 
+drinks_stats :: ResultDrinks -> String
 drinks_stats resultDrinks =
   ( case resultDrinks of
       NotFetchedDrink -> "Notfetcheddrink"
@@ -109,6 +126,7 @@ drinks_stats resultDrinks =
       ErrorDrink error -> error
   )
 
+-- can't figure out the correct type here, but it compiles
 update ∷ AffUpdate Model Message
 update { display, model, message } =
   let
@@ -212,6 +230,7 @@ view model = HE.main "main"
       ]
   ]
 
+view_input :: Model -> Html Message
 view_input model =
   HE.input
     [ HA.id "nums"
@@ -224,11 +243,13 @@ view_input model =
     , HA.onKeydown (DebugKeydown)
     ]
 
+view_options :: Model -> Html Message
 view_options model =
   case model.resultDrinks of
     OkDrinks dx -> view_options_ok_drinks model dx
     _ -> HE.span_ "nothing loaded"
 
+filter_items :: Model -> Drinks -> List Drink
 filter_items model dx =
   ( filter
       ( \d -> DS.contains
@@ -244,6 +265,7 @@ filter_items model dx =
       dx.drinks
   )
 
+view_options_ok_drinks :: Model -> Drinks -> Html Message
 view_options_ok_drinks model dx =
   ( HE.div_
       [ HE.ul_
@@ -255,6 +277,42 @@ view_options_ok_drinks model dx =
       ]
   )
 
+ingredientsList1 :: Drink -> Array (Maybe String)
+ingredientsList1 i =
+  [ i.strIngredient1
+  , i.strIngredient2
+  , i.strIngredient3
+  , i.strIngredient4
+  , i.strIngredient5
+  , i.strIngredient6
+  , i.strIngredient7
+  , i.strIngredient8
+  , i.strIngredient9
+  , i.strIngredient10
+  , i.strIngredient11
+  , i.strIngredient12
+  , i.strIngredient13
+  , i.strIngredient14
+  , i.strIngredient15
+  ]
+
+drink_ingredients_list :: Drink -> Array (String)
+drink_ingredients_list drink =
+  map
+    ( \e ->
+        case e of
+          Nothing -> ""
+          Just s -> s
+    )
+    ( DA.filter
+        ( \d -> case d of
+            Nothing -> false
+            Just _ -> true
+        )
+        (ingredientsList1 drink)
+    )
+
+view_drinks :: Model -> Html Message
 view_drinks model =
   HE.div_
     ( case model.resultDrinks of
@@ -273,6 +331,7 @@ view_drinks model =
                                     , HA.alt (i.strDrink)
                                     ]
                                 , HE.p_ i.strInstructions
+                                , HE.p_ (show (drink_ingredients_list i))
                                 ]
                             ]
                       )
