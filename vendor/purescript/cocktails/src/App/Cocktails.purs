@@ -62,14 +62,13 @@ instance showGetStatus :: Show GetStatus where
 type Drinks =
   { the_list :: List Drink }
 
-newtype Drink =
-  Drink
-    { strDrink :: String
-    , strInstructions :: String
-    , strDrinkThumb :: String
-    , strIngredients :: Array String
+type Drink =
+  { strDrink :: String
+  , strInstructions :: String
+  , strDrinkThumb :: String
+  , strIngredients :: Array String
 
-    }
+  }
 
 instance DecodeJson Drink where
   decodeJson json = do
@@ -82,8 +81,7 @@ instance DecodeJson Drink where
         object .:? ("strIngredient" <> show index)
       pure $ DA.fromFoldable (Compose fields)
     pure $
-      Drink
-        { strDrink, strInstructions, strDrinkThumb, strIngredients }
+      { strDrink, strInstructions, strDrinkThumb, strIngredients }
 
 derive instance Generic Drink _
 instance Show Drink where
