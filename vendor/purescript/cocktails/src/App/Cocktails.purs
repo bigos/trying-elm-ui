@@ -5,6 +5,7 @@ import Prelude
 -- import Affjax.RequestBody as AXRB
 import Data.Functor.Compose (Compose(..))
 import Data.Traversable (for)
+import Data.Argonaut (decodeJson)
 import Data.Argonaut (class DecodeJson)
 import Data.Argonaut.Decode.Combinators ((.:), (.:?))
 import Data.Argonaut.Decode.Decoders as Json.Decoders
@@ -127,43 +128,10 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
-ingredientsList1 :: Drink -> Array (Maybe String)
-ingredientsList1 i =
-  [ i.strIngredient1
-  , i.strIngredient2
-  , i.strIngredient3
-  , i.strIngredient4
-  , i.strIngredient5
-  , i.strIngredient6
-  , i.strIngredient7
-  , i.strIngredient8
-  , i.strIngredient9
-  , i.strIngredient10
-  , i.strIngredient11
-  , i.strIngredient12
-  , i.strIngredient13
-  , i.strIngredient14
-  , i.strIngredient15
-  ]
-
-ingredientsList2 :: Drink -> Array (String)
-ingredientsList2 i =
-  ( DA.filter (\f -> f /= "")
-      ( map
-          ( \e -> case e of
-              Nothing -> ""
-              Just f -> f
-          )
-          ( ingredientsList1 i
-          )
-
-      )
-  )
-
 showIngredients i =
   ( map
       (\a -> HH.li [] [ HH.text a ])
-      (ingredientsList2 i)
+      i.strIngredients
   )
 
 render state =
@@ -219,7 +187,7 @@ render state =
                                 , HH.h3 [] [ HH.text "Ingredients" ]
                                 , HH.ul [] (showIngredients i)
                                 , HH.h3 [] [ HH.text "Instructions" ]
-                                , HH.p [] [ HH.text i.strInstructions ]
+                                , HH.p [] [ HH.text (show i.strInstructions) ]
                                 ]
 
                             ]
