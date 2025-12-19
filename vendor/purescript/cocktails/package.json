@@ -2,7 +2,7 @@
   "private": true,
   "devDependencies": {
     "esbuild": "0.25.11",
-    "parcel": "2.7.0",
+    "parcel": "^1.12.4",
     "purescript": "^0.15.4",
     "spago": "^0.20.9"
   },
@@ -13,6 +13,6 @@
     "build-prod": "rm -rf prod && mkdir -p prod && cp dev/index.html prod/ && spago bundle-app --to prod/index.js && parcel build prod/index.html"
   },
   "dependencies": {
-    "psc-package": "^4.0.1"
+    "psc-package": "^0.3.2"
   }
 }

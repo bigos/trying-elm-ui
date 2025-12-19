@@ -3,7 +3,11 @@ module App.Cocktails where
 import Prelude
 
 -- import Affjax.RequestBody as AXRB
-import Data.Argonaut (decodeJson)
+import Data.Functor.Compose (Compose(..))
+import Data.Traversable (for)
+import Data.Argonaut (class DecodeJson)
+import Data.Argonaut.Decode.Combinators ((.:), (.:?))
+import Data.Argonaut.Decode.Decoders as Json.Decoders
 -- import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (printJsonDecodeError)
 import Data.Array as DA
@@ -51,34 +55,38 @@ type Flags =
 data GetStatus = GetEmpty | GetError String | GetOk Drinks
 
 derive instance genericGetStatus :: Generic GetStatus _
-
 instance showGetStatus :: Show GetStatus where
   show = genericShow
 
 type Drinks =
   { drinks :: List Drink }
 
-type Drink =
-  { strDrink :: String
-  , strInstructions :: String
-  , strDrinkThumb :: String
-  , strIngredient1 :: Maybe String
-  , strIngredient2 :: Maybe String
-  , strIngredient3 :: Maybe String
-  , strIngredient4 :: Maybe String
-  , strIngredient5 :: Maybe String
-  , strIngredient6 :: Maybe String
-  , strIngredient7 :: Maybe String
-  , strIngredient8 :: Maybe String
-  , strIngredient9 :: Maybe String
-  , strIngredient10 :: Maybe String
-  , strIngredient11 :: Maybe String
-  , strIngredient12 :: Maybe String
-  , strIngredient13 :: Maybe String
-  , strIngredient14 :: Maybe String
-  , strIngredient15 :: Maybe String
+newtype Drink =
+  Drink
+    { strDrink :: String
+    , strInstructions :: String
+    , strDrinkThumb :: String
+    , strIngredients :: Array String
 
-  }
+    }
+
+instance DecodeJson Drink where
+  decodeJson json = do
+    object <- Json.Decoders.decodeJObject json
+    strDrink <- object .: "strDrink"
+    strInstructions <- object .: "strInstructions"
+    strDrinkThumb <- object .: "strDrinkThumb"
+    strIngredients <- do
+      fields <- for (1 DA... 15) \index ->
+        object .:? ("strIngredient" <> show index)
+      pure $ DA.fromFoldable (compose fields)
+    pure $
+      Drink
+        { strDrink, strInstructions, strDrinkThumb, strIngredients }
+
+derive instance Generic Drink _
+instance Show Drink where
+  show = genericShow
 
 data Action
   = Increment

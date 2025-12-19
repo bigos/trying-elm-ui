@@ -11,6 +11,7 @@
   , "effect"
   , "either"
   , "exceptions"
+  , "foldable-traversable"
   , "halogen"
   , "integers"
   , "lists"
