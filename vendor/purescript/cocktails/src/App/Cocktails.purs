@@ -180,24 +180,18 @@ render state =
             GetOk d ->
               ( DA.fromFoldable
                   ( map
-                      ( \i ->
-                          let
-                            isd (Drink i) = i.strDrink
-                            isdt (Drink i) = i.strDrinkThumb
-                            isdi (Drink i) = i.strIngredients
-                            isdinst (Drink i) = i.strInstructions
-                          in
-                            HH.div []
-                              [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
-                                  [ HH.h2 [] [ HH.text (show isd) ]
-                                  , HH.img [ HP.src isdt, HP.alt (isd) ]
-                                  , HH.h3 [] [ HH.text "Ingredients" ]
-                                  , HH.ul [] (show isdi)
-                                  , HH.h3 [] [ HH.text "Instructions" ]
-                                  , HH.p [] [ HH.text (show isdinst) ]
-                                  ]
+                      ( \(Drink i) ->
+                          HH.div []
+                            [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
+                                [ HH.h2 [] [ HH.text (show i.strDrink) ]
+                                -- , HH.img [ HP.src isdt, HP.alt (isd) ]
+                                -- , HH.h3 [] [ HH.text "Ingredients" ]
+                                -- , HH.ul [] (show isdi)
+                                -- , HH.h3 [] [ HH.text "Instructions" ]
+                                -- , HH.p [] [ HH.text (show isdinst) ]
+                                ]
 
-                              ]
+                            ]
                       )
 
                       d.drinks
