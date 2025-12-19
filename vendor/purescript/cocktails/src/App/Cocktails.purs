@@ -16,7 +16,7 @@ import Data.Generic.Rep (class Generic)
 import Data.List (List, length)
 -- import Data.Show (show)
 import Data.Show.Generic (genericShow)
--- import Data.String (joinWith)
+import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
 -- import Data.Tuple (Tuple, fst, snd)
@@ -128,13 +128,6 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
---showIngredients :: Drink -> ?t1
-showIngredients drink =
-  ( map
-      (\a -> HH.li [] [ HH.text a ])
-      drink.strIngredients
-  )
-
 render state =
   HH.div_
     [ HH.p_
@@ -186,7 +179,7 @@ render state =
                                 [ HH.h2 [] [ HH.text i.strDrink ]
                                 , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
                                 , HH.h3 [] [ HH.text "Ingredients" ]
-                                , HH.ul [] (showIngredients i)
+                                , HH.p [] [ HH.text (joinWith ", " i.strIngredients) ]
                                 , HH.h3 [] [ HH.text "Instructions" ]
                                 , HH.p [] [ HH.text i.strInstructions ]
                                 ]
