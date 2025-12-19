@@ -3,6 +3,7 @@ module App.Cocktails where
 import Prelude
 
 -- import Affjax.RequestBody as AXRB
+import Data.Newtype (class Newtype, unwrap, un, over)
 import Data.Functor.Compose (Compose(..))
 import Data.Traversable (for)
 import Data.Argonaut (decodeJson)
@@ -180,19 +181,24 @@ render state =
               ( DA.fromFoldable
                   ( map
                       ( \i ->
-                          HH.div []
-                            [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
-                                [ HH.h2 [] [ HH.text i.strDrink ]
-                                , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
-                                , HH.h3 [] [ HH.text "Ingredients" ]
-                                , HH.ul [] (showIngredients i)
-                                , HH.h3 [] [ HH.text "Instructions" ]
-                                , HH.p [] [ HH.text (show i.strInstructions) ]
-                                ]
+                          let
+                            i2 = "I do not understand how to unwrap it"
+                          in
+                            HH.div []
+                              [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
+                                  [ HH.h2 [] [ HH.text i.strDrink ]
+                                  , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                  , HH.h3 [] [ HH.text "Ingredients" ]
+                                  , HH.ul [] (showIngredients i)
+                                  , HH.h3 [] [ HH.text "Instructions" ]
+                                  , HH.p [] [ HH.text (show i.strInstructions) ]
+                                  ]
 
-                            ]
+                              ]
                       )
+
                       d.drinks
+
                   )
               )
             _ ->
