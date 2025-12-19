@@ -60,7 +60,7 @@ instance showGetStatus :: Show GetStatus where
   show = genericShow
 
 type Drinks =
-  { drinks :: List Drink }
+  { the_list :: List Drink }
 
 newtype Drink =
   Drink
@@ -128,10 +128,11 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
-showIngredients i =
+--showIngredients :: Drink -> ?t1
+showIngredients drink =
   ( map
       (\a -> HH.li [] [ HH.text a ])
-      i.strIngredients
+      drink.strIngredients
   )
 
 render state =
@@ -169,14 +170,14 @@ render state =
                 GetError str -> str
                 GetOk d ->
                   ( "got "
-                      <> show (length d.drinks)
+                      <> show (length d.the_list)
                       <> " drinks"
                   )
             )
         ]
     , HH.div []
         ( case state.getStatus of
-            GetOk d ->
+            GetOk drinks ->
               ( DA.fromFoldable
                   ( map
                       ( \i ->
@@ -187,12 +188,12 @@ render state =
                                 , HH.h3 [] [ HH.text "Ingredients" ]
                                 , HH.ul [] (showIngredients i)
                                 , HH.h3 [] [ HH.text "Instructions" ]
-                                , HH.p [] [ HH.text (show i.strInstructions) ]
+                                , HH.p [] [ HH.text i.strInstructions ]
                                 ]
 
                             ]
                       )
-                      d.drinks
+                      drinks.the_list
                   )
               )
             _ ->
