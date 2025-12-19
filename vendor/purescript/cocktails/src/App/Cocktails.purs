@@ -184,8 +184,8 @@ render state =
                           HH.div []
                             [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
                                 [ HH.h2 [] [ HH.text (show i.strDrink) ]
-                                -- , HH.img [ HP.src isdt, HP.alt (isd) ]
-                                -- , HH.h3 [] [ HH.text "Ingredients" ]
+                                , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                , HH.h3 [] [ HH.text "Ingredients" ]
                                 -- , HH.ul [] (show isdi)
                                 -- , HH.h3 [] [ HH.text "Instructions" ]
                                 -- , HH.p [] [ HH.text (show isdinst) ]
