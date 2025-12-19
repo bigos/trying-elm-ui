@@ -182,16 +182,19 @@ render state =
                   ( map
                       ( \i ->
                           let
-                            i2 = "I do not understand how to unwrap it"
+                            isd (Drink i) = i.strDrink
+                            isdt (Drink i) = i.strDrinkThumb
+                            isdi (Drink i) = i.strIngredients
+                            isdinst (Drink i) = i.strInstructions
                           in
                             HH.div []
                               [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
-                                  [ HH.h2 [] [ HH.text i.strDrink ]
-                                  , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                  [ HH.h2 [] [ HH.text (show isd) ]
+                                  , HH.img [ HP.src isdt, HP.alt (isd) ]
                                   , HH.h3 [] [ HH.text "Ingredients" ]
-                                  , HH.ul [] (showIngredients i)
+                                  , HH.ul [] (show isdi)
                                   , HH.h3 [] [ HH.text "Instructions" ]
-                                  , HH.p [] [ HH.text (show i.strInstructions) ]
+                                  , HH.p [] [ HH.text (show isdinst) ]
                                   ]
 
                               ]
