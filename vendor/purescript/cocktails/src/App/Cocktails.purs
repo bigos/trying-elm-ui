@@ -79,7 +79,7 @@ instance DecodeJson Drink where
     strIngredients <- do
       fields <- for (1 DA... 15) \index ->
         object .:? ("strIngredient" <> show index)
-      pure $ DA.fromFoldable (compose fields)
+      pure $ DA.fromFoldable (Compose fields)
     pure $
       Drink
         { strDrink, strInstructions, strDrinkThumb, strIngredients }
@@ -276,7 +276,9 @@ handleAction = case _ of
         Left error ->
           GetError (AX.printError error)
         Right payload ->
-          case (decodeJson payload.body) of
+          case
+            (decodeJson payload.body)
+            of
             Left e ->
               GetError (printJsonDecodeError e)
             Right f ->
