@@ -62,7 +62,7 @@ instance showGetStatus :: Show GetStatus where
 type Drinks =
   { the_list :: List Drink }
 
-type Drink =
+newtype Drink = Drink
   { strDrink :: String
   , strInstructions :: String
   , strDrinkThumb :: String
@@ -81,7 +81,8 @@ instance DecodeJson Drink where
         object .:? ("strIngredient" <> show index)
       pure $ DA.fromFoldable (Compose fields)
     pure $
-      { strDrink, strInstructions, strDrinkThumb, strIngredients }
+      Drink
+        { strDrink, strInstructions, strDrinkThumb, strIngredients }
 
 derive instance Generic Drink _
 instance Show Drink where
@@ -127,51 +128,51 @@ component =
     }
 
 render state =
-  HH.div_
-    [ HH.p_
-        [ HH.text $ "You clicked " <> show state.count <> " times" ]
-    , HH.button
-        [ HE.onClick \_ -> Increment ]
-        [ HH.text "Click me" ]
-    , HH.hr_
-    , HH.h5_ [ HH.text "Input search" ]
-    , HH.p []
-        [ HH.input
-            [ HE.onValueInput \str -> (DebugInput str)
-            , HE.onKeyDown (DebugKeydown)
+  hh.div_
+    [ hh.p_
+        [ hh.text $ "you clicked " <> show state.count <> " times" ]
+    , hh.button
+        [ he.onclick \_ -> increment ]
+        [ hh.text "click me" ]
+    , hh.hr_
+    , hh.h5_ [ hh.text "input search" ]
+    , hh.p []
+        [ hh.input
+            [ he.onvalueinput \str -> (debuginput str)
+            , he.onkeydown (debugkeydown)
             ]
         ]
-    , HH.hr_
-    , HH.h5_ [ HH.text "Flags" ]
-    , HH.p [] [ HH.text (displayFlags state.flags) ]
-    , HH.p [] [ HH.text (show state.key) ]
-    , HH.p [] [ HH.text (show state.selected) ]
-    , HH.p []
-        [ HH.button
-            [ HE.onClick \_ -> MakeRequestGet
+    , hh.hr_
+    , hh.h5_ [ hh.text "flags" ]
+    , hh.p [] [ hh.text (displayflags state.flags) ]
+    , hh.p [] [ hh.text (show state.key) ]
+    , hh.p [] [ hh.text (show state.selected) ]
+    , hh.p []
+        [ hh.button
+            [ he.onclick \_ -> makerequestget
 
             ]
-            [ HH.text "Get the data" ]
+            [ hh.text "get the data" ]
         ]
-    , HH.p [] [ HH.text (fromMaybe "" state.result) ]
-    , HH.p []
-        [ HH.text
-            ( case state.getStatus of
-                GetEmpty -> "empty get status"
-                GetError str -> str
-                GetOk d ->
+    , hh.p [] [ hh.text (frommaybe "" state.result) ]
+    , hh.p []
+        [ hh.text
+            ( case state.getstatus of
+                getempty -> "empty get status"
+                geterror str -> str
+                getok d ->
                   ( "got "
                       <> show (length d.the_list)
                       <> " drinks"
                   )
             )
         ]
-    , HH.div []
-        ( case state.getStatus of
-            GetOk drinks ->
-              ( DA.fromFoldable
+    , hh.div []
+        ( case state.getstatus of
+            getok drinks ->
+              ( da.fromfoldable
                   ( map
-                      ( \i ->
+                    ( \i ->
                           HH.div []
                             [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
                                 [ HH.h2 [] [ HH.text i.strDrink ]
