@@ -3,6 +3,7 @@ module App.Cocktails where
 import Prelude
 
 -- import Affjax.RequestBody as AXRB
+import Data.Newtype (class Newtype, unwrap, un, over)
 import Data.Functor.Compose (Compose(..))
 import Data.Traversable (for)
 import Data.Argonaut (decodeJson)
@@ -16,7 +17,7 @@ import Data.Generic.Rep (class Generic)
 import Data.List (List, length)
 -- import Data.Show (show)
 import Data.Show.Generic (genericShow)
-import Data.String (joinWith)
+-- import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
 -- import Data.Tuple (Tuple, fst, snd)
@@ -60,15 +61,16 @@ instance showGetStatus :: Show GetStatus where
   show = genericShow
 
 type Drinks =
-  { the_list :: List Drink }
+  { drinks :: List Drink }
 
-newtype Drink = Drink
-  { strDrink :: String
-  , strInstructions :: String
-  , strDrinkThumb :: String
-  , strIngredients :: Array String
+newtype Drink =
+  Drink
+    { strDrink :: String
+    , strInstructions :: String
+    , strDrinkThumb :: String
+    , strIngredients :: Array String
 
-  }
+    }
 
 instance DecodeJson Drink where
   decodeJson json = do
@@ -127,65 +129,76 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
+showIngredients i =
+  ( map
+      (\a -> HH.li [] [ HH.text a ])
+      i.strIngredients
+  )
+
 render state =
-  hh.div_
-    [ hh.p_
-        [ hh.text $ "you clicked " <> show state.count <> " times" ]
-    , hh.button
-        [ he.onclick \_ -> increment ]
-        [ hh.text "click me" ]
-    , hh.hr_
-    , hh.h5_ [ hh.text "input search" ]
-    , hh.p []
-        [ hh.input
-            [ he.onvalueinput \str -> (debuginput str)
-            , he.onkeydown (debugkeydown)
+  HH.div_
+    [ HH.p_
+        [ HH.text $ "You clicked " <> show state.count <> " times" ]
+    , HH.button
+        [ HE.onClick \_ -> Increment ]
+        [ HH.text "Click me" ]
+    , HH.hr_
+    , HH.h5_ [ HH.text "Input search" ]
+    , HH.p []
+        [ HH.input
+            [ HE.onValueInput \str -> (DebugInput str)
+            , HE.onKeyDown (DebugKeydown)
             ]
         ]
-    , hh.hr_
-    , hh.h5_ [ hh.text "flags" ]
-    , hh.p [] [ hh.text (displayflags state.flags) ]
-    , hh.p [] [ hh.text (show state.key) ]
-    , hh.p [] [ hh.text (show state.selected) ]
-    , hh.p []
-        [ hh.button
-            [ he.onclick \_ -> makerequestget
+    , HH.hr_
+    , HH.h5_ [ HH.text "Flags" ]
+    , HH.p [] [ HH.text (displayFlags state.flags) ]
+    , HH.p [] [ HH.text (show state.key) ]
+    , HH.p [] [ HH.text (show state.selected) ]
+    , HH.p []
+        [ HH.button
+            [ HE.onClick \_ -> MakeRequestGet
 
             ]
-            [ hh.text "get the data" ]
+            [ HH.text "Get the data" ]
         ]
-    , hh.p [] [ hh.text (frommaybe "" state.result) ]
-    , hh.p []
-        [ hh.text
-            ( case state.getstatus of
-                getempty -> "empty get status"
-                geterror str -> str
-                getok d ->
+    , HH.p [] [ HH.text (fromMaybe "" state.result) ]
+    , HH.p []
+        [ HH.text
+            ( case state.getStatus of
+                GetEmpty -> "empty get status"
+                GetError str -> str
+                GetOk d ->
                   ( "got "
-                      <> show (length d.the_list)
+                      <> show (length d.drinks)
                       <> " drinks"
                   )
             )
         ]
-    , hh.div []
-        ( case state.getstatus of
-            getok drinks ->
-              ( da.fromfoldable
+    , HH.div []
+        ( case state.getStatus of
+            GetOk d ->
+              ( DA.fromFoldable
                   ( map
-                    ( \i ->
-                          HH.div []
-                            [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
-                                [ HH.h2 [] [ HH.text i.strDrink ]
-                                , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
-                                , HH.h3 [] [ HH.text "Ingredients" ]
-                                , HH.p [] [ HH.text (joinWith ", " i.strIngredients) ]
-                                , HH.h3 [] [ HH.text "Instructions" ]
-                                , HH.p [] [ HH.text i.strInstructions ]
-                                ]
+                      ( \i ->
+                          let
+                            i2 = "I do not understand how to unwrap it"
+                          in
+                            HH.div []
+                              [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
+                                  [ HH.h2 [] [ HH.text i.strDrink ]
+                                  , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                  , HH.h3 [] [ HH.text "Ingredients" ]
+                                  , HH.ul [] (showIngredients i)
+                                  , HH.h3 [] [ HH.text "Instructions" ]
+                                  , HH.p [] [ HH.text (show i.strInstructions) ]
+                                  ]
 
-                            ]
+                              ]
                       )
-                      drinks.the_list
+
+                      d.drinks
+
                   )
               )
             _ ->
