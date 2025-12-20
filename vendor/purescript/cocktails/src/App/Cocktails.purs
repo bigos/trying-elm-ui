@@ -113,14 +113,11 @@ initialState flags =
   }
 
 component
-  :: forall output235 m236 t251
+  :: forall m236 t251
    . MonadAff m236
   => H.Component t251
-       { base_url :: Maybe String
-       , logname :: Maybe String
-       , start :: Maybe String
-       }
-       output235
+       Flags
+       State
        m236
 component =
   H.mkComponent
