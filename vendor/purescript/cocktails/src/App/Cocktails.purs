@@ -3,11 +3,11 @@ module App.Cocktails where
 import Prelude
 
 -- import Affjax.RequestBody as AXRB
-import Data.Newtype (class Newtype, unwrap, un, over)
+--import Data.Newtype (class Newtype, unwrap, un, over)
 import Data.Functor.Compose (Compose(..))
 import Data.Traversable (for)
-import Data.Argonaut (decodeJson)
-import Data.Argonaut (class DecodeJson)
+-- import Data.Argonaut (decodeJson)
+import Data.Argonaut (class DecodeJson, decodeJson)
 import Data.Argonaut.Decode.Combinators ((.:), (.:?))
 import Data.Argonaut.Decode.Decoders as Json.Decoders
 -- import Data.Argonaut.Core (Json)
@@ -17,7 +17,7 @@ import Data.Generic.Rep (class Generic)
 import Data.List (List, length)
 -- import Data.Show (show)
 import Data.Show.Generic (genericShow)
-import Data.String (joinWith)
+-- import Data.String (joinWith)
 import Data.String as DS
 -- import Data.String.Utils (endsWith)
 -- import Data.Tuple (Tuple, fst, snd)
@@ -129,11 +129,20 @@ component =
     , eval: H.mkEval H.defaultEval { handleAction = handleAction }
     }
 
+showIngredients :: forall f84 w87 i88. Functor f84 => f84 String -> f84 (HH.HTML w87 i88)
 showIngredients i =
   ( map
       (\a -> HH.li [] [ HH.text a ])
-      i.strIngredients
+      i
   )
+
+render
+  :: forall w225 a235 a275 a283 t309
+   . Show Int
+  => Show String
+  => Show String
+  => State
+  -> HH.HTML w225 Action
 
 render state =
   HH.div_
@@ -186,7 +195,7 @@ render state =
                                 [ HH.h2 [] [ HH.text (show i.strDrink) ]
                                 , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
                                 , HH.h3 [] [ HH.text "Ingredients" ]
-                                , HH.p [] [ HH.text (show (joinWith ", " i.strIngredients)) ]
+                                , HH.ul [] (showIngredients i.strIngredients)
                                 , HH.h3 [] [ HH.text "Instructions" ]
                                 , HH.p [] [ HH.text (show i.strInstructions) ]
                                 ]
