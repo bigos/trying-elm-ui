@@ -137,7 +137,7 @@ showIngredients i =
   )
 
 render
-  :: forall w225 a235 a275 a283 t309
+  :: forall w225
    . Show Int
   => Show String
   => Show String
