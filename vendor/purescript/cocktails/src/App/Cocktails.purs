@@ -209,6 +209,9 @@ render state =
         )
     ]
 
+-- example of css based dropdown
+-- https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown
+
 -- handleAction :: Action -> H.HalogenM State _ () _ _ Unit
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
