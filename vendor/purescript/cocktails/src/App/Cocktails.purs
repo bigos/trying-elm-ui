@@ -183,30 +183,7 @@ render state =
       else HH.div_ []
 
     , HH.hr_
-    , HH.h5_ [ HH.text "Flags" ]
-    , HH.p [] [ HH.text (displayFlags state.flags) ]
     , HH.p [] [ HH.text (show state.key) ]
-    , HH.p [] [ HH.text (show state.selected) ]
-    , HH.p []
-        [ HH.button
-            [ HE.onClick \_ -> MakeRequestGet
-
-            ]
-            [ HH.text "Get the data" ]
-        ]
-    , HH.p [] [ HH.text (fromMaybe "" state.result) ]
-    , HH.p []
-        [ HH.text
-            ( case state.getStatus of
-                GetEmpty -> "empty get status"
-                GetError str -> str
-                GetOk d ->
-                  ( "got "
-                      <> show (length d.drinks)
-                      <> " drinks"
-                  )
-            )
-        ]
     , HH.div []
         ( case state.getStatus of
             GetOk d ->
