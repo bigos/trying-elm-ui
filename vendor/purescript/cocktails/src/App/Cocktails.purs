@@ -143,7 +143,7 @@ render state =
         [ HH.text "Click me" ]
     , HH.hr_
     , HH.h5_ [ HH.text "Input search" ]
-    , HH.p []
+    , HH.div []
         [ HH.input
             [ HE.onValueInput \str -> (DebugInput str)
             , HE.onKeyDown (DebugKeydown)
