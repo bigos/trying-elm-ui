@@ -95,6 +95,7 @@ data Action
   | MakeRequestGet
   | DebugInput String
   | DebugKeydown KE.KeyboardEvent
+  | Select String
 
 initialState :: Flags -> State
 initialState flags =
@@ -136,7 +137,8 @@ showIngredients i =
 render :: forall w225. Show Int => Show String => Show String => State -> HH.HTML w225 Action
 render state =
   HH.div_
-    [ HH.p_
+    [ HH.p_ [ HH.text (show state.selected) ]
+    , HH.p_
         [ HH.text $ "You clicked " <> show state.count <> " times" ]
     , HH.button
         [ HE.onClick \_ -> Increment ]
@@ -162,7 +164,11 @@ render state =
                   ( DA.fromFoldable
                       ( map
                           ( \(Drink i) ->
-                              HH.a [ HP.href "#" ] [ HH.text i.strDrink ]
+                              HH.a
+                                [ HP.href "#"
+                                , HE.onClick ((\_ -> (Select i.strDrink)))
+                                ]
+                                [ HH.text i.strDrink ]
                           )
                           d.drinks
                       )
@@ -243,6 +249,8 @@ handleAction = case _ of
         -- do nothing
         H.modify_ \st -> st { count = st.count }
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
+  Select drink -> do
+    H.modify_ \st -> st { selected = drink }
   MakeRequestGet ->
     do
       newState <- H.modify \st -> (st { loading = true })
