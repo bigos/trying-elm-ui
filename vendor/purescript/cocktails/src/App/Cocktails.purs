@@ -133,14 +133,7 @@ showIngredients i =
       i
   )
 
-render
-  :: forall w225
-   . Show Int
-  => Show String
-  => Show String
-  => State
-  -> HH.HTML w225 Action
-
+render :: forall w225. Show Int => Show String => Show String => State -> HH.HTML w225 Action
 render state =
   HH.div_
     [ HH.p_
@@ -155,6 +148,27 @@ render state =
             [ HE.onValueInput \str -> (DebugInput str)
             , HE.onKeyDown (DebugKeydown)
             ]
+        ]
+
+    , HH.div [ HP.class_ (HH.ClassName "dropdown") ]
+        [ HH.div
+            [ HP.id "myDropdown"
+            , HP.class_ (HH.ClassName "dropdown-content")
+            , HP.style "display: block"
+            ]
+
+            ( case state.getStatus of
+                GetOk d ->
+                  ( DA.fromFoldable
+                      ( map
+                          ( \(Drink i) ->
+                              HH.a [ HP.href "#" ] [ HH.text i.strDrink ]
+                          )
+                          d.drinks
+                      )
+                  )
+                _ -> []
+            )
         ]
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
