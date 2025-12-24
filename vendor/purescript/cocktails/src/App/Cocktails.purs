@@ -14,7 +14,7 @@ import Data.Argonaut.Decode.Decoders as Json.Decoders
 import Data.Argonaut.Decode.Error (printJsonDecodeError)
 import Data.Array as DA
 import Data.Generic.Rep (class Generic)
-import Data.List (List, length)
+import Data.List (List, length, filter)
 -- import Data.Show (show)
 import Data.Show.Generic (genericShow)
 -- import Data.String (joinWith)
@@ -45,6 +45,7 @@ type State =
   , result :: Maybe String
   , getStatus :: GetStatus
   , selected :: String
+  , picked :: String
   , key :: String
   }
 
@@ -95,7 +96,7 @@ data Action
   | MakeRequestGet
   | DebugInput String
   | DebugKeydown KE.KeyboardEvent
-  | Select String
+  | Pick String
 
 initialState :: Flags -> State
 initialState flags =
@@ -110,6 +111,7 @@ initialState flags =
   , result: Nothing
   , getStatus: GetEmpty
   , selected: ""
+  , picked: ""
   , key: ""
   }
 
@@ -166,7 +168,7 @@ render state =
                           ( \(Drink i) ->
                               HH.a
                                 [ HP.href "#"
-                                , HE.onClick ((\_ -> (Select i.strDrink)))
+                                , HE.onClick ((\_ -> (Pick i.strDrink)))
                                 ]
                                 [ HH.text i.strDrink ]
                           )
@@ -176,6 +178,7 @@ render state =
                 _ -> []
             )
         ]
+
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
     , HH.p [] [ HH.text (displayFlags state.flags) ]
@@ -210,7 +213,11 @@ render state =
                           HH.div []
                             [ HH.div [ HP.style "background: CornSilk; padding: 1em; margin: 1em; width: 60em" ]
                                 [ HH.h2 [] [ HH.text (show i.strDrink) ]
-                                , HH.img [ HP.src i.strDrinkThumb, HP.alt (i.strDrink) ]
+                                , HH.img
+                                    [ HP.src i.strDrinkThumb
+                                    , HP.alt (i.strDrink)
+                                    , HP.style "width: 200px; height: auto"
+                                    ]
                                 , HH.h3 [] [ HH.text "Ingredients" ]
                                 , HH.ul [] (showIngredients i.strIngredients)
                                 , HH.h3 [] [ HH.text "Instructions" ]
@@ -220,7 +227,14 @@ render state =
                             ]
                       )
 
-                      d.drinks
+                      ( if state.picked == "" then
+                          d.drinks
+                        else
+                          filter
+                            ( \(Drink dx) -> dx.strDrink == state.selected
+                            )
+                            d.drinks
+                      )
 
                   )
               )
@@ -228,9 +242,6 @@ render state =
               []
         )
     ]
-
--- example of css based dropdown
--- https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown
 
 -- handleAction :: Action -> H.HalogenM State _ () _ _ Unit
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
@@ -249,11 +260,11 @@ handleAction = case _ of
         -- do nothing
         H.modify_ \st -> st { count = st.count }
   DebugInput input_str -> H.modify_ \st -> st { selected = input_str }
-  Select drink -> do
-    H.modify_ \st -> st { selected = drink }
+  Pick drink -> do
+    H.modify_ \st -> st { picked = drink }
   MakeRequestGet ->
     do
-      newState <- H.modify \st -> (st { loading = true })
+      newState <- H.modify \st -> (st { loading = true, selected = "" })
 
       response <- H.liftAff $ AX.get
         --AXRF.string
