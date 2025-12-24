@@ -140,6 +140,7 @@ render :: forall w225. Show Int => Show String => Show String => State -> HH.HTM
 render state =
   HH.div_
     [ HH.p_ [ HH.text (show state.selected) ]
+    , HH.p_ [ HH.text (show state.picked) ]
     , HH.p_
         [ HH.text $ "You clicked " <> show state.count <> " times" ]
     , HH.button
@@ -154,30 +155,32 @@ render state =
             ]
         ]
 
-    , HH.div [ HP.class_ (HH.ClassName "dropdown") ]
-        [ HH.div
-            [ HP.id "myDropdown"
-            , HP.class_ (HH.ClassName "dropdown-content")
-            , HP.style "display: block"
-            ]
+    , if state.picked == "" then
+        HH.div [ HP.class_ (HH.ClassName "dropdown") ]
+          [ HH.div
+              [ HP.id "myDropdown"
+              , HP.class_ (HH.ClassName "dropdown-content")
+              , HP.style "display: block"
+              ]
 
-            ( case state.getStatus of
-                GetOk d ->
-                  ( DA.fromFoldable
-                      ( map
-                          ( \(Drink i) ->
-                              HH.a
-                                [ HP.href "#"
-                                , HE.onClick ((\_ -> (Pick i.strDrink)))
-                                ]
-                                [ HH.text i.strDrink ]
-                          )
-                          d.drinks
-                      )
-                  )
-                _ -> []
-            )
-        ]
+              ( case state.getStatus of
+                  GetOk d ->
+                    ( DA.fromFoldable
+                        ( map
+                            ( \(Drink i) ->
+                                HH.a
+                                  [ HP.href "#"
+                                  , HE.onClick ((\_ -> (Pick i.strDrink)))
+                                  ]
+                                  [ HH.text i.strDrink ]
+                            )
+                            d.drinks
+                        )
+                    )
+                  _ -> []
+              )
+          ]
+      else HH.div_ []
 
     , HH.hr_
     , HH.h5_ [ HH.text "Flags" ]
@@ -231,7 +234,7 @@ render state =
                           d.drinks
                         else
                           filter
-                            ( \(Drink dx) -> dx.strDrink == state.selected
+                            ( \(Drink dx) -> dx.strDrink == state.picked
                             )
                             d.drinks
                       )
@@ -264,7 +267,7 @@ handleAction = case _ of
     H.modify_ \st -> st { picked = drink }
   MakeRequestGet ->
     do
-      newState <- H.modify \st -> (st { loading = true, selected = "" })
+      newState <- H.modify \st -> (st { loading = true, picked = "" })
 
       response <- H.liftAff $ AX.get
         --AXRF.string
