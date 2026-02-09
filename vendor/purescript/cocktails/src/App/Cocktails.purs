@@ -2,36 +2,23 @@ module App.Cocktails where
 
 import Prelude
 
--- import Affjax.RequestBody as AXRB
---import Data.Newtype (class Newtype, unwrap, un, over)
 import Data.Functor.Compose (Compose(..))
 import Data.Traversable (for)
--- import Data.Argonaut (decodeJson)
 import Data.Argonaut (class DecodeJson, decodeJson)
 import Data.Argonaut.Decode.Combinators ((.:), (.:?))
 import Data.Argonaut.Decode.Decoders as Json.Decoders
--- import Data.Argonaut.Core (Json)
 import Data.Argonaut.Decode.Error (printJsonDecodeError)
 import Data.Array as DA
 import Data.Generic.Rep (class Generic)
-import Data.List (List, length, filter)
--- import Data.Show (show)
+import Data.List (List, filter)
 import Data.Show.Generic (genericShow)
--- import Data.String (joinWith)
 import Data.String as DS
--- import Data.String.Utils (endsWith)
--- import Data.Tuple (Tuple, fst, snd)
--- import Debug (trace, spy, traceM)
 import Effect.Aff.Class (class MonadAff)
--- import Halogen.Component (Component)
--- import Halogen.HTML.Core (HTML)
 import Affjax.ResponseFormat as AXRF
 import Affjax.Web as AX
 import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..), fromMaybe)
--- import Data.String.Common (joinWith)
--- import Effect.Console (logShow)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
@@ -92,8 +79,7 @@ instance Show Drink where
   show = genericShow
 
 data Action
-  = Increment
-  | MakeRequestGet
+  = MakeRequestGet
   | DebugInput String
   | DebugKeydown KE.KeyboardEvent
   | Pick String
@@ -141,11 +127,6 @@ render state =
   HH.div_
     [ HH.p_ [ HH.text (show state.selected) ]
     , HH.p_ [ HH.text (show state.picked) ]
-    , HH.p_
-        [ HH.text $ "You clicked " <> show state.count <> " times" ]
-    , HH.button
-        [ HE.onClick \_ -> Increment ]
-        [ HH.text "Click me" ]
     , HH.hr_
     , HH.h5_ [ HH.text "Input search" ]
     , HH.div []
@@ -226,7 +207,6 @@ render state =
 -- handleAction :: Action -> H.HalogenM State _ () _ _ Unit
 handleAction :: forall output m. MonadAff m => Action -> H.HalogenM State Action () output m Unit
 handleAction = case _ of
-  Increment -> H.modify_ \st -> st { count = st.count + 1 }
   DebugKeydown input_key ->
     let
       key = (KE.key input_key)
