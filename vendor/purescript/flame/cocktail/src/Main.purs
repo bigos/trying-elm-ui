@@ -218,7 +218,7 @@ view model = HE.main "main"
       , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.div_
           [ view_input model
-          , view_options model
+          -- , view_options model
           ]
       ]
   , view_drinks model
