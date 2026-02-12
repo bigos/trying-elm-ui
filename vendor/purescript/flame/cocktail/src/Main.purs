@@ -330,8 +330,15 @@ view_drinks model =
                                     , HA.height "auto"
                                     , HA.alt (i.strDrink)
                                     ]
+                                , HE.h3_ "Instructions"
                                 , HE.p_ i.strInstructions
-                                , HE.p_ (show (drink_ingredients_list i))
+                                , HE.h3_ "Ingredients"
+                                , HE.ul_
+                                    ( DA.fromFoldable
+                                        ( map (\ing -> HE.li_ ing)
+                                            (drink_ingredients_list i)
+                                        )
+                                    )
                                 ]
                             ]
                       )
