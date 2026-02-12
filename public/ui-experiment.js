@@ -13316,13 +13316,27 @@ var $author$project$UiExperiment$view = function (model) {
 						onPress: $elm$core$Maybe$Just($author$project$UiExperiment$LoadFiles)
 					}),
 					A2(
-					$mdgriffith$elm_ui$Element$paragraph,
-					_List_Nil,
+					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text(
-							$elm$core$Debug$toString(model))
-						]))
+							$mdgriffith$elm_ui$Element$padding(20)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(10),
+								$mdgriffith$elm_ui$Element$Border$width(1),
+								$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.yellow)
+							]),
+						A2(
+							$mdgriffith$elm_ui$Element$paragraph,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$text(
+									$elm$core$Debug$toString(model))
+								]))))
 				])));
 };
 var $author$project$UiExperiment$main = $elm$browser$Browser$element(

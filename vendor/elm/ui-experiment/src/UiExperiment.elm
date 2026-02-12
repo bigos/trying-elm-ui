@@ -1,4 +1,4 @@
-module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, Model, LoadState)
+module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, LoadState, Model)
 
 import Browser
 import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
@@ -450,17 +450,25 @@ view model =
                     ]
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
-            , paragraph [] [ text (Debug.toString model) ]
+            , el [ padding 20 ]
+                (el
+                    [ padding 10
+                    , Border.width 1
+                    , Border.color color.yellow
+                    ]
+                    (paragraph [] [ text (Debug.toString model) ])
+                )
             ]
         )
 
-color:
-       { blue : Color
-       , darkCharcoal : Color
-       , lightBlue : Color
-       , lightGrey : Color
-       , white : Color
-       , yellow : Color
+
+color :
+    { blue : Color
+    , darkCharcoal : Color
+    , lightBlue : Color
+    , lightGrey : Color
+    , white : Color
+    , yellow : Color
     }
 color =
     { blue = rgb255 0x72 0x9F 0xCF
@@ -510,7 +518,6 @@ toggleCheckboxWidget { offColor, onColor, sliderColor, toggleWidth, toggleHeight
                                         (toggleWidth - sliderSize - pad)
                             in
                             HA.style "transform" <| "translateX(" ++ translation ++ "px)"
-
 
                         else
                             HA.class ""
