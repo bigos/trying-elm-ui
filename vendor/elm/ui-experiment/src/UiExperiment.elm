@@ -1,4 +1,4 @@
-module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, Model)
+module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, Model, LoadState)
 
 import Browser
 import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
@@ -454,7 +454,14 @@ view model =
             ]
         )
 
-
+color:
+       { blue : Color
+       , darkCharcoal : Color
+       , lightBlue : Color
+       , lightGrey : Color
+       , white : Color
+       , yellow : Color
+    }
 color =
     { blue = rgb255 0x72 0x9F 0xCF
     , darkCharcoal = rgb255 0x2E 0x34 0x36
@@ -503,6 +510,7 @@ toggleCheckboxWidget { offColor, onColor, sliderColor, toggleWidth, toggleHeight
                                         (toggleWidth - sliderSize - pad)
                             in
                             HA.style "transform" <| "translateX(" ++ translation ++ "px)"
+
 
                         else
                             HA.class ""
