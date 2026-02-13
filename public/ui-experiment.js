@@ -6324,6 +6324,45 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 			url: _Utils_ap(domain, path)
 		});
 };
+var $author$project$UiExperiment$FileDidRead = function (a) {
+	return {$: 'FileDidRead', a: a};
+};
+var $elm$http$Http$expectString = function (toMsg) {
+	return A2(
+		$elm$http$Http$expectStringResponse,
+		toMsg,
+		$elm$http$Http$resolve($elm$core$Result$Ok));
+};
+var $author$project$UiExperiment$httpReadFile = F3(
+	function (model, pwd, fname) {
+		var path = '/api/read-file';
+		var domain = 'http://127.0.0.1:3000';
+		return $elm$http$Http$post(
+			{
+				body: $elm$http$Http$jsonBody(
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'pwd',
+								$elm$json$Json$Encode$string(
+									function () {
+										var _v0 = model.dirs.leftDir;
+										if (_v0.$ === 'Nothing') {
+											return '/home/jacek';
+										} else {
+											var files = _v0.a;
+											return files.pwd.original;
+										}
+									}())),
+								_Utils_Tuple2(
+								'fname',
+								$elm$json$Json$Encode$string(fname))
+							]))),
+				expect: $elm$http$Http$expectString($author$project$UiExperiment$FileDidRead),
+				url: _Utils_ap(domain, path)
+			});
+	});
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
 var $elm$core$List$takeReverse = F3(
@@ -6468,7 +6507,9 @@ var $author$project$UiExperiment$update = F2(
 					case 'FileDoRead':
 						var pwd = msg.a;
 						var fname = msg.b;
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						return _Utils_Tuple2(
+							model,
+							A3($author$project$UiExperiment$httpReadFile, model, pwd, fname));
 					case 'FileDidRead':
 						var result = msg.a;
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);

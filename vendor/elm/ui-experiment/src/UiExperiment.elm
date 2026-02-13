@@ -123,7 +123,7 @@ update msg model =
                 update Reload model2
 
             FileDoRead pwd fname ->
-                ( model, Cmd.none )
+                ( model, httpReadFile model pwd fname )
 
             FileDidRead result ->
                 ( model, Cmd.none )
@@ -245,6 +245,39 @@ update msg model =
 
 
 -- ACTIONS
+
+
+httpReadFile : Model -> String -> String -> Cmd Msg
+httpReadFile model pwd fname =
+    let
+        domain : String
+        domain =
+            "http://127.0.0.1:3000"
+
+        path : String
+        path =
+            "/api/read-file"
+    in
+    Http.post
+        { url = domain ++ path
+        , body =
+            Http.jsonBody
+                (Encode.object
+                    [ ( "pwd"
+                      , Encode.string
+                            (case model.dirs.leftDir of
+                                Nothing ->
+                                    "/home/jacek"
+
+                                Just files ->
+                                    files.pwd.original
+                            )
+                      )
+                    , ( "fname", Encode.string fname )
+                    ]
+                )
+        , expect = Http.expectString FileDidRead
+        }
 
 
 httpLoadFiles : Model -> Cmd Msg
