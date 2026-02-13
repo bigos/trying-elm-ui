@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get "pure_script/show_flame"
   get "re_script/show"
 
+  post "api/read-file" => "api/files#read"
   post "api/list-files" => "api/files#list"
   #  second example for clarity
   get  "api/get-files"  => "api/files#get"

@@ -1,6 +1,10 @@
 class Api::FilesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def read
+    render plain: File.open(File.join(params['pwd'], params['fname'])).read
+  end
+
   def list
     params.permit!
 
