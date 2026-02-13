@@ -6294,11 +6294,12 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 			url: _Utils_ap(domain, path)
 		});
 };
+var $author$project$UiExperiment$FileContentEmpty = {$: 'FileContentEmpty'};
 var $author$project$UiExperiment$NotLoadingYet = {$: 'NotLoadingYet'};
 var $author$project$UiExperiment$new_model = function (flags) {
 	return {
 		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
-		fileContent: $elm$core$Maybe$Nothing,
+		fileContent: $author$project$UiExperiment$FileContentEmpty,
 		flags: flags,
 		loading: $author$project$UiExperiment$NotLoadingYet,
 		toggle_hidden: true
@@ -6315,6 +6316,10 @@ var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$UiExperiment$subscriptions = function (_v0) {
 	return $elm$core$Platform$Sub$none;
 };
+var $author$project$UiExperiment$FileContentLoaded = function (a) {
+	return {$: 'FileContentLoaded', a: a};
+};
+var $author$project$UiExperiment$FileContentLoading = {$: 'FileContentLoading'};
 var $author$project$UiExperiment$Loaded = {$: 'Loaded'};
 var $author$project$UiExperiment$Loading = {$: 'Loading'};
 var $author$project$UiExperiment$Reload = {$: 'Reload'};
@@ -6511,7 +6516,9 @@ var $author$project$UiExperiment$update = F2(
 						var pwd = msg.a;
 						var fname = msg.b;
 						return _Utils_Tuple2(
-							model,
+							_Utils_update(
+								model,
+								{fileContent: $author$project$UiExperiment$FileContentLoading}),
 							A3($author$project$UiExperiment$httpReadFile, model, pwd, fname));
 					case 'FileDidRead':
 						var result = msg.a;
@@ -6521,7 +6528,7 @@ var $author$project$UiExperiment$update = F2(
 								_Utils_update(
 									model,
 									{
-										fileContent: $elm$core$Maybe$Just(fullText)
+										fileContent: $author$project$UiExperiment$FileContentLoaded(fullText)
 									}),
 								$elm$core$Platform$Cmd$none);
 						} else {
@@ -6575,7 +6582,7 @@ var $author$project$UiExperiment$update = F2(
 											pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
 											showHidden: false
 										}),
-									fileContent: $elm$core$Maybe$Nothing,
+									fileContent: $author$project$UiExperiment$FileContentEmpty,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(
@@ -6598,7 +6605,7 @@ var $author$project$UiExperiment$update = F2(
 											pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
 											showHidden: model.toggle_hidden
 										}),
-									fileContent: $elm$core$Maybe$Nothing,
+									fileContent: $author$project$UiExperiment$FileContentEmpty,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(
@@ -6616,7 +6623,7 @@ var $author$project$UiExperiment$update = F2(
 								{
 									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
 										{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
-									fileContent: $elm$core$Maybe$Nothing,
+									fileContent: $author$project$UiExperiment$FileContentEmpty,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(
@@ -13418,47 +13425,71 @@ var $author$project$UiExperiment$view = function (model) {
 					}),
 					function () {
 					var _v1 = model.fileContent;
-					if (_v1.$ === 'Nothing') {
-						return A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$padding(20)
-								]),
-							A2(
+					switch (_v1.$) {
+						case 'FileContentEmpty':
+							return A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$padding(20)
+									]),
+								A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$padding(10),
+											$mdgriffith$elm_ui$Element$Border$width(5),
+											$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.red)
+										]),
+									A2(
+										$mdgriffith$elm_ui$Element$paragraph,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$text(
+												$elm$core$Debug$toString(model.fileContent))
+											]))));
+						case 'FileContentLoading':
+							return A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$padding(20)
+									]),
+								A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$padding(10),
+											$mdgriffith$elm_ui$Element$Border$width(5),
+											$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.red)
+										]),
+									A2(
+										$mdgriffith$elm_ui$Element$paragraph,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$mdgriffith$elm_ui$Element$text(
+												$elm$core$Debug$toString(model.fileContent))
+											]))));
+						default:
+							var txt = _v1.a;
+							return A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[
 										$mdgriffith$elm_ui$Element$padding(10),
 										$mdgriffith$elm_ui$Element$Border$width(5),
-										$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.red)
+										$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.green)
 									]),
-								A2(
-									$mdgriffith$elm_ui$Element$paragraph,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$text(
-											$elm$core$Debug$toString(model.fileContent))
-										]))));
-					} else {
-						var txt = _v1.a;
-						return A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$padding(10),
-									$mdgriffith$elm_ui$Element$Border$width(5),
-									$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.green)
-								]),
-							$mdgriffith$elm_ui$Element$html(
-								A2(
-									$elm$html$Html$pre,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text(txt)
-										]))));
+								$mdgriffith$elm_ui$Element$html(
+									A2(
+										$elm$html$Html$pre,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(txt)
+											]))));
 					}
 				}(),
 					A2(

@@ -33,8 +33,14 @@ type alias Model =
     , flags : Flags
     , dirs : Dirs
     , loading : LoadState
-    , fileContent : Maybe String
+    , fileContent : FileContentLoadState
     }
+
+
+type FileContentLoadState
+    = FileContentEmpty
+    | FileContentLoading
+    | FileContentLoaded String
 
 
 
@@ -85,7 +91,7 @@ new_model flags =
     , dirs = { leftDir = Nothing, rightDir = Nothing }
     , flags = flags
     , loading = NotLoadingYet
-    , fileContent = Nothing
+    , fileContent = FileContentEmpty
     }
 
 
@@ -125,12 +131,14 @@ update msg model =
                 update Reload model2
 
             FileDoRead pwd fname ->
-                ( model, httpReadFile model pwd fname )
+                ( { model | fileContent = FileContentLoading }
+                , httpReadFile model pwd fname
+                )
 
             FileDidRead result ->
                 case result of
                     Ok fullText ->
-                        ( { model | fileContent = Just fullText }
+                        ( { model | fileContent = FileContentLoaded fullText }
                         , Cmd.none
                         )
 
@@ -202,7 +210,7 @@ update msg model =
                                             , showHidden = False
                                             , files = []
                                             }
-                                    , fileContent = Nothing
+                                    , fileContent = FileContentEmpty
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
@@ -227,7 +235,7 @@ update msg model =
                                             , showHidden = model.toggle_hidden
                                             , files = []
                                             }
-                                    , fileContent = Nothing
+                                    , fileContent = FileContentEmpty
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
@@ -248,7 +256,7 @@ update msg model =
                                             , showHidden = model.toggle_hidden
                                             , files = []
                                             }
-                                    , fileContent = Nothing
+                                    , fileContent = FileContentEmpty
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
@@ -526,7 +534,7 @@ view model =
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
             , case model.fileContent of
-                Nothing ->
+                FileContentEmpty ->
                     el [ padding 20 ]
                         (el
                             [ padding 10
@@ -536,7 +544,17 @@ view model =
                             (paragraph [] [ text (Debug.toString model.fileContent) ])
                         )
 
-                Just txt ->
+                FileContentLoading ->
+                    el [ padding 20 ]
+                        (el
+                            [ padding 10
+                            , Border.width 5
+                            , Border.color color.red
+                            ]
+                            (paragraph [] [ text (Debug.toString model.fileContent) ])
+                        )
+
+                FileContentLoaded txt ->
                     el
                         [ padding 10
                         , Border.width 5
