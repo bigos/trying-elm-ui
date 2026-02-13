@@ -6324,6 +6324,7 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 			url: _Utils_ap(domain, path)
 		});
 };
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$not = _Basics_not;
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -6451,115 +6452,121 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
+var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
-		update:
-		while (true) {
-			switch (msg.$) {
-				case 'Toggle':
-					var model2 = _Utils_update(
-						model,
-						{toggle_hidden: !model.toggle_hidden});
-					var $temp$msg = $author$project$UiExperiment$Reload,
-						$temp$model = model2;
-					msg = $temp$msg;
-					model = $temp$model;
-					continue update;
-				case 'LoadFiles':
-					return _Utils_Tuple2(
-						_Utils_update(
+		return A2(
+			$elm$core$Debug$log,
+			$elm$core$Debug$toString(msg),
+			function () {
+				switch (msg.$) {
+					case 'Toggle':
+						var model2 = _Utils_update(
 							model,
-							{loading: $author$project$UiExperiment$Loading}),
-						$author$project$UiExperiment$httpLoadFiles(model));
-				case 'LoadedFiles':
-					var result = msg.a;
-					if (result.$ === 'Ok') {
-						var fullText = result.a;
+							{toggle_hidden: !model.toggle_hidden});
+						return A2($author$project$UiExperiment$update, $author$project$UiExperiment$Reload, model2);
+					case 'FileDoRead':
+						var pwd = msg.a;
+						var fname = msg.b;
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					case 'FileDidRead':
+						var result = msg.a;
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					case 'LoadFiles':
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
+								{loading: $author$project$UiExperiment$Loading}),
+							$author$project$UiExperiment$httpLoadFiles(model));
+					case 'LoadedFiles':
+						var result = msg.a;
+						if (result.$ === 'Ok') {
+							var fullText = result.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+											{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden}),
+										loading: $author$project$UiExperiment$Loaded
+									}),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						}
+					case 'LoadParent':
+						var m1fx = model.dirs.leftDir;
+						if (m1fx.$ === 'Nothing') {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var files = m1fx.a;
+							var pwdx = files.pwd.original;
+							var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
+							var pwdxLen = $elm$core$List$length(pwdxSplit);
+							var pwdxStr = A2(
+								$elm$core$String$append,
+								'/',
+								A2(
+									$elm$core$String$join,
+									'/',
+									A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
+							var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
+							var model2 = _Utils_update(
+								model,
 								{
 									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-										{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden}),
-									loading: $author$project$UiExperiment$Loaded
-								}),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					}
-				case 'LoadParent':
-					var m1fx = model.dirs.leftDir;
-					if (m1fx.$ === 'Nothing') {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					} else {
-						var files = m1fx.a;
-						var pwdx = files.pwd.original;
-						var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
-						var pwdxLen = $elm$core$List$length(pwdxSplit);
-						var pwdxStr = A2(
-							$elm$core$String$append,
-							'/',
-							A2(
-								$elm$core$String$join,
-								'/',
-								A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
-						var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
-						var model2 = _Utils_update(
-							model,
-							{
-								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{
-										files: _List_Nil,
-										pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
-										showHidden: false
-									}),
-								loading: $author$project$UiExperiment$Loading
-							});
-						return _Utils_Tuple2(
-							model2,
-							$author$project$UiExperiment$httpLoadFiles(model2));
-					}
-				case 'LoadChild':
-					var child = msg.a;
-					var _v3 = model.dirs.leftDir;
-					if (_v3.$ === 'Nothing') {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					} else {
-						var files = _v3.a;
-						var model2 = _Utils_update(
-							model,
-							{
-								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{
-										files: _List_Nil,
-										pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
-										showHidden: model.toggle_hidden
-									}),
-								loading: $author$project$UiExperiment$Loading
-							});
-						return _Utils_Tuple2(
-							model2,
-							$author$project$UiExperiment$httpLoadFiles(model2));
-					}
-				default:
-					var _v4 = model.dirs.leftDir;
-					if (_v4.$ === 'Nothing') {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					} else {
-						var files = _v4.a;
-						var model2 = _Utils_update(
-							model,
-							{
-								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
-								loading: $author$project$UiExperiment$Loading
-							});
-						return _Utils_Tuple2(
-							model2,
-							$author$project$UiExperiment$httpLoadFiles(model2));
-					}
-			}
-		}
+										{
+											files: _List_Nil,
+											pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
+											showHidden: false
+										}),
+									loading: $author$project$UiExperiment$Loading
+								});
+							return _Utils_Tuple2(
+								model2,
+								$author$project$UiExperiment$httpLoadFiles(model2));
+						}
+					case 'LoadChild':
+						var child = msg.a;
+						var _v3 = model.dirs.leftDir;
+						if (_v3.$ === 'Nothing') {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var files = _v3.a;
+							var model2 = _Utils_update(
+								model,
+								{
+									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+										{
+											files: _List_Nil,
+											pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
+											showHidden: model.toggle_hidden
+										}),
+									loading: $author$project$UiExperiment$Loading
+								});
+							return _Utils_Tuple2(
+								model2,
+								$author$project$UiExperiment$httpLoadFiles(model2));
+						}
+					default:
+						var _v4 = model.dirs.leftDir;
+						if (_v4.$ === 'Nothing') {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var files = _v4.a;
+							var model2 = _Utils_update(
+								model,
+								{
+									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+										{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
+									loading: $author$project$UiExperiment$Loading
+								});
+							return _Utils_Tuple2(
+								model2,
+								$author$project$UiExperiment$httpLoadFiles(model2));
+						}
+				}
+			}());
 	});
 var $author$project$UiExperiment$LoadFiles = {$: 'LoadFiles'};
 var $author$project$UiExperiment$Toggle = {$: 'Toggle'};
@@ -12429,8 +12436,10 @@ var $mdgriffith$elm_ui$Element$rgb255 = F3(
 var $author$project$UiExperiment$color = {
 	blue: A3($mdgriffith$elm_ui$Element$rgb255, 114, 159, 207),
 	darkCharcoal: A3($mdgriffith$elm_ui$Element$rgb255, 46, 52, 54),
+	green: A3($mdgriffith$elm_ui$Element$rgb255, 0, 255, 0),
 	lightBlue: A3($mdgriffith$elm_ui$Element$rgb255, 197, 232, 247),
 	lightGrey: A3($mdgriffith$elm_ui$Element$rgb255, 224, 224, 224),
+	red: A3($mdgriffith$elm_ui$Element$rgb255, 255, 0, 0),
 	white: A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255),
 	yellow: A3($mdgriffith$elm_ui$Element$rgb255, 255, 235, 0)
 };
@@ -12509,6 +12518,10 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 			f,
 			f));
 };
+var $author$project$UiExperiment$FileDoRead = F2(
+	function (a, b) {
+		return {$: 'FileDoRead', a: a, b: b};
+	});
 var $author$project$UiExperiment$LoadChild = function (a) {
 	return {$: 'LoadChild', a: a};
 };
@@ -12527,7 +12540,7 @@ var $author$project$UiExperiment$panel_files = F2(
 				$elm$core$List$map,
 				function (x) {
 					var isDirectory = x.ftype === 'directory';
-					return isDirectory ? A2(
+					return (x.ftype === 'directory') ? A2(
 						$mdgriffith$elm_ui$Element$Input$button,
 						_List_fromArray(
 							[
@@ -12541,13 +12554,41 @@ var $author$project$UiExperiment$panel_files = F2(
 							label: $mdgriffith$elm_ui$Element$text(x.name),
 							onPress: $elm$core$Maybe$Just(
 								$author$project$UiExperiment$LoadChild(x.name))
+						}) : ((x.ftype === 'file') ? A2(
+						$mdgriffith$elm_ui$Element$Input$button,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(1),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$Border$width(1),
+								$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.red),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.yellow)
+							]),
+						{
+							label: $mdgriffith$elm_ui$Element$text(x.name),
+							onPress: $elm$core$Maybe$Just(
+								A2($author$project$UiExperiment$FileDoRead, files.pwd.original, x.name))
+						}) : ((x.ftype === 'link') ? A2(
+						$mdgriffith$elm_ui$Element$Input$button,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(1),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$Border$width(1),
+								$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.green),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.red)
+							]),
+						{
+							label: $mdgriffith$elm_ui$Element$text(x.name),
+							onPress: $elm$core$Maybe$Just(
+								A2($author$project$UiExperiment$FileDoRead, files.pwd.original, x.name))
 						}) : A2(
 						$mdgriffith$elm_ui$Element$el,
 						(x.mtime === '') ? _List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Background$color($author$project$UiExperiment$color.yellow)
 							]) : _List_Nil,
-						$mdgriffith$elm_ui$Element$text(x.name));
+						$mdgriffith$elm_ui$Element$text(x.name))));
 				},
 				files.files));
 	});
@@ -13124,7 +13165,6 @@ var $mdgriffith$elm_ui$Element$row = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
-var $elm$core$Debug$toString = _Debug_toString;
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(
