@@ -12765,6 +12765,8 @@ var $author$project$UiExperiment$file_panel_right = function (model) {
 	return A2($author$project$UiExperiment$file_panel, model, 'right');
 };
 var $author$project$UiExperiment$green = A3($mdgriffith$elm_ui$Element$rgb255, 39, 203, 139);
+var $mdgriffith$elm_ui$Internal$Model$unstyled = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Unstyled, $elm$core$Basics$always);
+var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
 	function (a, b, c) {
 		return {$: 'Label', a: a, b: b, c: c};
@@ -13196,6 +13198,7 @@ var $mdgriffith$elm_ui$Element$paragraph = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
+var $elm$html$Html$pre = _VirtualDom_node('pre');
 var $mdgriffith$elm_ui$Element$rgb = F3(
 	function (r, g, b) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, r, g, b, 1);
@@ -13408,6 +13411,51 @@ var $author$project$UiExperiment$view = function (model) {
 						label: $mdgriffith$elm_ui$Element$text('Load Files'),
 						onPress: $elm$core$Maybe$Just($author$project$UiExperiment$LoadFiles)
 					}),
+					function () {
+					var _v1 = model.fileContent;
+					if (_v1.$ === 'Nothing') {
+						return A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$padding(20)
+								]),
+							A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$padding(10),
+										$mdgriffith$elm_ui$Element$Border$width(5),
+										$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.red)
+									]),
+								A2(
+									$mdgriffith$elm_ui$Element$paragraph,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$text(
+											$elm$core$Debug$toString(model.fileContent))
+										]))));
+					} else {
+						var txt = _v1.a;
+						return A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$padding(10),
+									$mdgriffith$elm_ui$Element$Border$width(5),
+									$mdgriffith$elm_ui$Element$Border$color($author$project$UiExperiment$color.green)
+								]),
+							$mdgriffith$elm_ui$Element$html(
+								A2(
+									$elm$html$Html$pre,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(txt)
+										]))));
+					}
+				}(),
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(

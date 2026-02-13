@@ -522,6 +522,29 @@ view model =
                     ]
                 ]
                 { onPress = Just LoadFiles, label = text "Load Files" }
+            , case model.fileContent of
+                Nothing ->
+                    el [ padding 20 ]
+                        (el
+                            [ padding 10
+                            , Border.width 5
+                            , Border.color color.red
+                            ]
+                            (paragraph [] [ text (Debug.toString model.fileContent) ])
+                        )
+
+                Just txt ->
+                    el
+                        [ padding 10
+                        , Border.width 5
+                        , Border.color color.green
+                        ]
+                        (Element.html
+                            (Html.pre
+                                []
+                                [ Html.text txt ]
+                            )
+                        )
             , el [ padding 20 ]
                 (el
                     [ padding 10
