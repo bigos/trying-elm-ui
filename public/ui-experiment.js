@@ -5374,38 +5374,6 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$element = _Browser_element;
 var $elm$json$Json$Decode$field = _Json_decodeField;
-var $author$project$UiExperiment$NotLoadingYet = {$: 'NotLoadingYet'};
-var $author$project$UiExperiment$new_model = function (flags) {
-	return {
-		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
-		fileContent: $elm$core$Maybe$Nothing,
-		flags: flags,
-		loading: $author$project$UiExperiment$NotLoadingYet,
-		toggle_hidden: true
-	};
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$UiExperiment$init = function (flags) {
-	var m = $author$project$UiExperiment$new_model(flags);
-	return _Utils_Tuple2(m, $elm$core$Platform$Cmd$none);
-};
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$core$Platform$Sub$batch = _Platform_batch;
-var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$UiExperiment$subscriptions = function (_v0) {
-	return $elm$core$Platform$Sub$none;
-};
-var $author$project$UiExperiment$Loaded = {$: 'Loaded'};
-var $author$project$UiExperiment$Loading = {$: 'Loading'};
-var $author$project$UiExperiment$Reload = {$: 'Reload'};
-var $elm$core$String$append = _String_append;
-var $author$project$UiExperiment$buildOnlyLeftDir = function (dir) {
-	return {
-		leftDir: $elm$core$Maybe$Just(dir),
-		rightDir: $elm$core$Maybe$Nothing
-	};
-};
 var $author$project$UiExperiment$LoadedFiles = function (a) {
 	return {$: 'LoadedFiles', a: a};
 };
@@ -6034,6 +6002,7 @@ var $author$project$UiExperiment$CorrectedString = F2(
 	});
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$hardcoded = A2($elm$core$Basics$composeR, $elm$json$Json$Decode$succeed, $NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom);
+var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$UiExperiment$correctedStringDecoder = A2(
 	$elm$json$Json$Decode$andThen,
 	function (cstr) {
@@ -6325,6 +6294,37 @@ var $author$project$UiExperiment$httpLoadFiles = function (model) {
 			url: _Utils_ap(domain, path)
 		});
 };
+var $author$project$UiExperiment$NotLoadingYet = {$: 'NotLoadingYet'};
+var $author$project$UiExperiment$new_model = function (flags) {
+	return {
+		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
+		fileContent: $elm$core$Maybe$Nothing,
+		flags: flags,
+		loading: $author$project$UiExperiment$NotLoadingYet,
+		toggle_hidden: true
+	};
+};
+var $author$project$UiExperiment$init = function (flags) {
+	var m = $author$project$UiExperiment$new_model(flags);
+	return _Utils_Tuple2(
+		m,
+		$author$project$UiExperiment$httpLoadFiles(m));
+};
+var $elm$core$Platform$Sub$batch = _Platform_batch;
+var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$UiExperiment$subscriptions = function (_v0) {
+	return $elm$core$Platform$Sub$none;
+};
+var $author$project$UiExperiment$Loaded = {$: 'Loaded'};
+var $author$project$UiExperiment$Loading = {$: 'Loading'};
+var $author$project$UiExperiment$Reload = {$: 'Reload'};
+var $elm$core$String$append = _String_append;
+var $author$project$UiExperiment$buildOnlyLeftDir = function (dir) {
+	return {
+		leftDir: $elm$core$Maybe$Just(dir),
+		rightDir: $elm$core$Maybe$Nothing
+	};
+};
 var $author$project$UiExperiment$FileDidRead = function (a) {
 	return {$: 'FileDidRead', a: a};
 };
@@ -6365,6 +6365,8 @@ var $author$project$UiExperiment$httpReadFile = F3(
 			});
 	});
 var $elm$core$Debug$log = _Debug_log;
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Basics$not = _Basics_not;
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -6573,6 +6575,7 @@ var $author$project$UiExperiment$update = F2(
 											pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
 											showHidden: false
 										}),
+									fileContent: $elm$core$Maybe$Nothing,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(
@@ -6595,6 +6598,7 @@ var $author$project$UiExperiment$update = F2(
 											pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
 											showHidden: model.toggle_hidden
 										}),
+									fileContent: $elm$core$Maybe$Nothing,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(
@@ -6612,6 +6616,7 @@ var $author$project$UiExperiment$update = F2(
 								{
 									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
 										{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
+									fileContent: $elm$core$Maybe$Nothing,
 									loading: $author$project$UiExperiment$Loading
 								});
 							return _Utils_Tuple2(

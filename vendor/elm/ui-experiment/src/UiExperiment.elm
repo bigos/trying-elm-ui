@@ -95,7 +95,7 @@ init flags =
         m =
             new_model flags
     in
-    ( m, Cmd.none )
+    ( m, httpLoadFiles m )
 
 
 
@@ -202,6 +202,7 @@ update msg model =
                                             , showHidden = False
                                             , files = []
                                             }
+                                    , fileContent = Nothing
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
@@ -226,6 +227,7 @@ update msg model =
                                             , showHidden = model.toggle_hidden
                                             , files = []
                                             }
+                                    , fileContent = Nothing
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
@@ -246,6 +248,7 @@ update msg model =
                                             , showHidden = model.toggle_hidden
                                             , files = []
                                             }
+                                    , fileContent = Nothing
                                 }
                         in
                         ( model2, httpLoadFiles model2 )
