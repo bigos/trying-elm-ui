@@ -5378,6 +5378,7 @@ var $author$project$UiExperiment$NotLoadingYet = {$: 'NotLoadingYet'};
 var $author$project$UiExperiment$new_model = function (flags) {
 	return {
 		dirs: {leftDir: $elm$core$Maybe$Nothing, rightDir: $elm$core$Maybe$Nothing},
+		fileContent: $elm$core$Maybe$Nothing,
 		flags: flags,
 		loading: $author$project$UiExperiment$NotLoadingYet,
 		toggle_hidden: true
@@ -6512,7 +6513,18 @@ var $author$project$UiExperiment$update = F2(
 							A3($author$project$UiExperiment$httpReadFile, model, pwd, fname));
 					case 'FileDidRead':
 						var result = msg.a;
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						if (result.$ === 'Ok') {
+							var fullText = result.a;
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										fileContent: $elm$core$Maybe$Just(fullText)
+									}),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						}
 					case 'LoadFiles':
 						return _Utils_Tuple2(
 							_Utils_update(
@@ -6569,11 +6581,11 @@ var $author$project$UiExperiment$update = F2(
 						}
 					case 'LoadChild':
 						var child = msg.a;
-						var _v3 = model.dirs.leftDir;
-						if (_v3.$ === 'Nothing') {
+						var _v4 = model.dirs.leftDir;
+						if (_v4.$ === 'Nothing') {
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						} else {
-							var files = _v3.a;
+							var files = _v4.a;
 							var model2 = _Utils_update(
 								model,
 								{
@@ -6590,11 +6602,11 @@ var $author$project$UiExperiment$update = F2(
 								$author$project$UiExperiment$httpLoadFiles(model2));
 						}
 					default:
-						var _v4 = model.dirs.leftDir;
-						if (_v4.$ === 'Nothing') {
+						var _v5 = model.dirs.leftDir;
+						if (_v5.$ === 'Nothing') {
 							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 						} else {
-							var files = _v4.a;
+							var files = _v5.a;
 							var model2 = _Utils_update(
 								model,
 								{

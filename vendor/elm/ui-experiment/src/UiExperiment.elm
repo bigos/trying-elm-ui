@@ -33,6 +33,7 @@ type alias Model =
     , flags : Flags
     , dirs : Dirs
     , loading : LoadState
+    , fileContent : Maybe String
     }
 
 
@@ -84,6 +85,7 @@ new_model flags =
     , dirs = { leftDir = Nothing, rightDir = Nothing }
     , flags = flags
     , loading = NotLoadingYet
+    , fileContent = Nothing
     }
 
 
@@ -126,7 +128,14 @@ update msg model =
                 ( model, httpReadFile model pwd fname )
 
             FileDidRead result ->
-                ( model, Cmd.none )
+                case result of
+                    Ok fullText ->
+                        ( { model | fileContent = Just fullText }
+                        , Cmd.none
+                        )
+
+                    Err _ ->
+                        ( model, Cmd.none )
 
             LoadFiles ->
                 ( { model | loading = Loading }
