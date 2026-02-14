@@ -19,6 +19,7 @@ import NoExposingEverything
 import NoImportingEverything
 import NoMissingTypeAnnotation
 import NoMissingTypeAnnotationInLetIn
+import NoMissingTypeConstructor
 import NoMissingTypeExpose
 import NoPrematureLetComputation
 import NoSimpleLetBody
@@ -55,5 +56,6 @@ config =
     , NoUnused.Parameters.rule
     , NoUnused.Patterns.rule
     , NoUnused.Variables.rule
+    , NoMissingTypeConstructor.rule
     , Simplify.rule Simplify.defaults
     ]
