@@ -1,4 +1,4 @@
-module UiExperiment exposing (CorrectedString, Dirs, FileObject, Files, Flags, LoadState, Model)
+module UiExperiment exposing (CorrectedString, Dirs, FileContentLoadState, FileObject, Files, Flags, LoadState, Model)
 
 import Browser
 import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
@@ -121,146 +121,144 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    Debug.log (Debug.toString msg)
-        (case msg of
-            Toggle ->
-                let
-                    model2 =
-                        { model | toggle_hidden = not model.toggle_hidden }
-                in
-                update Reload model2
+    case msg of
+        Toggle ->
+            let
+                model2 =
+                    { model | toggle_hidden = not model.toggle_hidden }
+            in
+            update Reload model2
 
-            FileDoRead pwd fname ->
-                ( { model | fileContent = FileContentLoading }
-                , httpReadFile model pwd fname
-                )
+        FileDoRead pwd fname ->
+            ( { model | fileContent = FileContentLoading }
+            , httpReadFile model pwd fname
+            )
 
-            FileDidRead result ->
-                case result of
-                    Ok fullText ->
-                        ( { model | fileContent = FileContentLoaded fullText }
-                        , Cmd.none
-                        )
+        FileDidRead result ->
+            case result of
+                Ok fullText ->
+                    ( { model | fileContent = FileContentLoaded fullText }
+                    , Cmd.none
+                    )
 
-                    Err _ ->
-                        ( model, Cmd.none )
+                Err _ ->
+                    ( model, Cmd.none )
 
-            LoadFiles ->
-                ( { model | loading = Loading }
-                , httpLoadFiles model
-                )
+        LoadFiles ->
+            ( { model | loading = Loading }
+            , httpLoadFiles model
+            )
 
-            LoadedFiles result ->
-                case result of
-                    Ok fullText ->
-                        ( { model
-                            | loading = Loaded
-                            , dirs =
-                                buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
-                          }
-                        , Cmd.none
-                        )
+        LoadedFiles result ->
+            case result of
+                Ok fullText ->
+                    ( { model
+                        | loading = Loaded
+                        , dirs =
+                            buildOnlyLeftDir { pwd = fullText.pwd, showHidden = fullText.showHidden, files = fullText.files }
+                      }
+                    , Cmd.none
+                    )
 
-                    Err _ ->
-                        ( model, Cmd.none )
+                Err _ ->
+                    ( model, Cmd.none )
 
-            LoadParent ->
-                let
-                    m1fx =
-                        model.dirs.leftDir
-                in
-                case m1fx of
-                    Nothing ->
-                        ( model, Cmd.none )
+        LoadParent ->
+            let
+                m1fx =
+                    model.dirs.leftDir
+            in
+            case m1fx of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just files ->
-                        -- create new parent model
-                        let
-                            pwdx =
-                                files.pwd.original
+                Just files ->
+                    -- create new parent model
+                    let
+                        pwdx =
+                            files.pwd.original
 
-                            pwdxSplit =
-                                String.split "/" pwdx
+                        pwdxSplit =
+                            String.split "/" pwdx
 
-                            pwdxLen =
-                                List.length pwdxSplit
+                        pwdxLen =
+                            List.length pwdxSplit
 
-                            pwdxStr =
-                                pwdxSplit
-                                    |> List.take (pwdxLen - 1)
-                                    |> String.join "/"
-                                    |> String.append "/"
+                        pwdxStr =
+                            pwdxSplit
+                                |> List.take (pwdxLen - 1)
+                                |> String.join "/"
+                                |> String.append "/"
 
-                            pwdxStrOk =
-                                if String.slice 0 2 pwdxStr == "//" then
-                                    String.dropLeft 1 pwdxStr
+                        pwdxStrOk =
+                            if String.slice 0 2 pwdxStr == "//" then
+                                String.dropLeft 1 pwdxStr
 
-                                else
-                                    pwdxStr
+                            else
+                                pwdxStr
 
-                            model2 =
-                                { model
-                                    | loading = Loading
-                                    , dirs =
-                                        buildOnlyLeftDir
-                                            { pwd =
-                                                { original = pwdxStrOk
-                                                , corrected = Nothing
-                                                }
-                                            , showHidden = False
-                                            , files = []
+                        model2 =
+                            { model
+                                | loading = Loading
+                                , dirs =
+                                    buildOnlyLeftDir
+                                        { pwd =
+                                            { original = pwdxStrOk
+                                            , corrected = Nothing
                                             }
-                                    , fileContent = FileContentEmpty
-                                }
-                        in
-                        ( model2, httpLoadFiles model2 )
+                                        , showHidden = False
+                                        , files = []
+                                        }
+                                , fileContent = FileContentEmpty
+                            }
+                    in
+                    ( model2, httpLoadFiles model2 )
 
-            LoadChild child ->
-                case model.dirs.leftDir of
-                    Nothing ->
-                        ( model, Cmd.none )
+        LoadChild child ->
+            case model.dirs.leftDir of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just files ->
-                        let
-                            model2 =
-                                { model
-                                    | loading = Loading
-                                    , dirs =
-                                        buildOnlyLeftDir
-                                            { pwd =
-                                                { original =
-                                                    files.pwd.original ++ "/" ++ child
-                                                , corrected = Nothing
-                                                }
-                                            , showHidden = model.toggle_hidden
-                                            , files = []
+                Just files ->
+                    let
+                        model2 =
+                            { model
+                                | loading = Loading
+                                , dirs =
+                                    buildOnlyLeftDir
+                                        { pwd =
+                                            { original =
+                                                files.pwd.original ++ "/" ++ child
+                                            , corrected = Nothing
                                             }
-                                    , fileContent = FileContentEmpty
-                                }
-                        in
-                        ( model2, httpLoadFiles model2 )
+                                        , showHidden = model.toggle_hidden
+                                        , files = []
+                                        }
+                                , fileContent = FileContentEmpty
+                            }
+                    in
+                    ( model2, httpLoadFiles model2 )
 
-            Reload ->
-                case model.dirs.leftDir of
-                    Nothing ->
-                        ( model, Cmd.none )
+        Reload ->
+            case model.dirs.leftDir of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                    Just files ->
-                        let
-                            model2 =
-                                { model
-                                    | loading = Loading
-                                    , dirs =
-                                        buildOnlyLeftDir
-                                            { pwd = files.pwd
-                                            , showHidden = model.toggle_hidden
-                                            , files = []
-                                            }
-                                    , fileContent = FileContentEmpty
-                                }
-                        in
-                        ( model2, httpLoadFiles model2 )
-        )
+                Just files ->
+                    let
+                        model2 =
+                            { model
+                                | loading = Loading
+                                , dirs =
+                                    buildOnlyLeftDir
+                                        { pwd = files.pwd
+                                        , showHidden = model.toggle_hidden
+                                        , files = []
+                                        }
+                                , fileContent = FileContentEmpty
+                            }
+                    in
+                    ( model2, httpLoadFiles model2 )
 
 
 
@@ -268,7 +266,7 @@ update msg model =
 
 
 httpReadFile : Model -> String -> String -> Cmd Msg
-httpReadFile model pwd fname =
+httpReadFile model _ fname =
     let
         domain : String
         domain =
@@ -412,10 +410,6 @@ panel_files _ files =
     column []
         (List.map
             (\x ->
-                let
-                    isDirectory =
-                        x.ftype == "directory"
-                in
                 if x.ftype == "directory" then
                     Input.button
                         [ padding 1

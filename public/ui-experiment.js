@@ -6340,7 +6340,7 @@ var $elm$http$Http$expectString = function (toMsg) {
 		$elm$http$Http$resolve($elm$core$Result$Ok));
 };
 var $author$project$UiExperiment$httpReadFile = F3(
-	function (model, pwd, fname) {
+	function (model, _v0, fname) {
 		var path = '/api/read-file';
 		var domain = 'http://127.0.0.1:3000';
 		return $elm$http$Http$post(
@@ -6353,11 +6353,11 @@ var $author$project$UiExperiment$httpReadFile = F3(
 								'pwd',
 								$elm$json$Json$Encode$string(
 									function () {
-										var _v0 = model.dirs.leftDir;
-										if (_v0.$ === 'Nothing') {
+										var _v1 = model.dirs.leftDir;
+										if (_v1.$ === 'Nothing') {
 											return '/home/jacek';
 										} else {
-											var files = _v0.a;
+											var files = _v1.a;
 											return files.pwd.original;
 										}
 									}())),
@@ -6369,7 +6369,6 @@ var $author$project$UiExperiment$httpReadFile = F3(
 				url: _Utils_ap(domain, path)
 			});
 	});
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Basics$not = _Basics_not;
@@ -6499,139 +6498,140 @@ var $elm$core$List$take = F2(
 	function (n, list) {
 		return A3($elm$core$List$takeFast, 0, n, list);
 	});
-var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$UiExperiment$update = F2(
 	function (msg, model) {
-		return A2(
-			$elm$core$Debug$log,
-			$elm$core$Debug$toString(msg),
-			function () {
-				switch (msg.$) {
-					case 'Toggle':
+		update:
+		while (true) {
+			switch (msg.$) {
+				case 'Toggle':
+					var model2 = _Utils_update(
+						model,
+						{toggle_hidden: !model.toggle_hidden});
+					var $temp$msg = $author$project$UiExperiment$Reload,
+						$temp$model = model2;
+					msg = $temp$msg;
+					model = $temp$model;
+					continue update;
+				case 'FileDoRead':
+					var pwd = msg.a;
+					var fname = msg.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{fileContent: $author$project$UiExperiment$FileContentLoading}),
+						A3($author$project$UiExperiment$httpReadFile, model, pwd, fname));
+				case 'FileDidRead':
+					var result = msg.a;
+					if (result.$ === 'Ok') {
+						var fullText = result.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									fileContent: $author$project$UiExperiment$FileContentLoaded(fullText)
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 'LoadFiles':
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{loading: $author$project$UiExperiment$Loading}),
+						$author$project$UiExperiment$httpLoadFiles(model));
+				case 'LoadedFiles':
+					var result = msg.a;
+					if (result.$ === 'Ok') {
+						var fullText = result.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+										{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden}),
+									loading: $author$project$UiExperiment$Loaded
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 'LoadParent':
+					var m1fx = model.dirs.leftDir;
+					if (m1fx.$ === 'Nothing') {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var files = m1fx.a;
+						var pwdx = files.pwd.original;
+						var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
+						var pwdxLen = $elm$core$List$length(pwdxSplit);
+						var pwdxStr = A2(
+							$elm$core$String$append,
+							'/',
+							A2(
+								$elm$core$String$join,
+								'/',
+								A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
+						var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
 						var model2 = _Utils_update(
 							model,
-							{toggle_hidden: !model.toggle_hidden});
-						return A2($author$project$UiExperiment$update, $author$project$UiExperiment$Reload, model2);
-					case 'FileDoRead':
-						var pwd = msg.a;
-						var fname = msg.b;
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{fileContent: $author$project$UiExperiment$FileContentLoading}),
-							A3($author$project$UiExperiment$httpReadFile, model, pwd, fname));
-					case 'FileDidRead':
-						var result = msg.a;
-						if (result.$ === 'Ok') {
-							var fullText = result.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
+							{
+								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
 									{
-										fileContent: $author$project$UiExperiment$FileContentLoaded(fullText)
+										files: _List_Nil,
+										pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
+										showHidden: false
 									}),
-								$elm$core$Platform$Cmd$none);
-						} else {
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						}
-					case 'LoadFiles':
+								fileContent: $author$project$UiExperiment$FileContentEmpty,
+								loading: $author$project$UiExperiment$Loading
+							});
 						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{loading: $author$project$UiExperiment$Loading}),
-							$author$project$UiExperiment$httpLoadFiles(model));
-					case 'LoadedFiles':
-						var result = msg.a;
-						if (result.$ === 'Ok') {
-							var fullText = result.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
+					}
+				case 'LoadChild':
+					var child = msg.a;
+					var _v4 = model.dirs.leftDir;
+					if (_v4.$ === 'Nothing') {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var files = _v4.a;
+						var model2 = _Utils_update(
+							model,
+							{
+								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
 									{
-										dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-											{files: fullText.files, pwd: fullText.pwd, showHidden: fullText.showHidden}),
-										loading: $author$project$UiExperiment$Loaded
+										files: _List_Nil,
+										pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
+										showHidden: model.toggle_hidden
 									}),
-								$elm$core$Platform$Cmd$none);
-						} else {
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						}
-					case 'LoadParent':
-						var m1fx = model.dirs.leftDir;
-						if (m1fx.$ === 'Nothing') {
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						} else {
-							var files = m1fx.a;
-							var pwdx = files.pwd.original;
-							var pwdxSplit = A2($elm$core$String$split, '/', pwdx);
-							var pwdxLen = $elm$core$List$length(pwdxSplit);
-							var pwdxStr = A2(
-								$elm$core$String$append,
-								'/',
-								A2(
-									$elm$core$String$join,
-									'/',
-									A2($elm$core$List$take, pwdxLen - 1, pwdxSplit)));
-							var pwdxStrOk = (A3($elm$core$String$slice, 0, 2, pwdxStr) === '//') ? A2($elm$core$String$dropLeft, 1, pwdxStr) : pwdxStr;
-							var model2 = _Utils_update(
-								model,
-								{
-									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-										{
-											files: _List_Nil,
-											pwd: {corrected: $elm$core$Maybe$Nothing, original: pwdxStrOk},
-											showHidden: false
-										}),
-									fileContent: $author$project$UiExperiment$FileContentEmpty,
-									loading: $author$project$UiExperiment$Loading
-								});
-							return _Utils_Tuple2(
-								model2,
-								$author$project$UiExperiment$httpLoadFiles(model2));
-						}
-					case 'LoadChild':
-						var child = msg.a;
-						var _v4 = model.dirs.leftDir;
-						if (_v4.$ === 'Nothing') {
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						} else {
-							var files = _v4.a;
-							var model2 = _Utils_update(
-								model,
-								{
-									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-										{
-											files: _List_Nil,
-											pwd: {corrected: $elm$core$Maybe$Nothing, original: files.pwd.original + ('/' + child)},
-											showHidden: model.toggle_hidden
-										}),
-									fileContent: $author$project$UiExperiment$FileContentEmpty,
-									loading: $author$project$UiExperiment$Loading
-								});
-							return _Utils_Tuple2(
-								model2,
-								$author$project$UiExperiment$httpLoadFiles(model2));
-						}
-					default:
-						var _v5 = model.dirs.leftDir;
-						if (_v5.$ === 'Nothing') {
-							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-						} else {
-							var files = _v5.a;
-							var model2 = _Utils_update(
-								model,
-								{
-									dirs: $author$project$UiExperiment$buildOnlyLeftDir(
-										{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
-									fileContent: $author$project$UiExperiment$FileContentEmpty,
-									loading: $author$project$UiExperiment$Loading
-								});
-							return _Utils_Tuple2(
-								model2,
-								$author$project$UiExperiment$httpLoadFiles(model2));
-						}
-				}
-			}());
+								fileContent: $author$project$UiExperiment$FileContentEmpty,
+								loading: $author$project$UiExperiment$Loading
+							});
+						return _Utils_Tuple2(
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
+					}
+				default:
+					var _v5 = model.dirs.leftDir;
+					if (_v5.$ === 'Nothing') {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var files = _v5.a;
+						var model2 = _Utils_update(
+							model,
+							{
+								dirs: $author$project$UiExperiment$buildOnlyLeftDir(
+									{files: _List_Nil, pwd: files.pwd, showHidden: model.toggle_hidden}),
+								fileContent: $author$project$UiExperiment$FileContentEmpty,
+								loading: $author$project$UiExperiment$Loading
+							});
+						return _Utils_Tuple2(
+							model2,
+							$author$project$UiExperiment$httpLoadFiles(model2));
+					}
+			}
+		}
 	});
 var $author$project$UiExperiment$LoadFiles = {$: 'LoadFiles'};
 var $author$project$UiExperiment$Toggle = {$: 'Toggle'};
@@ -12604,7 +12604,6 @@ var $author$project$UiExperiment$panel_files = F2(
 			A2(
 				$elm$core$List$map,
 				function (x) {
-					var isDirectory = x.ftype === 'directory';
 					return (x.ftype === 'directory') ? A2(
 						$mdgriffith$elm_ui$Element$Input$button,
 						_List_fromArray(
@@ -13233,6 +13232,7 @@ var $mdgriffith$elm_ui$Element$row = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
+var $elm$core$Debug$toString = _Debug_toString;
 var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
 var $mdgriffith$elm_ui$Internal$Model$InFront = {$: 'InFront'};
 var $mdgriffith$elm_ui$Element$createNearby = F2(
