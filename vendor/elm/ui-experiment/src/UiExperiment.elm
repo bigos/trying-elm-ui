@@ -1,13 +1,14 @@
 module UiExperiment exposing (CorrectedString, Dirs, FileContentLoadState, FileObject, Files, Flags, LoadState, Model)
 
 import Browser
-import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
+import Element exposing (Color, Element, alignTop, centerY, column, el, fill, height, html, htmlAttribute, inFront, layout, mouseDown, mouseOver, moveRight, padding, paragraph, px, rgb, rgb255, row, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes as HA
+import Html.Events exposing (keyCode, on, onInput)
 import Http
 import Json.Decode as Decode exposing (Decoder, andThen, bool, int, list, string)
 import Json.Decode.Pipeline exposing (hardcoded, required)
@@ -117,11 +118,26 @@ type Msg
     | LoadedFiles (Result Http.Error Files)
     | LoadParent
     | LoadChild String
+    | ValidationInput String
+    | ValidationKeyUp Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    -- Debug.log (Debug.toString msg) <|
     case msg of
+        ValidationInput string ->
+            ( model, Cmd.none )
+
+        ValidationKeyUp keyCode ->
+            case keyCode of
+                13 ->
+                    Debug.log "Return"
+                        ( model, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         Toggle ->
             let
                 model2 =
@@ -454,13 +470,27 @@ panel_files _ files =
         )
 
 
+onKeyUp : (Int -> msg) -> Html.Attribute msg
+onKeyUp tagger =
+    on "keyup" (Decode.map tagger keyCode)
+
+
 view : Model -> Html Msg
 view model =
     -- elm-ui layout
     layout
         []
         (column []
-            [ text "Hello Elm-UI!"
+            [ html
+                (Html.input
+                    [ HA.type_ "text"
+                    , onInput ValidationInput
+                    , onKeyUp ValidationKeyUp
+                    ]
+                    []
+                )
+            , html (Html.hr [] [])
+            , text "Hello Elm-UI!"
 
             -- , Element.text (Debug.toString model)
             , Input.checkbox [ padding 10 ] <|

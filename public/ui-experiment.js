@@ -6369,6 +6369,7 @@ var $author$project$UiExperiment$httpReadFile = F3(
 				url: _Utils_ap(domain, path)
 			});
 	});
+var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$core$Basics$not = _Basics_not;
@@ -6503,6 +6504,19 @@ var $author$project$UiExperiment$update = F2(
 		update:
 		while (true) {
 			switch (msg.$) {
+				case 'ValidationInput':
+					var string = msg.a;
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				case 'ValidationKeyUp':
+					var keyCode = msg.a;
+					if (keyCode === 13) {
+						return A2(
+							$elm$core$Debug$log,
+							'Return',
+							_Utils_Tuple2(model, $elm$core$Platform$Cmd$none));
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
 				case 'Toggle':
 					var model2 = _Utils_update(
 						model,
@@ -6591,11 +6605,11 @@ var $author$project$UiExperiment$update = F2(
 					}
 				case 'LoadChild':
 					var child = msg.a;
-					var _v4 = model.dirs.leftDir;
-					if (_v4.$ === 'Nothing') {
+					var _v5 = model.dirs.leftDir;
+					if (_v5.$ === 'Nothing') {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
-						var files = _v4.a;
+						var files = _v5.a;
 						var model2 = _Utils_update(
 							model,
 							{
@@ -6613,11 +6627,11 @@ var $author$project$UiExperiment$update = F2(
 							$author$project$UiExperiment$httpLoadFiles(model2));
 					}
 				default:
-					var _v5 = model.dirs.leftDir;
-					if (_v5.$ === 'Nothing') {
+					var _v6 = model.dirs.leftDir;
+					if (_v6.$ === 'Nothing') {
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 					} else {
-						var files = _v5.a;
+						var files = _v6.a;
 						var model2 = _Utils_update(
 							model,
 							{
@@ -6635,6 +6649,12 @@ var $author$project$UiExperiment$update = F2(
 	});
 var $author$project$UiExperiment$LoadFiles = {$: 'LoadFiles'};
 var $author$project$UiExperiment$Toggle = {$: 'Toggle'};
+var $author$project$UiExperiment$ValidationInput = function (a) {
+	return {$: 'ValidationInput', a: a};
+};
+var $author$project$UiExperiment$ValidationKeyUp = function (a) {
+	return {$: 'ValidationKeyUp', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
 	return {$: 'AlignY', a: a};
 };
@@ -12776,8 +12796,10 @@ var $author$project$UiExperiment$file_panel_right = function (model) {
 	return A2($author$project$UiExperiment$file_panel, model, 'right');
 };
 var $author$project$UiExperiment$green = A3($mdgriffith$elm_ui$Element$rgb255, 39, 203, 139);
+var $elm$html$Html$hr = _VirtualDom_node('hr');
 var $mdgriffith$elm_ui$Internal$Model$unstyled = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Unstyled, $elm$core$Basics$always);
 var $mdgriffith$elm_ui$Element$html = $mdgriffith$elm_ui$Internal$Model$unstyled;
+var $elm$html$Html$input = _VirtualDom_node('input');
 var $mdgriffith$elm_ui$Element$Input$Label = F3(
 	function (a, b, c) {
 		return {$: 'Label', a: a, b: b, c: c};
@@ -13190,6 +13212,44 @@ var $mdgriffith$elm_ui$Element$mouseOver = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Hover,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Events$keyCode = A2($elm$json$Json$Decode$field, 'keyCode', $elm$json$Json$Decode$int);
+var $author$project$UiExperiment$onKeyUp = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'keyup',
+		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$keyCode));
+};
 var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
 var $mdgriffith$elm_ui$Element$paragraph = F2(
 	function (attrs, children) {
@@ -13319,6 +13379,7 @@ var $author$project$UiExperiment$toggleCheckboxWidget = F2(
 				]),
 			$mdgriffith$elm_ui$Element$text(''));
 	});
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $author$project$UiExperiment$white = A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255);
 var $author$project$UiExperiment$view = function (model) {
 	return A2(
@@ -13329,6 +13390,18 @@ var $author$project$UiExperiment$view = function (model) {
 			_List_Nil,
 			_List_fromArray(
 				[
+					$mdgriffith$elm_ui$Element$html(
+					A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$type_('text'),
+								$elm$html$Html$Events$onInput($author$project$UiExperiment$ValidationInput),
+								$author$project$UiExperiment$onKeyUp($author$project$UiExperiment$ValidationKeyUp)
+							]),
+						_List_Nil)),
+					$mdgriffith$elm_ui$Element$html(
+					A2($elm$html$Html$hr, _List_Nil, _List_Nil)),
 					$mdgriffith$elm_ui$Element$text('Hello Elm-UI!'),
 					A2(
 					$mdgriffith$elm_ui$Element$Input$checkbox,
