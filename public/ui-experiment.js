@@ -6505,7 +6505,6 @@ var $author$project$UiExperiment$update = F2(
 		while (true) {
 			switch (msg.$) {
 				case 'ValidationInput':
-					var string = msg.a;
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				case 'ValidationKeyUp':
 					var keyCode = msg.a;
