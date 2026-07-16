@@ -77,7 +77,7 @@ function A9(fun, a, b, c, d, e, f, g, h, i) {
   return fun.a === 9 ? fun.f(a, b, c, d, e, f, g, h, i) : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
 
-console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.');
+console.warn('Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.2/optimize for better performance and smaller assets.');
 
 
 var _JsArray_empty = [];
@@ -4709,8 +4709,8 @@ var $elm$core$String$split = F2(
 var $elm$json$Json$Decode$indent = function (str) {
 	return A2(
 		$elm$core$String$join,
-		'\n    ',
-		A2($elm$core$String$split, '\n', str));
+		'\u000A    ',
+		A2($elm$core$String$split, '\u000A', str));
 };
 var $elm$core$List$foldl = F3(
 	function (func, acc, list) {
@@ -4802,7 +4802,7 @@ var $elm$core$List$reverse = function (list) {
 var $elm$core$String$uncons = _String_uncons;
 var $elm$json$Json$Decode$errorOneOf = F2(
 	function (i, error) {
-		return '\n\n(' + ($elm$core$String$fromInt(i + 1) + (') ' + $elm$json$Json$Decode$indent(
+		return '\u000A\u000A(' + ($elm$core$String$fromInt(i + 1) + (') ' + $elm$json$Json$Decode$indent(
 			$elm$json$Json$Decode$errorToString(error))));
 	});
 var $elm$json$Json$Decode$errorToString = function (error) {
@@ -4827,7 +4827,7 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 							return $elm$core$Char$isAlpha(_char) && A2($elm$core$String$all, $elm$core$Char$isAlphaNum, rest);
 						}
 					}();
-					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
+					var fieldName = isSimple ? ('.' + f) : ('[\u0027' + (f + '\u0027]'));
 					var $temp$error = err,
 						$temp$context = A2($elm$core$List$cons, fieldName, context);
 					error = $temp$error;
@@ -4878,7 +4878,7 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 								$elm$core$List$length(errors)) + ' ways:'));
 							return A2(
 								$elm$core$String$join,
-								'\n\n',
+								'\u000A\u000A',
 								A2(
 									$elm$core$List$cons,
 									introduction,
@@ -4890,16 +4890,16 @@ var $elm$json$Json$Decode$errorToStringHelp = F2(
 					var json = error.b;
 					var introduction = function () {
 						if (!context.b) {
-							return 'Problem with the given value:\n\n';
+							return 'Problem with the given value:\u000A\u000A';
 						} else {
 							return 'Problem with the value at json' + (A2(
 								$elm$core$String$join,
 								'',
-								$elm$core$List$reverse(context)) + ':\n\n    ');
+								$elm$core$List$reverse(context)) + ':\u000A\u000A    ');
 						}
 					}();
 					return introduction + ($elm$json$Json$Decode$indent(
-						A2($elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
+						A2($elm$json$Json$Encode$encode, 4, json)) + ('\u000A\u000A' + msg));
 			}
 		}
 	});
@@ -8554,7 +8554,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 												'::after',
 												_List_fromArray(
 													[
-														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'content', '\"\"'),
+														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'content', '\u0022\u0022'),
 														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'table'),
 														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'clear', 'both')
 													]))
@@ -8570,7 +8570,7 @@ var $mdgriffith$elm_ui$Internal$Style$baseSheet = _List_fromArray(
 												'::after',
 												_List_fromArray(
 													[
-														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'content', '\"\"'),
+														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'content', '\u0022\u0022'),
 														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'display', 'table'),
 														A2($mdgriffith$elm_ui$Internal$Style$Prop, 'clear', 'both')
 													]))
@@ -8954,14 +8954,14 @@ var $mdgriffith$elm_ui$Internal$Style$fontVariant = function (_var) {
 			'.v-' + _var,
 			_List_fromArray(
 				[
-					A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-feature-settings', '\"' + (_var + '\"'))
+					A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-feature-settings', '\u0022' + (_var + '\u0022'))
 				])),
 			A2(
 			$mdgriffith$elm_ui$Internal$Style$Class,
 			'.v-' + (_var + '-off'),
 			_List_fromArray(
 				[
-					A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-feature-settings', '\"' + (_var + '\" 0'))
+					A2($mdgriffith$elm_ui$Internal$Style$Prop, 'font-feature-settings', '\u0022' + (_var + '\u0022 0'))
 				]))
 		]);
 };
@@ -9039,11 +9039,11 @@ var $mdgriffith$elm_ui$Internal$Style$commonValues = $elm$core$List$concat(
 			$mdgriffith$elm_ui$Internal$Style$fontVariant('afrc'),
 			$mdgriffith$elm_ui$Internal$Style$fontVariant('frac')
 		]));
-var $mdgriffith$elm_ui$Internal$Style$explainer = '\n.explain {\n    border: 6px solid rgb(174, 121, 15) !important;\n}\n.explain > .' + ($mdgriffith$elm_ui$Internal$Style$classes.any + (' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n.ctr {\n    border: none !important;\n}\n.explain > .ctr > .' + ($mdgriffith$elm_ui$Internal$Style$classes.any + ' {\n    border: 4px dashed rgb(0, 151, 167) !important;\n}\n\n')));
-var $mdgriffith$elm_ui$Internal$Style$inputTextReset = '\ninput[type="search"],\ninput[type="search"]::-webkit-search-decoration,\ninput[type="search"]::-webkit-search-cancel-button,\ninput[type="search"]::-webkit-search-results-button,\ninput[type="search"]::-webkit-search-results-decoration {\n  -webkit-appearance:none;\n}\n';
-var $mdgriffith$elm_ui$Internal$Style$sliderReset = '\ninput[type=range] {\n  -webkit-appearance: none; \n  background: transparent;\n  position:absolute;\n  left:0;\n  top:0;\n  z-index:10;\n  width: 100%;\n  outline: dashed 1px;\n  height: 100%;\n  opacity: 0;\n}\n';
-var $mdgriffith$elm_ui$Internal$Style$thumbReset = '\ninput[type=range]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range]::-moz-range-thumb {\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range]::-ms-thumb {\n    opacity: 0.5;\n    width: 80px;\n    height: 80px;\n    background-color: black;\n    border:none;\n    border-radius: 5px;\n}\ninput[type=range][orient=vertical]{\n    writing-mode: bt-lr; /* IE */\n    -webkit-appearance: slider-vertical;  /* WebKit */\n}\n';
-var $mdgriffith$elm_ui$Internal$Style$trackReset = '\ninput[type=range]::-moz-range-track {\n    background: transparent;\n    cursor: pointer;\n}\ninput[type=range]::-ms-track {\n    background: transparent;\n    cursor: pointer;\n}\ninput[type=range]::-webkit-slider-runnable-track {\n    background: transparent;\n    cursor: pointer;\n}\n';
+var $mdgriffith$elm_ui$Internal$Style$explainer = '\u000A.explain {\u000A    border: 6px solid rgb(174, 121, 15) !important;\u000A}\u000A.explain > .' + ($mdgriffith$elm_ui$Internal$Style$classes.any + (' {\u000A    border: 4px dashed rgb(0, 151, 167) !important;\u000A}\u000A\u000A.ctr {\u000A    border: none !important;\u000A}\u000A.explain > .ctr > .' + ($mdgriffith$elm_ui$Internal$Style$classes.any + ' {\u000A    border: 4px dashed rgb(0, 151, 167) !important;\u000A}\u000A\u000A')));
+var $mdgriffith$elm_ui$Internal$Style$inputTextReset = '\u000Ainput[type=\u0022search\u0022],\u000Ainput[type=\u0022search\u0022]::-webkit-search-decoration,\u000Ainput[type=\u0022search\u0022]::-webkit-search-cancel-button,\u000Ainput[type=\u0022search\u0022]::-webkit-search-results-button,\u000Ainput[type=\u0022search\u0022]::-webkit-search-results-decoration {\u000A  -webkit-appearance:none;\u000A}\u000A';
+var $mdgriffith$elm_ui$Internal$Style$sliderReset = '\u000Ainput[type=range] {\u000A  -webkit-appearance: none; \u000A  background: transparent;\u000A  position:absolute;\u000A  left:0;\u000A  top:0;\u000A  z-index:10;\u000A  width: 100%;\u000A  outline: dashed 1px;\u000A  height: 100%;\u000A  opacity: 0;\u000A}\u000A';
+var $mdgriffith$elm_ui$Internal$Style$thumbReset = '\u000Ainput[type=range]::-webkit-slider-thumb {\u000A    -webkit-appearance: none;\u000A    opacity: 0.5;\u000A    width: 80px;\u000A    height: 80px;\u000A    background-color: black;\u000A    border:none;\u000A    border-radius: 5px;\u000A}\u000Ainput[type=range]::-moz-range-thumb {\u000A    opacity: 0.5;\u000A    width: 80px;\u000A    height: 80px;\u000A    background-color: black;\u000A    border:none;\u000A    border-radius: 5px;\u000A}\u000Ainput[type=range]::-ms-thumb {\u000A    opacity: 0.5;\u000A    width: 80px;\u000A    height: 80px;\u000A    background-color: black;\u000A    border:none;\u000A    border-radius: 5px;\u000A}\u000Ainput[type=range][orient=vertical]{\u000A    writing-mode: bt-lr; /* IE */\u000A    -webkit-appearance: slider-vertical;  /* WebKit */\u000A}\u000A';
+var $mdgriffith$elm_ui$Internal$Style$trackReset = '\u000Ainput[type=range]::-moz-range-track {\u000A    background: transparent;\u000A    cursor: pointer;\u000A}\u000Ainput[type=range]::-ms-track {\u000A    background: transparent;\u000A    cursor: pointer;\u000A}\u000Ainput[type=range]::-webkit-slider-runnable-track {\u000A    background: transparent;\u000A    cursor: pointer;\u000A}\u000A';
 var $mdgriffith$elm_ui$Internal$Style$overrides = '@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.row) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + (' { flex-basis: auto !important; } ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.row) + (' > ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.container) + (' { flex-basis: auto !important; }}' + ($mdgriffith$elm_ui$Internal$Style$inputTextReset + ($mdgriffith$elm_ui$Internal$Style$sliderReset + ($mdgriffith$elm_ui$Internal$Style$trackReset + ($mdgriffith$elm_ui$Internal$Style$thumbReset + $mdgriffith$elm_ui$Internal$Style$explainer)))))))))))))));
 var $elm$core$String$concat = function (strings) {
 	return A2($elm$core$String$join, '', strings);
@@ -9084,7 +9084,7 @@ var $mdgriffith$elm_ui$Internal$Style$renderRules = F2(
 								others: A2(
 									$elm$core$List$cons,
 									$mdgriffith$elm_ui$Internal$Style$Intermediate(
-										{closing: '\n}', others: _List_Nil, props: props, selector: '@supports (' + (prop + (':' + (value + (') {' + parent.selector))))}),
+										{closing: '\u000A}', others: _List_Nil, props: props, selector: '@supports (' + (prop + (':' + (value + (') {' + parent.selector))))}),
 									rendered.others)
 							});
 					case 'Adjacent':
@@ -9292,14 +9292,14 @@ var $mdgriffith$elm_ui$Internal$Model$fontName = function (font) {
 			return 'monospace';
 		case 'Typeface':
 			var name = font.a;
-			return '\"' + (name + '\"');
+			return '\u0022' + (name + '\u0022');
 		case 'ImportFont':
 			var name = font.a;
 			var url = font.b;
-			return '\"' + (name + '\"');
+			return '\u0022' + (name + '\u0022');
 		default:
 			var name = font.a.name;
-			return '\"' + (name + '\"');
+			return '\u0022' + (name + '\u0022');
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$isSmallCaps = function (_var) {
@@ -9335,7 +9335,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderProps = F3(
 	function (force, _v0, existing) {
 		var key = _v0.a;
 		var val = _v0.b;
-		return force ? (existing + ('\n  ' + (key + (': ' + (val + ' !important;'))))) : (existing + ('\n  ' + (key + (': ' + (val + ';')))));
+		return force ? (existing + ('\u000A  ' + (key + (': ' + (val + ' !important;'))))) : (existing + ('\u000A  ' + (key + (': ' + (val + ';')))));
 	});
 var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 	function (options, maybePseudo, selector, props) {
@@ -9346,7 +9346,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 					$elm$core$List$foldl,
 					$mdgriffith$elm_ui$Internal$Model$renderProps(false),
 					'',
-					props) + '\n}'))
+					props) + '\u000A}'))
 				]);
 		} else {
 			var pseudo = maybePseudo.a;
@@ -9363,7 +9363,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 									$elm$core$List$foldl,
 									$mdgriffith$elm_ui$Internal$Model$renderProps(true),
 									'',
-									props) + '\n}'))
+									props) + '\u000A}'))
 								]);
 						default:
 							return _List_fromArray(
@@ -9372,7 +9372,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 									$elm$core$List$foldl,
 									$mdgriffith$elm_ui$Internal$Model$renderProps(false),
 									'',
-									props) + '\n}'))
+									props) + '\u000A}'))
 								]);
 					}
 				case 'Focus':
@@ -9383,10 +9383,10 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 						props);
 					return _List_fromArray(
 						[
-							selector + ('-fs:focus {' + (renderedProps + '\n}')),
-							('.' + ($mdgriffith$elm_ui$Internal$Style$classes.any + (':focus ' + (selector + '-fs  {')))) + (renderedProps + '\n}'),
-							(selector + '-fs:focus-within {') + (renderedProps + '\n}'),
-							('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + (' .focusable-thumb' + (selector + '-fs {')))) + (renderedProps + '\n}')
+							selector + ('-fs:focus {' + (renderedProps + '\u000A}')),
+							('.' + ($mdgriffith$elm_ui$Internal$Style$classes.any + (':focus ' + (selector + '-fs  {')))) + (renderedProps + '\u000A}'),
+							(selector + '-fs:focus-within {') + (renderedProps + '\u000A}'),
+							('.ui-slide-bar:focus + ' + ($mdgriffith$elm_ui$Internal$Style$dot($mdgriffith$elm_ui$Internal$Style$classes.any) + (' .focusable-thumb' + (selector + '-fs {')))) + (renderedProps + '\u000A}')
 						]);
 				default:
 					return _List_fromArray(
@@ -9395,7 +9395,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyle = F4(
 							$elm$core$List$foldl,
 							$mdgriffith$elm_ui$Internal$Model$renderProps(false),
 							'',
-							props) + '\n}'))
+							props) + '\u000A}'))
 						]);
 			}
 		}
@@ -9404,14 +9404,14 @@ var $mdgriffith$elm_ui$Internal$Model$renderVariant = function (_var) {
 	switch (_var.$) {
 		case 'VariantActive':
 			var name = _var.a;
-			return '\"' + (name + '\"');
+			return '\u0022' + (name + '\u0022');
 		case 'VariantOff':
 			var name = _var.a;
-			return '\"' + (name + '\" 0');
+			return '\u0022' + (name + '\u0022 0');
 		default:
 			var name = _var.a;
 			var index = _var.b;
-			return '\"' + (name + ('\" ' + $elm$core$String$fromInt(index)));
+			return '\u0022' + (name + ('\u0022 ' + $elm$core$String$fromInt(index)));
 	}
 };
 var $mdgriffith$elm_ui$Internal$Model$renderVariants = function (typeface) {
@@ -9689,7 +9689,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 							_class + (paragraph + '::after'),
 							_List_fromArray(
 								[
-									A2($mdgriffith$elm_ui$Internal$Model$Property, 'content', '\'\''),
+									A2($mdgriffith$elm_ui$Internal$Model$Property, 'content', '\u0027\u0027'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'display', 'block'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'height', '0'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'width', '0'),
@@ -9705,7 +9705,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderStyleRule = F3(
 							_class + (paragraph + '::before'),
 							_List_fromArray(
 								[
-									A2($mdgriffith$elm_ui$Internal$Model$Property, 'content', '\'\''),
+									A2($mdgriffith$elm_ui$Internal$Model$Property, 'content', '\u0027\u0027'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'display', 'block'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'height', '0'),
 									A2($mdgriffith$elm_ui$Internal$Model$Property, 'width', '0'),
@@ -10143,7 +10143,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderTopLevelValues = function (rules) {
 	var withImport = function (font) {
 		if (font.$ === 'ImportFont') {
 			var url = font.b;
-			return $elm$core$Maybe$Just('@import url(\'' + (url + '\');'));
+			return $elm$core$Maybe$Just('@import url(\u0027' + (url + '\u0027);'));
 		} else {
 			return $elm$core$Maybe$Nothing;
 		}
@@ -10153,7 +10153,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderTopLevelValues = function (rules) {
 		var typefaces = _v2.b;
 		var imports = A2(
 			$elm$core$String$join,
-			'\n',
+			'\u000A',
 			A2($elm$core$List$filterMap, withImport, typefaces));
 		return imports;
 	};
@@ -10184,11 +10184,11 @@ var $mdgriffith$elm_ui$Internal$Model$renderTopLevelValues = function (rules) {
 	return _Utils_ap(
 		A2(
 			$elm$core$String$join,
-			'\n',
+			'\u000A',
 			A2($elm$core$List$map, fontImports, rules)),
 		A2(
 			$elm$core$String$join,
-			'\n',
+			'\u000A',
 			A2($elm$core$List$map, fontAdjustments, rules)));
 };
 var $mdgriffith$elm_ui$Internal$Model$topLevelValue = function (rule) {
@@ -10225,8 +10225,8 @@ var $mdgriffith$elm_ui$Internal$Model$toStyleSheetString = F2(
 			combine,
 			{rules: _List_Nil, topLevel: _List_Nil},
 			stylesheet);
-		var topLevel = _v0.topLevel;
 		var rules = _v0.rules;
+		var topLevel = _v0.topLevel;
 		return _Utils_ap(
 			$mdgriffith$elm_ui$Internal$Model$renderTopLevelValues(topLevel),
 			$elm$core$String$concat(rules));
@@ -12216,8 +12216,8 @@ var $mdgriffith$elm_ui$Internal$Model$Width = function (a) {
 var $mdgriffith$elm_ui$Element$width = $mdgriffith$elm_ui$Internal$Model$Width;
 var $mdgriffith$elm_ui$Element$Input$button = F2(
 	function (attrs, _v0) {
-		var onPress = _v0.onPress;
 		var label = _v0.label;
+		var onPress = _v0.onPress;
 		return A4(
 			$mdgriffith$elm_ui$Internal$Model$element,
 			$mdgriffith$elm_ui$Internal$Model$asEl,
@@ -12408,10 +12408,10 @@ var $mdgriffith$elm_ui$Element$spacing = function (x) {
 var $mdgriffith$elm_ui$Element$Input$tabindex = A2($elm$core$Basics$composeL, $mdgriffith$elm_ui$Internal$Model$Attr, $elm$html$Html$Attributes$tabindex);
 var $mdgriffith$elm_ui$Element$Input$checkbox = F2(
 	function (attrs, _v0) {
-		var label = _v0.label;
-		var icon = _v0.icon;
-		var checked = _v0.checked;
 		var onChange = _v0.onChange;
+		var checked = _v0.checked;
+		var icon = _v0.icon;
+		var label = _v0.label;
 		var attributes = _Utils_ap(
 			_List_fromArray(
 				[
@@ -12710,7 +12710,7 @@ var $mdgriffith$elm_ui$Element$Font$variant = function (_var) {
 					$mdgriffith$elm_ui$Internal$Model$Single,
 					'v-' + (name + ('-' + $elm$core$String$fromInt(index))),
 					'font-feature-settings',
-					'\"' + (name + ('\" ' + $elm$core$String$fromInt(index)))));
+					'\u0022' + (name + ('\u0022 ' + $elm$core$String$fromInt(index)))));
 	}
 };
 var $author$project$UiExperiment$file_panel = F2(
@@ -12914,8 +12914,8 @@ var $mdgriffith$elm_ui$Internal$Model$toHtml = F2(
 				var html = el.a;
 				return html($mdgriffith$elm_ui$Internal$Model$asEl);
 			case 'Styled':
-				var styles = el.a.styles;
 				var html = el.a.html;
+				var styles = el.a.styles;
 				return A2(
 					html,
 					mode(styles),
@@ -13324,11 +13324,11 @@ var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$UiExperiment$toggleCheckboxWidget = F2(
 	function (_v0, checked) {
-		var offColor = _v0.offColor;
-		var onColor = _v0.onColor;
-		var sliderColor = _v0.sliderColor;
-		var toggleWidth = _v0.toggleWidth;
 		var toggleHeight = _v0.toggleHeight;
+		var toggleWidth = _v0.toggleWidth;
+		var sliderColor = _v0.sliderColor;
+		var onColor = _v0.onColor;
+		var offColor = _v0.offColor;
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(

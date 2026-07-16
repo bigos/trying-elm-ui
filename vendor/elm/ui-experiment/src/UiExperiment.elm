@@ -126,7 +126,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     -- Debug.log (Debug.toString msg) <|
     case msg of
-        ValidationInput string ->
+        ValidationInput _ ->
             ( model, Cmd.none )
 
         ValidationKeyUp keyCode ->
