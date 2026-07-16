@@ -129,14 +129,8 @@ update msg model =
         ValidationInput _ ->
             ( model, Cmd.none )
 
-        ValidationKeyUp keyCode ->
-            case keyCode of
-                13 ->
-                    Debug.log "Return"
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+        ValidationKeyUp _ ->
+            ( model, Cmd.none )
 
         Toggle ->
             let
