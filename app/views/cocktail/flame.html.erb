@@ -6,11 +6,6 @@
 <div id="flame-cocktail"></div>
 
 <%
-#js_filename = 'flame-cocktail.js'
-#js_file = File.join(Rails.root, 'public', js_filename)
-# prepare my own fingerprinting
-#js_mtime =File.mtime(js_file).to_i
-
 html_attributes = {type: 'module', id: 'flame-cocktail-flags'}
 flag_data = {
   base_url: request.base_url,
