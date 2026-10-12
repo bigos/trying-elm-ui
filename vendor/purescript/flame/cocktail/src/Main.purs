@@ -215,7 +215,7 @@ view model = HE.main "main"
       , HE.p_ (drinks_stats model.resultDrinks)
       , HE.p_ ("sel " <> model.selected)
       , HE.p_ ("key " <> model.key)
-      , HE.label [ HA.for "nums" ] [ HE.text "What is your order???" ]
+      , HE.label [ HA.for "nums" ] [ HE.text "What is your order?" ]
       , HE.div_
           [ view_input model
           -- , view_options model
@@ -223,7 +223,7 @@ view model = HE.main "main"
       ]
   , view_drinks model
   , HE.div (da_border_color "green")
-      [ HE.h3_ "flags2"
+      [ HE.h3_ "flags"
       , HE.p_ (show model.flags)
       , HE.h3_ "model"
       , HE.p_ (show model)
