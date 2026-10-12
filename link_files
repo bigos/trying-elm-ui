@@ -26,7 +26,7 @@ fname = 'vendor/javascript/flame-cocktail.js'
 dirf = 'flame/cocktail'
 link_purescript fname, dirf
 
-fname = 'public/halogen-cocktail.js'
+fname = 'vendor/javascript/halogen-cocktail.js'
 dirf = 'cocktails'
 link_purescript fname, dirf
 
