@@ -5,6 +5,7 @@ SOURCE_FOLDER = __dir__
 def link_purescript(fname, dirf)
   puts "removing #{fname}"
   `rm -v ./#{fname}`
+
   puts "copying #{fname}"
   `ln -sv #{SOURCE_FOLDER}/vendor/purescript/#{dirf}/prod/index.js  ./#{fname}`
 
@@ -21,7 +22,7 @@ puts "to link the JS files to the destination folder: ./public/"
 puts ''
 
 
-fname = 'public/flame-cocktail.js'
+fname = 'vendor/javascript/flame-cocktail.js'
 dirf = 'flame/cocktail'
 link_purescript fname, dirf
 
@@ -39,17 +40,18 @@ link_purescript fname, dirf
 
 
 puts 'removing rescript'
-
 `rm -v ./public/index_rescript.*`
 
-ASSETS_FOLDER = "#{SOURCE_FOLDER}/vendor/rescript/my-rectript-experiment/dist/assets/"
-dir = Dir.open ASSETS_FOLDER
-dir.children.each do |c|
-  if c.to_s.end_with? '.js'
-    `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.js`
-  end
+if false
+  ASSETS_FOLDER = "#{SOURCE_FOLDER}/vendor/rescript/my-rectript-experiment/dist/assets/"
+  dir = Dir.open ASSETS_FOLDER
+  dir.children.each do |c|
+    if c.to_s.end_with? '.js'
+      `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.js`
+    end
 
-  if c.to_s.end_with? '.css'
-    `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.css`
+    if c.to_s.end_with? '.css'
+      `ln -sv #{ASSETS_FOLDER}/#{c} ./public/index_rescript.css`
+    end
   end
 end
